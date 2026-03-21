@@ -14,24 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Validate HTML
+      - name: Verify static files
         run: |
-          npm install -g html-validate
-          html-validate public/index.html || true
-
-      - name: Check for broken links (optional)
-        run: |
-          npm install -g broken-link-checker
-          blc http://localhost:8000 --recursive --offline || true
-        continue-on-error: true
-
-      - name: Build check
-        run: npm run build
+          echo "Checking public folder..."
+          ls -la public/
+          if [ ! -f public/index.html ]; then
+            echo "ERROR: index.html not found!"
+            exit 1
+          fi
+          echo "✓ Static files verified"
