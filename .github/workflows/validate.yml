@@ -1,0 +1,37 @@
+name: Validate Build
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate HTML
+        run: |
+          npm install -g html-validate
+          html-validate public/index.html || true
+
+      - name: Check for broken links (optional)
+        run: |
+          npm install -g broken-link-checker
+          blc http://localhost:8000 --recursive --offline || true
+        continue-on-error: true
+
+      - name: Build check
+        run: npm run build

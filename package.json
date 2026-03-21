@@ -1,0 +1,25 @@
+{
+  "name": "promaterial-website",
+  "version": "1.0.0",
+  "description": "ProMaterial: Intelligence for Magnet Manufacturing",
+  "main": "public/index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "http-server public -p 8000 -c-1",
+    "build": "echo 'Static site - no build needed'",
+    "preview": "http-server public -p 8000",
+    "start": "npm run preview"
+  },
+  "keywords": [
+    "magnet",
+    "manufacturing",
+    "AI",
+    "inspection",
+    "quality"
+  ],
+  "author": "ProMaterial",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
