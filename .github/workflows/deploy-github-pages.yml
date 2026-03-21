@@ -28,5 +28,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          cname: promaterial.co.uk
           force_orphan: true
+
+      - name: Deployment Info
+        run: |
+          echo "✓ Deployment complete"
+          echo "Site will be available at: https://promaterialai.github.io/website/"
+          echo "Custom domain: promaterial.co.uk (after DNS config)"
