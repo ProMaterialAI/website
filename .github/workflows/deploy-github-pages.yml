@@ -9,18 +9,19 @@ jobs:
     runs-on: [self-hosted]
     
     permissions:
-      contents: read
+      contents: write
       pages: write
-      id-token: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check site folder
+      - name: Verify public folder
         run: |
           echo "Files to deploy:"
           ls -la public/
+          echo "---"
+          ls -la public/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -28,3 +29,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           cname: promaterial.co.uk
+          force_orphan: true
