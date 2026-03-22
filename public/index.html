@@ -657,9 +657,16 @@
             btn.dataset.enquiryEnabled = enabled ? 'true' : 'false';
 
             if (enabled) {
-                statusEl.textContent = '';
-                statusEl.classList.add('hidden');
                 btn.innerText = 'Book a Demo';
+
+                if (message) {
+                    statusEl.textContent = message;
+                    statusEl.classList.remove('hidden');
+                } else {
+                    statusEl.textContent = '';
+                    statusEl.classList.add('hidden');
+                }
+
                 return;
             }
 
@@ -691,7 +698,7 @@
 
                 setEnquiryState(false, message);
             } catch (error) {
-                setEnquiryState(false, 'The enquiry form is unavailable right now. Please try again later.');
+                setEnquiryState(true, 'You can enter an enquiry now. If sending fails, finish the Vercel email settings and redeploy.');
             }
         }
 
