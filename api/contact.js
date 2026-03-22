@@ -1,4 +1,12 @@
 import sendgrid from "@sendgrid/mail";
+import {
+  detectEmailProvider,
+  getEmailApiKey,
+  getEnquiryConfig,
+  loadLocalEnv,
+} from "../lib/env.js";
+
+loadLocalEnv();
 
 function parseJsonBody(req) {
   return new Promise((resolve, reject) => {
@@ -61,53 +69,123 @@ export async function contactHandler(req, res) {
     return;
   }
 
-  const apiKey = process.env.SENDGRID_API_KEY;
   const toEmail = process.env.CONTACT_TO_EMAIL;
   const fromEmail = process.env.CONTACT_FROM_EMAIL;
+  const { enquirySectionEnabled } = getEnquiryConfig();
+  const provider = detectEmailProvider();
+  const apiKey = provider ? getEmailApiKey(provider) : "";
 
-  if (!apiKey || !toEmail || !fromEmail) {
-    sendJson(res, 500, {
-      error: "Email service is not configured. Add SendGrid environment variables.",
+  if (!enquirySectionEnabled) {
+    sendJson(res, 503, {
+      error: "The enquiry form is currently disabled.",
     });
     return;
   }
 
-  sendgrid.setApiKey(apiKey);
+  if (!apiKey || !toEmail || !fromEmail) {
+    sendJson(res, 500, {
+      error: "Email service is not configured. Add the email environment variables.",
+    });
+    return;
+  }
 
   const submittedAt = new Date().toISOString();
   const safeMessage = message.replace(/\r\n/g, "\n");
+  const emailPayload = {
+    toEmail,
+    fromEmail,
+    name,
+    email,
+    submittedAt,
+    safeMessage,
+  };
 
   try {
-    await sendgrid.send({
-      to: toEmail,
-      from: fromEmail,
-      replyTo: email,
-      subject: `New ProMaterial demo request from ${name}`,
-      text: [
-        "New demo request received from the website.",
-        "",
-        `Name: ${name}`,
-        `Email: ${email}`,
-        `Submitted: ${submittedAt}`,
-        "",
-        "Message:",
-        safeMessage,
-      ].join("\n"),
-      html: `
-        <h2>New demo request received</h2>
-        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-        <p><strong>Submitted:</strong> ${escapeHtml(submittedAt)}</p>
-        <p><strong>Message:</strong></p>
-        <p>${escapeHtml(safeMessage).replace(/\n/g, "<br>")}</p>
-      `,
-    });
+    if (provider === "brevo") {
+      await sendWithBrevo(apiKey, emailPayload);
+    } else if (provider === "sendgrid") {
+      await sendWithSendGrid(apiKey, emailPayload);
+    } else {
+      throw new Error("Unsupported email provider configuration.");
+    }
 
     sendJson(res, 200, { ok: true });
   } catch (error) {
-    console.error("SendGrid error:", error);
+    console.error("Email delivery error:", error);
     sendJson(res, 502, { error: "Unable to send email right now." });
   }
+}
+
+async function sendWithSendGrid(apiKey, payload) {
+  sendgrid.setApiKey(apiKey);
+
+  await sendgrid.send({
+    to: payload.toEmail,
+    from: payload.fromEmail,
+    replyTo: payload.email,
+    subject: `New ProMaterial demo request from ${payload.name}`,
+    text: buildTextBody(payload),
+    html: buildHtmlBody(payload),
+  });
+}
+
+async function sendWithBrevo(apiKey, payload) {
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "api-key": apiKey,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: {
+        email: payload.fromEmail,
+        name: "ProMaterial Website",
+      },
+      to: [
+        {
+          email: payload.toEmail,
+          name: "ProMaterial",
+        },
+      ],
+      replyTo: {
+        email: payload.email,
+        name: payload.name,
+      },
+      subject: `New ProMaterial demo request from ${payload.name}`,
+      textContent: buildTextBody(payload),
+      htmlContent: buildHtmlBody(payload),
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Brevo API returned ${response.status}: ${errorText}`);
+  }
+}
+
+function buildTextBody(payload) {
+  return [
+    "New demo request received from the website.",
+    "",
+    `Name: ${payload.name}`,
+    `Email: ${payload.email}`,
+    `Submitted: ${payload.submittedAt}`,
+    "",
+    "Message:",
+    payload.safeMessage,
+  ].join("\n");
+}
+
+function buildHtmlBody(payload) {
+  return `
+    <h2>New demo request received</h2>
+    <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
+    <p><strong>Submitted:</strong> ${escapeHtml(payload.submittedAt)}</p>
+    <p><strong>Message:</strong></p>
+    <p>${escapeHtml(payload.safeMessage).replace(/\n/g, "<br>")}</p>
+  `;
 }
 
 function escapeHtml(value) {

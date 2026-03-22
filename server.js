@@ -4,6 +4,10 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 
 import { contactHandler } from "./api/contact.js";
+import { configHandler } from "./api/config.js";
+import { loadLocalEnv } from "./lib/env.js";
+
+loadLocalEnv();
 
 const rootDir = fileURLToPath(new URL(".", import.meta.url));
 const publicDir = join(rootDir, "public");
@@ -36,6 +40,11 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === "/api/contact") {
     await contactHandler(req, res);
+    return;
+  }
+
+  if (url.pathname === "/api/config") {
+    await configHandler(req, res);
     return;
   }
 

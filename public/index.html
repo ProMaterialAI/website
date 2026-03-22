@@ -548,6 +548,7 @@
                     <textarea required id="ai-input-integrated" rows="4" placeholder="Tell us about your inspection challenge..." class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-[#2dd4bf] transition"></textarea>
                     <button type="submit" id="submit-btn-unified" class="w-full py-5 bg-[#2dd4bf] text-black font-extrabold rounded-2xl hover:bg-white transition text-sm uppercase tracking-widest shadow-lg">Book a Demo</button>
                 </form>
+                <p id="enquiry-status" class="hidden mt-6 text-sm text-slate-300"></p>
                 <div id="ai-loading-integrated" class="hidden flex justify-center py-12"><div class="dot-flashing"></div></div>
                 <div id="ai-response-container" class="hidden animate-fadeIn mt-12 p-8 bg-black/40 rounded-[3rem] border border-[#2dd4bf]/20 text-left">
                     <div id="ai-response" class="text-slate-300 text-sm leading-relaxed"></div>
@@ -605,7 +606,7 @@
             const responseContainer = document.getElementById('ai-response-container');
             const responseEl = document.getElementById('ai-response');
 
-            if(!challenge) return;
+            if (btn.disabled || !challenge) return;
             btn.disabled = true;
             btn.innerText = "Sending...";
             document.getElementById('ai-loading-integrated').classList.remove('hidden');
@@ -636,10 +637,65 @@
                 responseContainer.classList.remove('hidden');
                 btn.innerText = "Book a Demo";
             } finally {
-                btn.disabled = false;
+                if (btn.dataset.enquiryEnabled !== 'false') {
+                    btn.disabled = false;
+                }
                 document.getElementById('ai-loading-integrated').classList.add('hidden');
             }
         }
+
+        function setEnquiryState(enabled, message = '') {
+            const form = document.getElementById('unified-form');
+            const btn = document.getElementById('submit-btn-unified');
+            const statusEl = document.getElementById('enquiry-status');
+            const fields = form.querySelectorAll('input, textarea, button');
+
+            fields.forEach((field) => {
+                field.disabled = !enabled;
+            });
+
+            btn.dataset.enquiryEnabled = enabled ? 'true' : 'false';
+
+            if (enabled) {
+                statusEl.textContent = '';
+                statusEl.classList.add('hidden');
+                btn.innerText = 'Book a Demo';
+                return;
+            }
+
+            statusEl.textContent = message || 'The enquiry form is currently unavailable.';
+            statusEl.classList.remove('hidden');
+            btn.innerText = 'Enquiry Unavailable';
+        }
+
+        async function initializeEnquirySection() {
+            try {
+                const response = await fetch('/api/config', {
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Unable to load enquiry settings.');
+                }
+
+                const config = await response.json();
+
+                if (config.enquirySectionEnabled) {
+                    setEnquiryState(true);
+                    return;
+                }
+
+                const message = config.emailConfigured
+                    ? 'The enquiry form is currently turned off in configuration.'
+                    : 'The enquiry form is waiting for email environment variables before it can be activated.';
+
+                setEnquiryState(false, message);
+            } catch (error) {
+                setEnquiryState(false, 'The enquiry form is unavailable right now. Please try again later.');
+            }
+        }
+
+        initializeEnquirySection();
 
         const logosGroup1 = [
             { name: "Business Wales", src: "/assets/BusinessWales.png" },
