@@ -5,9 +5,9 @@
   "main": "public/index.html",
   "type": "module",
   "scripts": {
-    "dev": "http-server public -p 8000 -c-1",
+    "dev": "node server.js",
     "build": "echo 'Static site - no build needed'",
-    "preview": "http-server public -p 8000",
+    "preview": "node server.js",
     "start": "npm run preview"
   },
   "keywords": [
@@ -19,6 +19,9 @@
   ],
   "author": "ProMaterial",
   "license": "MIT",
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.5"
+  },
   "devDependencies": {
     "http-server": "^14.1.1"
   }

@@ -8,7 +8,7 @@ This is the official website for ProMaterial, showcasing AI-powered quality solu
 
 - **HTML5** - Semantic markup
 - **Tailwind CSS** - Responsive styling via CDN
-- **Vanilla JavaScript** - Interactive components (no build step required)
+- **Vanilla JavaScript + Node.js** - Interactive components and a simple contact API
 - **Static hosting ready** - Deploy to any static host
 
 ## 🚀 Quick Start
@@ -56,7 +56,9 @@ cp .env.example .env
 ```
 
 Required variables:
-- `VITE_GEMINI_API_KEY` - Google Gemini API key for the demo form
+- `SENDGRID_API_KEY` - SendGrid API key for the contact form
+- `CONTACT_TO_EMAIL` - Inbox for demo request notifications
+- `CONTACT_FROM_EMAIL` - Verified SendGrid sender address
 - Deployment-specific variables (see below)
 
 ## 🌐 Hosting Options
@@ -107,8 +109,10 @@ Add these to GitHub Secrets (Settings → Secrets and variables → Actions):
 - `VERCEL_ORG_ID`
 - `VERCEL_PROJECT_ID`
 
-### For Google Gemini API:
-- `VITE_GEMINI_API_KEY`
+### For Contact Form:
+- `SENDGRID_API_KEY`
+- `CONTACT_TO_EMAIL`
+- `CONTACT_FROM_EMAIL`
 
 ## 📝 Customization
 
@@ -119,14 +123,9 @@ Edit `/public/index.html` directly. The site uses:
 - **Font Awesome** for icons (via CDN)
 - **Google Fonts** for typography
 
-### Update API Integration
+### Contact Form
 
-The demo form uses Google's Gemini API:
-
-```javascript
-// In index.html, update the API call:
-const apiKey = process.env.VITE_GEMINI_API_KEY;
-```
+The demo form posts to `/api/contact`, which sends a plain email through SendGrid.
 
 ## 🔗 DNS Configuration (GoDaddy)
 
@@ -156,9 +155,9 @@ const apiKey = process.env.VITE_GEMINI_API_KEY;
 
 Before deploying, you'll need to provide:
 
-1. **Google Gemini API Key**
-   - Get from: https://ai.google.dev/
-   - Add to GitHub Secrets as `VITE_GEMINI_API_KEY`
+1. **SendGrid API Key**
+   - Create a SendGrid API key with Mail Send permissions
+   - Add to Vercel or GitHub Secrets as `SENDGRID_API_KEY`
 
 2. **Hosting Provider Credentials**
    - Choose Netlify, Vercel, or GitHub Pages
@@ -168,17 +167,17 @@ Before deploying, you'll need to provide:
    - Ensure domain is registered on GoDaddy
    - Configure DNS records per hosting provider
 
-4. **Email Setup** (Optional)
-   - Currently form submissions are sent to Gemini API
-   - Consider adding email service (SendGrid, Mailgun, etc.) for form handling
+4. **Email Setup**
+   - Set `CONTACT_TO_EMAIL` to your inbox
+   - Set `CONTACT_FROM_EMAIL` to a verified SendGrid sender
 
 ### Form Submission Flow
 
-Currently, the form uses Google's Gemini API. For production, consider:
+Currently, the form sends a plain email via SendGrid. For future expansion, you could add:
 
-1. **Email notifications**: SendGrid, Mailgun, or AWS SES
-2. **Form storage**: Firebase, Airtable, or custom backend
-3. **Lead management**: HubSpot, Pipedrive, or similar CRM
+1. **Form storage**: Firebase, Airtable, or a CRM
+2. **Spam protection**: reCAPTCHA or Turnstile
+3. **Lead routing**: Different inboxes by inquiry type
 
 ## 📞 Support
 

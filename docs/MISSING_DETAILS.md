@@ -4,22 +4,19 @@ This document outlines all the information you need to gather to complete the de
 
 ## 🔑 Required API Keys & Credentials
 
-### 1. Google Gemini API Key
+### 1. SendGrid API Key
 **Status**: ⚠️ REQUIRED for demo form functionality
 
-- **What it is**: Authentication key for Google's AI API
-- **Where to get it**: https://ai.google.dev/
+- **What it is**: Authentication key for SendGrid email delivery
+- **Where to get it**: https://sendgrid.com/
 - **How to use**: 
   1. Visit the link and sign up/log in
-  2. Create a new API key
-  3. Copy and save securely
-  4. Add to `.env` file as `VITE_GEMINI_API_KEY`
-  5. Add to GitHub Secrets
-
-**Alternative**: If you want to use email instead of AI responses for form submissions, consider:
-- SendGrid API key
-- Mailgun API key
-- AWS SES credentials
+  2. Verify a sender identity
+  3. Create a new API key with Mail Send permissions
+  4. Copy and save securely
+  5. Add to `.env` file as `SENDGRID_API_KEY`
+  6. Add `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL`
+  7. Add the same values to your deployment environment
 
 ## 📋 Hosting Provider Information
 
@@ -62,8 +59,10 @@ Steps:
 
 Location: Settings → Secrets and variables → Actions
 
-**Required for ANY deployment**:
-- [ ] `VITE_GEMINI_API_KEY` - Your Gemini API key
+**Required for the contact form**:
+- [ ] `SENDGRID_API_KEY` - Your SendGrid API key
+- [ ] `CONTACT_TO_EMAIL` - Inbox for demo requests
+- [ ] `CONTACT_FROM_EMAIL` - Verified sender email
 
 **If using Netlify**:
 - [ ] `NETLIFY_AUTH_TOKEN`
@@ -111,12 +110,13 @@ For form submissions to send you emails, you'll need:
 - Authentication method
 - API documentation
 
-*Currently the form uses Gemini API for responses. Email integration requires backend changes.*
+*The form now sends email through SendGrid. If you want CRM storage too, that would be an additional backend change.*
 
 ## 🎯 Checklist Before Deployment
 
 ### Pre-Deployment
-- [ ] Google Gemini API key obtained
+- [ ] SendGrid API key obtained
+- [ ] Verified sender created in SendGrid
 - [ ] Hosting provider chosen and account created
 - [ ] GitHub repository created
 - [ ] Domain registered on GoDaddy
@@ -158,7 +158,7 @@ For the website form recipients:
 
 | Item | Needed For | Priority |
 |------|-----------|----------|
-| Gemini API Key | Demo form | High |
+| SendGrid API Key | Demo form | High |
 | Hosting credentials | Site hosting | High |
 | GitHub repo | CI/CD pipeline | High |
 | GoDaddy access | DNS records | High |

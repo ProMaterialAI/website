@@ -32,12 +32,13 @@ git branch -M main
 git push -u origin main
 ```
 
-## Step 2: Set Up Google Gemini API
+## Step 2: Set Up SendGrid
 
-1. Visit https://ai.google.dev/
-2. Sign up or log in with your Google account
-3. Create a new API key
-4. Copy the API key
+1. Visit https://sendgrid.com/
+2. Create or log in to your account
+3. Verify a sender identity
+4. Create an API key with Mail Send permissions
+5. Copy the API key
 
 ## Step 3: Choose and Configure Hosting
 
@@ -53,8 +54,9 @@ git push -u origin main
 6. Click "Deploy site"
 7. Go to Site settings → Build & deploy → Environment
 8. Add environment variables:
-   - Key: `VITE_GEMINI_API_KEY`
-   - Value: Your Gemini API key from Step 2
+   - `SENDGRID_API_KEY`
+   - `CONTACT_TO_EMAIL`
+   - `CONTACT_FROM_EMAIL`
 9. Note your Netlify subdomain (e.g., `promaterial-abc123.netlify.app`)
 
 ### Option B: Vercel
@@ -67,9 +69,10 @@ git push -u origin main
    - Root Directory: `./`
    - Build Command: `npm run build`
    - Output Directory: `public/`
-5. Add environment variable:
-   - Name: `VITE_GEMINI_API_KEY`
-   - Value: Your Gemini API key
+5. Add environment variables:
+   - `SENDGRID_API_KEY`
+   - `CONTACT_TO_EMAIL`
+   - `CONTACT_FROM_EMAIL`
 6. Click "Deploy"
 7. Note your Vercel domain
 
@@ -111,10 +114,16 @@ Name: VERCEL_PROJECT_ID
 Value: (from Vercel → Settings → General)
 ```
 
-### API Keys:
+### Contact Form:
 ```
-Name: VITE_GEMINI_API_KEY
-Value: Your Google Gemini API key
+Name: SENDGRID_API_KEY
+Value: Your SendGrid API key
+
+Name: CONTACT_TO_EMAIL
+Value: Inbox where demo requests should be delivered
+
+Name: CONTACT_FROM_EMAIL
+Value: Verified SendGrid sender address
 ```
 
 ## Step 5: Update DNS on GoDaddy
@@ -172,9 +181,10 @@ Most hosting providers auto-enable HTTPS:
 - Check DNS settings on GoDaddy
 
 ### Form not working
-- Check Gemini API key is correctly set in environment variables
+- Check SendGrid variables are correctly set in environment variables
+- Confirm `CONTACT_FROM_EMAIL` is a verified sender in SendGrid
 - Open browser DevTools → Console for error messages
-- Verify API key is valid at https://ai.google.dev/
+- Verify your SendGrid API key has Mail Send permission
 
 ### Build failing
 - Check GitHub Actions logs
@@ -190,8 +200,8 @@ Most hosting providers auto-enable HTTPS:
 
 After setup, any push to the `main` branch will automatically:
 1. Trigger GitHub Actions workflow
-2. Build the site (if needed)
-3. Deploy to your hosting provider
+2. Deploy the site and `/api/contact` endpoint
+3. Publish the update to your hosting provider
 4. Site updates in ~2-5 minutes
 
 ## Testing Locally

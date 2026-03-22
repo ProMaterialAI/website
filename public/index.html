@@ -68,11 +68,23 @@
         }
 
         .logo-gray {
-            filter: grayscale(1) brightness(0.8) contrast(1.1);
-            transition: all 0.4s ease;
-            opacity: 0.6;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+            cursor: pointer;
+            filter: grayscale(1) brightness(0.85);
         }
-        .logo-gray:hover { filter: grayscale(0) brightness(1); opacity: 1; }
+        .logo-gray:hover {
+            opacity: 1;
+            filter: grayscale(0) brightness(1.2);
+            transform: scale(1.1);
+        }
 
         /* --- 机械图样式 --- */
         .machine-viz-container {
@@ -269,11 +281,11 @@
     </section>
 
     <!-- 3. Section 2 (Why Magnets) -->
-    <section id="focus" class="py-32 bg-white">
+    <section id="focus" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-2 gap-20 items-center">
                 <div class="flex flex-col items-start">
-                    <h2 class="text-5xl md:text-6xl font-bold mb-2 tracking-tight text-slate-900 leading-tight">Why Magnets Matter</h2>
+                    <h2 class="text-4xl font-bold mb-4 tracking-tight text-slate-900 leading-tight">Why Magnets Matter</h2>
                     <div class="inline-magnet-wrap">
                         <div class="small-magnet-core">
                             <div class="m-side s-front"></div><div class="m-side s-back"></div>
@@ -435,22 +447,22 @@
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-4xl font-black mb-16 tracking-tight">Enabling Sustainability Together</h2>
             
-            <div class="flex flex-wrap justify-center items-center gap-12 mb-20">
-                <div class="logo-gray font-black text-sm uppercase">Business Wales</div>
-                <div class="logo-gray font-black text-sm uppercase">Dept for Business & Trade</div>
-                <div class="logo-gray font-black text-sm uppercase">UKRI Innovate UK</div>
-                <div class="logo-gray font-black text-sm uppercase">Funded by UK Government</div>
-                <div class="logo-gray font-black text-sm uppercase">Welsh Government</div>
-                <div class="logo-gray font-black text-sm uppercase">Neath Port Talbot Council</div>
+            <div class="flex flex-wrap justify-center items-center gap-8 mb-16 logo-row-1">
+                <div class="logo-gray"><img src="../assets/BusinessWales.png" alt="Business Wales" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/DBT.png" alt="Dept for Business & Trade" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/innovateuk.png" alt="UKRI Innovate UK" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/fundedbyUK.png" alt="Funded by UK Government" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/WelshGov.png" alt="Welsh Government" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/NPC.png" alt="Neath Port Talbot Council" class="h-10 object-contain"></div>
             </div>
             
-            <div class="flex flex-wrap justify-center items-center gap-12">
-                <div class="logo-gray font-black text-sm uppercase">SFC Capital</div>
-                <div class="logo-gray font-black text-sm uppercase">British Business Bank</div>
-                <div class="logo-gray font-black text-sm uppercase text-[#2dd4bf]">Women TechEU</div>
-                <div class="logo-gray font-black text-sm uppercase">Funded by European Union</div>
-                <div class="logo-gray font-black text-sm uppercase text-orange-400">Carbon13</div>
-                <div class="logo-gray font-black text-sm uppercase">Eagle Labs</div>
+            <div class="flex flex-wrap justify-center items-center gap-8 logo-row-2">
+                <div class="logo-gray"><img src="../assets/SFC.png" alt="SFC Capital" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/BBB.png" alt="British Business Bank" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/womentechEU.png" alt="Women TechEU" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/EU.png" alt="Funded by European Union" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/Carbon13.jpg" alt="Carbon13" class="h-10 object-contain"></div>
+                <div class="logo-gray"><img src="../assets/eagleLabs.webp" alt="Eagle Labs" class="h-10 object-contain"></div>
             </div>
         </div>
     </section>
