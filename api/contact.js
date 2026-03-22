@@ -1,10 +1,12 @@
 import sendgrid from "@sendgrid/mail";
 import {
-  detectEmailProvider,
+  detectEnquiryStorageProvider,
   getEmailApiKey,
   getEnquiryConfig,
   loadLocalEnv,
 } from "../lib/env.js";
+import { sendEnquiryToGoogleAppsScript } from "../lib/google-apps-script.js";
+import { appendEnquiryToGoogleSheet } from "../lib/google-sheets.js";
 
 loadLocalEnv();
 
@@ -69,11 +71,14 @@ export async function contactHandler(req, res) {
     return;
   }
 
+  const { enquirySectionEnabled } = getEnquiryConfig();
+  const provider = detectEnquiryStorageProvider();
+  const apiKey =
+    provider === "brevo" || provider === "sendgrid"
+      ? getEmailApiKey(provider)
+      : "";
   const toEmail = process.env.CONTACT_TO_EMAIL;
   const fromEmail = process.env.CONTACT_FROM_EMAIL;
-  const { enquirySectionEnabled } = getEnquiryConfig();
-  const provider = detectEmailProvider();
-  const apiKey = provider ? getEmailApiKey(provider) : "";
 
   if (!enquirySectionEnabled) {
     sendJson(res, 503, {
@@ -82,38 +87,72 @@ export async function contactHandler(req, res) {
     return;
   }
 
-  if (!apiKey || !toEmail || !fromEmail) {
+  if (!provider) {
     sendJson(res, 500, {
-      error: "Email service is not configured. Add the email environment variables.",
+      error: "Enquiry storage is not configured. Add the backend environment variables.",
     });
     return;
   }
 
   const submittedAt = new Date().toISOString();
   const safeMessage = message.replace(/\r\n/g, "\n");
-  const emailPayload = {
-    toEmail,
-    fromEmail,
+  const enquiryRecord = {
     name,
     email,
+    message: safeMessage,
     submittedAt,
-    safeMessage,
+    source: "Website enquiry form",
+    ipAddress: getClientIp(req),
+    userAgent: `${req.headers["user-agent"] ?? ""}`.trim(),
   };
 
   try {
-    if (provider === "brevo") {
-      await sendWithBrevo(apiKey, emailPayload);
-    } else if (provider === "sendgrid") {
-      await sendWithSendGrid(apiKey, emailPayload);
+    if (provider === "google-apps-script") {
+      await sendEnquiryToGoogleAppsScript(enquiryRecord);
+    } else if (provider === "google-sheets") {
+      await appendEnquiryToGoogleSheet(enquiryRecord);
+    } else if (provider === "brevo" || provider === "sendgrid") {
+      if (!apiKey || !toEmail || !fromEmail) {
+        throw new Error("Email storage is not fully configured.");
+      }
+
+      const emailPayload = {
+        toEmail,
+        fromEmail,
+        name,
+        email,
+        submittedAt,
+        safeMessage,
+      };
+
+      if (provider === "brevo") {
+        await sendWithBrevo(apiKey, emailPayload);
+      } else {
+        await sendWithSendGrid(apiKey, emailPayload);
+      }
     } else {
-      throw new Error("Unsupported email provider configuration.");
+      throw new Error("Unsupported enquiry storage configuration.");
     }
 
     sendJson(res, 200, { ok: true });
   } catch (error) {
-    console.error("Email delivery error:", error);
-    sendJson(res, 502, { error: "Unable to send email right now." });
+    console.error("Enquiry storage error:", error);
+    sendJson(res, 502, { error: "Unable to save your enquiry right now." });
   }
+}
+
+function getClientIp(req) {
+  const forwardedFor = req.headers["x-forwarded-for"];
+
+  if (typeof forwardedFor === "string" && forwardedFor.trim()) {
+    return forwardedFor.split(",")[0].trim();
+  }
+
+  if (Array.isArray(forwardedFor) && forwardedFor.length > 0) {
+    return forwardedFor[0].split(",")[0].trim();
+  }
+
+  return req.socket?.remoteAddress ?? "";
 }
 
 async function sendWithSendGrid(apiKey, payload) {

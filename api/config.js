@@ -16,10 +16,20 @@ export async function configHandler(req, res) {
     return;
   }
 
-  const { emailConfigured, enquirySectionEnabled, provider } = getEnquiryConfig();
+  const {
+    emailConfigured,
+    googleAppsScriptConfigured,
+    googleSheetsConfigured,
+    storageConfigured,
+    enquirySectionEnabled,
+    provider,
+  } = getEnquiryConfig();
 
   sendJson(res, 200, {
     emailConfigured,
+    googleAppsScriptConfigured,
+    googleSheetsConfigured,
+    storageConfigured,
     enquirySectionEnabled,
     provider,
   });

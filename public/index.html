@@ -692,9 +692,9 @@
                     return;
                 }
 
-                const message = config.emailConfigured
+                const message = config.storageConfigured
                     ? 'The enquiry form is currently turned off in configuration.'
-                    : 'The enquiry form is waiting for email environment variables before it can be activated.';
+                    : 'The enquiry form is waiting for backend storage configuration before it can be activated.';
 
                 setEnquiryState(false, message);
             } catch (error) {
