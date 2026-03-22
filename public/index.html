@@ -337,7 +337,7 @@
                     <a href="#impact" class="hover:text-[#2dd4bf] transition">Impact</a>
                 </div>
                 <a href="#diagnostic-center" class="bg-[#2dd4bf] hover:bg-[#10b981] text-black px-6 py-2.5 rounded-full text-xs font-extrabold transition shadow-lg">
-                    Analyze My Process ✨
+                    Book Demo
                 </a>
             </div>
         </div>
@@ -353,7 +353,7 @@
         </p>
         <div class="flex justify-center">
             <a href="#diagnostic-center" class="px-16 py-5 bg-[#2dd4bf] text-black font-extrabold rounded-2xl hover:bg-white transition shadow-2xl scale-110">
-                Analyze My Process ✨
+                Book a Demo
             </a>
         </div>
     </section>
@@ -546,7 +546,7 @@
                         <input required type="email" id="user-email" placeholder="Work Email" class="bg-slate-900 border border-white/5 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-[#2dd4bf]">
                     </div>
                     <textarea required id="ai-input-integrated" rows="4" placeholder="Tell us about your inspection challenge..." class="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-[#2dd4bf] transition"></textarea>
-                    <button type="submit" id="submit-btn-unified" class="w-full py-5 bg-[#2dd4bf] text-black font-extrabold rounded-2xl hover:bg-white transition text-sm uppercase tracking-widest shadow-lg">Analyze My Process ✨</button>
+                    <button type="submit" id="submit-btn-unified" class="w-full py-5 bg-[#2dd4bf] text-black font-extrabold rounded-2xl hover:bg-white transition text-sm uppercase tracking-widest shadow-lg">Book a Demo</button>
                 </form>
                 <p id="enquiry-status" class="hidden mt-6 text-sm text-slate-300"></p>
                 <div id="ai-loading-integrated" class="hidden flex justify-center py-12"><div class="dot-flashing"></div></div>
@@ -635,7 +635,7 @@
             } catch(e) {
                 responseEl.textContent = e.message || "Error processing request.";
                 responseContainer.classList.remove('hidden');
-                btn.innerText = "Analyze My Process ✨";
+                btn.innerText = "Book a Demo";
             } finally {
                 if (btn.dataset.enquiryEnabled !== 'false') {
                     btn.disabled = false;
@@ -657,7 +657,7 @@
             btn.dataset.enquiryEnabled = enabled ? 'true' : 'false';
 
             if (enabled) {
-                btn.innerText = 'Analyze My Process ✨';
+                btn.innerText = 'Book a Demo';
 
                 if (message) {
                     statusEl.textContent = message;
