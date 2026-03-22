@@ -1,6 +1,7 @@
 import sendgrid from "@sendgrid/mail";
 import {
   detectEnquiryStorageProvider,
+  getAllowedEnquiryOrigins,
   getEmailApiKey,
   getEnquiryConfig,
   loadLocalEnv,
@@ -45,6 +46,13 @@ function sendJson(res, status, body) {
 export async function contactHandler(req, res) {
   if (req.method !== "POST") {
     sendJson(res, 405, { error: "Method not allowed." });
+    return;
+  }
+
+  if (!isAllowedEnquiryRequest(req)) {
+    sendJson(res, 403, {
+      error: "This enquiry endpoint only accepts requests from approved origins.",
+    });
     return;
   }
 
@@ -238,4 +246,73 @@ function escapeHtml(value) {
 
 export default async function handler(req, res) {
   return contactHandler(req, res);
+}
+
+function isAllowedEnquiryRequest(req) {
+  const originCandidates = [
+    readSingleHeader(req.headers.origin),
+    extractOriginFromReferer(readSingleHeader(req.headers.referer)),
+  ].filter(Boolean);
+
+  if (originCandidates.length === 0) {
+    return false;
+  }
+
+  const allowedOrigins = new Set([
+    ...getAllowedEnquiryOrigins().map(normalizeOrigin).filter(Boolean),
+    ...getRequestHostOrigins(req),
+  ]);
+
+  return originCandidates.some((origin) =>
+    allowedOrigins.has(normalizeOrigin(origin)),
+  );
+}
+
+function getRequestHostOrigins(req) {
+  const hosts = [
+    readSingleHeader(req.headers["x-forwarded-host"]),
+    readSingleHeader(req.headers.host),
+  ].filter(Boolean);
+
+  const protocol = readSingleHeader(req.headers["x-forwarded-proto"]) || "https";
+
+  return hosts
+    .map((host) => normalizeOrigin(`${protocol}://${host}`))
+    .filter(Boolean);
+}
+
+function extractOriginFromReferer(referer) {
+  if (!referer) {
+    return "";
+  }
+
+  try {
+    return new URL(referer).origin;
+  } catch {
+    return "";
+  }
+}
+
+function normalizeOrigin(value) {
+  if (!value) {
+    return "";
+  }
+
+  try {
+    return new URL(value).origin.toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+function readSingleHeader(value) {
+  if (typeof value === "string") {
+    return value.trim();
+  }
+
+  if (Array.isArray(value) && value.length > 0) {
+    return `${value[0]}`.trim();
+  }
+
+  return "";
 }
