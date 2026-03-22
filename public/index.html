@@ -132,6 +132,72 @@
         .animate-fadeIn {
             animation: fadeIn 0.6s ease-out forwards;
         }
+
+        /* Hotspot Interaction Styles */
+        .hotspot-item {
+            position: absolute;
+            cursor: pointer;
+        }
+
+        .hotspot-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--brand-teal);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .hotspot-item:hover .hotspot-tag {
+            background: rgba(45, 212, 191, 0.2);
+            border-color: var(--brand-teal);
+            transform: scale(1.05);
+        }
+
+        .hotspot-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand-teal);
+            box-shadow: 0 0 12px rgba(45, 212, 191, 0.6);
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(45, 212, 191, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(45, 212, 191, 0.9); }
+        }
+
+        .detail-box {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            border-radius: 1.25rem;
+            padding: 1rem;
+            width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        .hotspot-item:hover .detail-box {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .machine-path {
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1.5;
+            fill: rgba(45, 212, 191, 0.05);
+        }
     </style>
 </head>
 <body>
@@ -217,48 +283,104 @@
         </div>
     </section>
 
-    <!-- 4. Section 3 (All-in-One Quality Solution) -->
+    <!-- 4. All-in-One Quality Solution (交互机器视觉重构) -->
     <section id="solutions" class="py-24 bg-slate-950 text-white">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-4xl font-bold mb-4">All-in-One Quality Solution</h2>
-            <p class="text-slate-500 font-medium italic mb-12 italic">Detect issues in real-time and keep production on track</p>
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">All-in-One Quality Solution</h2>
+            <p class="text-slate-500 font-medium italic mb-20 italic">Detect issues in real-time and keep production on track</p>
             
-            <div class="machine-viz-container mb-24">
-                <svg viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
-                    <path d="M50 550 L950 550 L850 480 L150 480 Z" fill="rgba(45, 212, 191, 0.03)" stroke="rgba(255,255,255,0.05)" />
-                    <path d="M150 550 V100 H550 V550" class="blueprint-strong sketch-anim" />
-                    <path d="M150 100 L200 60 H600 V510 L550 550" class="blueprint-line" />
-                    <rect x="200" y="150" width="300" height="220" rx="2" class="blueprint-teal sketch-anim" />
-                    <circle cx="350" cy="260" r="40" class="blueprint-teal" stroke-dasharray="8 4" />
-                    <text x="350" y="265" fill="var(--brand-teal)" font-size="8" text-anchor="middle" font-family="monospace">AI_VISION_MODULE</text>
-                    <g class="dimension-group">
-                        <line x1="100" y1="550" x2="100" y2="60" class="blueprint-dim" />
-                        <text x="90" y="300" class="dim-text" transform="rotate(-90 90,300)" text-anchor="middle">H: 1850mm</text>
-                        <line x1="130" y1="550" x2="130" y2="150" class="blueprint-dim" />
-                        <text x="120" y="350" class="dim-text" transform="rotate(-90 120,350)" text-anchor="middle">1100mm</text>
+            <div class="machine-viz-container mb-24 relative h-[700px]">
+                <!-- 基于 image_6cbb82.png 的写实机械轮廓 -->
+                <svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                    <g class="machine-path">
+                        <!-- 机柜框架 -->
+                        <path d="M350 200 L750 200 L750 600 L350 600 Z" />
+                        <path d="M350 200 L420 120 L820 120 L750 200" />
+                        <path d="M820 120 L820 520 L750 600" />
+                        <!-- 悬挂显示器支架 -->
+                        <path d="M350 280 L220 280 L220 480" />
+                        <rect x="120" y="260" width="130" height="100" rx="2" /> <!-- 显示器面板 -->
+                        <rect x="110" y="420" width="140" height="15" rx="2" /> <!-- 键盘托 -->
+                        <!-- 下柜门细节 -->
+                        <path d="M350 420 L750 420" />
+                        <path d="M550 420 L550 600" />
+                        <rect x="500" y="460" width="20" height="6" rx="1" />
+                        <rect x="580" y="460" width="20" height="6" rx="1" />
+                        <!-- 底部支脚 -->
+                        <circle cx="380" cy="630" r="12" /><circle cx="720" cy="630" r="12" />
+                        <path d="M380 600 L380 618 M720 600 L720 618" stroke-dasharray="2" />
                     </g>
-                    <path d="M550 550 H850 V280 H550" class="blueprint-strong" />
-                    <path d="M850 280 L900 240 V510 L850 550" class="blueprint-line" />
                 </svg>
+
+                <!-- 1. DETECT (指向检测腔) -->
+                <div class="hotspot-item" style="top: 25%; left: 52%;">
+                    <div class="hotspot-tag"><div class="hotspot-dot"></div>1. DETECT</div>
+                    <div class="detail-box" style="top: 55px; left: -80px;">
+                        <h5 class="text-[#2dd4bf] text-xs font-black uppercase mb-4 tracking-widest border-b border-teal-500/20 pb-2">Hardware Unit</h5>
+                        <!-- 摄像头视觉重现 -->
+                        <div class="w-full aspect-square bg-slate-900 rounded-xl flex items-center justify-center border border-white/10 mb-4 overflow-hidden relative">
+                            <svg width="100" height="100" viewBox="0 0 100 100">
+                                <!-- 摄像头外壳 -->
+                                <rect x="30" y="20" width="40" height="50" rx="4" fill="#1e293b" stroke="#2dd4bf" />
+                                <circle cx="50" cy="45" r="12" fill="#0f172a" stroke="#2dd4bf" stroke-width="2" />
+                                <!-- 蓝色扫描光束 (参考图3) -->
+                                <path d="M50 45 L10 90 L90 90 Z" fill="rgba(59, 130, 246, 0.1)" stroke="rgba(59, 130, 246, 0.4)" stroke-dasharray="2" />
+                                <circle cx="50" cy="45" r="4" fill="#2dd4bf" class="animate-pulse" />
+                            </svg>
+                            <div class="absolute bottom-2 right-3 text-[8px] font-mono text-blue-400 opacity-50 uppercase">Active_Scan</div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-relaxed italic">High-precision industrial optics and multi-spectrum sensors for sub-micron flaw identification.</p>
+                    </div>
+                </div>
+
+                <!-- 2. ANALYSE (指向侧边显示屏) -->
+                <div class="hotspot-item" style="top: 38%; left: 16%;">
+                    <div class="hotspot-tag"><div class="hotspot-dot"></div>2. ANALYSE</div>
+                    <div class="detail-box" style="top: -180px; left: 0;">
+                        <h5 class="text-[#2dd4bf] text-xs font-black uppercase mb-4 tracking-widest border-b border-teal-500/20 pb-2">AI Vision Analysis</h5>
+                        <div class="w-full aspect-video bg-slate-900 rounded-xl p-3 border border-white/10 mb-4 overflow-hidden">
+                             <div class="flex gap-2 h-full items-end">
+                                <div class="w-1/4 bg-teal-500/30 h-1/2 animate-bounce" style="animation-duration: 2s"></div>
+                                <div class="w-1/4 bg-teal-500 h-3/4 animate-bounce" style="animation-duration: 1.5s"></div>
+                                <div class="w-1/4 bg-blue-500 h-2/3 animate-bounce" style="animation-duration: 2.5s"></div>
+                                <div class="w-1/4 bg-teal-500 h-full animate-bounce" style="animation-duration: 1.8s"></div>
+                             </div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-relaxed italic">Proprietary AI engine processing 10,000+ data points per second to categorize magnet performance.</p>
+                    </div>
+                </div>
+
+                <!-- 3. DECISION (指向生产线区域) -->
+                <div class="hotspot-item" style="top: 65%; left: 75%;">
+                    <div class="hotspot-tag"><div class="hotspot-dot"></div>3. DECISION</div>
+                    <div class="detail-box" style="top: -180px; left: -180px;">
+                        <h5 class="text-[#2dd4bf] text-xs font-black uppercase mb-4 tracking-widest border-b border-teal-500/20 pb-2">Traceability Loop</h5>
+                        <!-- 生产线抽象画 -->
+                        <div class="w-full aspect-video bg-slate-900 rounded-xl border border-white/10 mb-4 relative overflow-hidden flex items-center px-6">
+                            <div class="w-full h-1.5 bg-white/10 rounded relative">
+                                <!-- 流动的物料 -->
+                                <div class="absolute -top-1.5 w-full flex justify-around">
+                                    <div class="w-4 h-4 bg-teal-500 rounded shadow-[0_0_15px_#2dd4bf] animate-[move-part_3s_linear_infinite]"></div>
+                                    <div class="w-4 h-4 bg-teal-500 rounded shadow-[0_0_15px_#2dd4bf] animate-[move-part_3s_linear_infinite_1.5s]"></div>
+                                    <div class="w-4 h-4 bg-red-500 rounded animate-[move-reject_3s_linear_infinite_0.5s]"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-relaxed italic">Closed-loop feedback to the production line for autonomous sorting and 100% waste-free manufacturing.</p>
+                        <style>
+                            @keyframes move-part { 0% { transform: translateX(-100px); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(100px); opacity: 0; } }
+                            @keyframes move-reject { 0% { transform: translateX(-100px); opacity: 0; } 50% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(50px) translateX(30px); opacity: 0; } }
+                        </style>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-                <div class="glass-card p-8 rounded-3xl">
-                    <h4 class="text-lg font-bold mb-2">AI Inspection</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed">0.4ms detection catches Sub-Micron Flaws Instantly</p>
-                </div>
-                <div class="glass-card p-8 rounded-3xl border-blue-500/20">
-                    <h4 class="text-lg font-bold mb-2">Diagnostic System</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed">Automated feedback loops to sintering stages.</p>
-                </div>
-                <div class="glass-card p-8 rounded-3xl border-emerald-500/20">
-                    <h4 class="text-lg font-bold mb-2">Magnetic Flux Testing</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed">Guarantee magnet compliance, eliminate recall risk</p>
-                </div>
-                <div class="glass-card p-8 rounded-3xl">
-                    <h4 class="text-lg font-bold mb-2">Magnet Field Measurement</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed">Live Tolerance Precision for Zero-Waste Magnets</p>
-                </div>
+            <!-- 下方卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                <div class="glass-card p-8 rounded-3xl"><h4 class="text-lg font-bold mb-2">AI Inspection</h4><p class="text-slate-500 text-xs">0.4ms detection catches Sub-Micron Flaws Instantly</p></div>
+                <div class="glass-card p-8 rounded-3xl border-blue-500/20"><h4 class="text-lg font-bold mb-2">Diagnostic System</h4><p class="text-slate-500 text-xs">Automated feedback loops to sintering stages.</p></div>
+                <div class="glass-card p-8 rounded-3xl border-emerald-500/20"><h4 class="text-lg font-bold mb-2">Magnetic Flux Testing</h4><p class="text-slate-500 text-xs">Guarantee magnet compliance, eliminate recall risk</p></div>
+                <div class="glass-card p-8 rounded-3xl"><h4 class="text-lg font-bold mb-2">Magnet Field Measurement</h4><p class="text-slate-500 text-xs">Live Tolerance Precision for Zero-Waste Magnets</p></div>
             </div>
         </div>
     </section>
