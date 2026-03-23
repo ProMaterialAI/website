@@ -254,6 +254,7 @@
             /* 核心吸引点：跳动动画 */
             animation: hotspot-jump 2s ease-in-out infinite;
             backdrop-filter: blur(4px);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .hotspot-dot {
@@ -276,15 +277,20 @@
             animation: hotspot-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
         }
 
-        .hotspot-tag:hover {
+        .hotspot-tag:hover,
+        .hotspot-tag:focus-visible,
+        .hotspot-item.is-active .hotspot-tag {
             background: var(--brand-teal);
             color: var(--brand-dark);
             box-shadow: 0 0 30px var(--brand-teal);
             transform: scale(1.1);
             animation-play-state: paused;
+            outline: none;
         }
 
-        .hotspot-tag:hover .hotspot-dot { background: var(--brand-dark); }
+        .hotspot-tag:hover .hotspot-dot,
+        .hotspot-tag:focus-visible .hotspot-dot,
+        .hotspot-item.is-active .hotspot-dot { background: var(--brand-dark); }
 
         @keyframes hotspot-jump {
             0%, 100% { transform: translateY(0); }
@@ -308,7 +314,9 @@
             backdrop-filter: blur(12px);
         }
 
-        .hotspot-item:hover .detail-box {
+        .hotspot-item:hover .detail-box,
+        .hotspot-item:focus-within .detail-box,
+        .hotspot-item.is-active .detail-box {
             opacity: 1;
             pointer-events: auto;
         }
@@ -749,6 +757,46 @@
 
         populateTrack('logo-track-1', logosGroup1);
         populateTrack('logo-track-2', logosGroup2);
+
+        const hotspotItems = Array.from(document.querySelectorAll('.hotspot-item'));
+
+        function setHotspotState(targetItem, isActive) {
+            hotspotItems.forEach((item) => {
+                const tag = item.querySelector('.hotspot-tag');
+                const active = item === targetItem && isActive;
+                item.classList.toggle('is-active', active);
+                if (tag) {
+                    tag.setAttribute('aria-expanded', active ? 'true' : 'false');
+                }
+            });
+        }
+
+        hotspotItems.forEach((item) => {
+            const tag = item.querySelector('.hotspot-tag');
+            if (!tag) return;
+
+            tag.setAttribute('role', 'button');
+            tag.setAttribute('tabindex', '0');
+            tag.setAttribute('aria-expanded', 'false');
+
+            tag.addEventListener('click', (event) => {
+                event.preventDefault();
+                const willActivate = !item.classList.contains('is-active');
+                setHotspotState(item, willActivate);
+            });
+
+            tag.addEventListener('keydown', (event) => {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+                const willActivate = !item.classList.contains('is-active');
+                setHotspotState(item, willActivate);
+            });
+        });
+
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('.hotspot-item')) return;
+            setHotspotState(null, false);
+        });
 
         const cases = [
             { title: "AI SURFACE INSPECTION", subtitle: "Surface Inspection Intelligence", metrics: [{l:"target detection accuracy", v:"Up to 99%"}, {l:"/ hour inspections at line speed", v:"10,000+"}] },
