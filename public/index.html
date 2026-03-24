@@ -309,8 +309,10 @@
             padding: 1rem;
             width: 200px;
             opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
             backdrop-filter: blur(12px);
         }
 
@@ -318,6 +320,8 @@
         .hotspot-item:focus-within .detail-box,
         .hotspot-item.is-active .detail-box {
             opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
             pointer-events: auto;
         }
 
@@ -434,7 +438,7 @@
                 </svg>
 
                 <!-- 1. DETECT (指向检测腔) -->
-                <div class="hotspot-item" style="top: 25%; left: 52%;">
+                <div class="hotspot-item" data-hotspot-index="0" style="top: 25%; left: 52%;">
                     <div class="hotspot-tag"><div class="hotspot-dot"></div>1. DETECT</div>
                     <div class="detail-box" style="top: 55px; left: -80px;">
                         <h5 class="text-[#2dd4bf] text-xs font-black uppercase mb-4 tracking-widest border-b border-teal-500/20 pb-2">Hardware Unit</h5>
@@ -455,7 +459,7 @@
                 </div>
 
                 <!-- 2. ANALYSE (指向侧边显示屏) -->
-                <div class="hotspot-item" style="top: 38%; left: 16%;">
+                <div class="hotspot-item" data-hotspot-index="1" style="top: 38%; left: 16%;">
                     <div class="hotspot-tag"><div class="hotspot-dot"></div>2. ANALYSE</div>
                     <div class="detail-box" style="top: -180px; left: 0;">
                         <h5 class="text-[#2dd4bf] text-xs font-black uppercase mb-4 tracking-widest border-b border-teal-500/20 pb-2">AI Vision Analysis</h5>
@@ -472,7 +476,7 @@
                 </div>
 
                 <!-- 3. DECISION (指向生产线区域) -->
-                <div class="hotspot-item" style="top: 65%; left: 75%;">
+                <div class="hotspot-item" data-hotspot-index="2" style="top: 65%; left: 75%;">
                     <div class="hotspot-tag"><div class="hotspot-dot"></div>3. DECISION</div>
                     <div class="detail-box" style="top: -180px; left: -180px;">
                         <h5 class="text-[#2dd4bf] text-xs font-black uppercase mb-4 tracking-widest border-b border-teal-500/20 pb-2">Traceability Loop</h5>
@@ -816,7 +820,80 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">${c.metrics.map(m => `<div><p class="text-5xl font-black text-slate-900 mb-2">${m.v}</p><p class="text-[10px] uppercase font-black text-slate-400 tracking-[0.2em]">${m.l}</p></div>`).join('')}</div>
                 </div>`;
         }
+
+        function setupHotspotAutoplay() {
+            const container = document.querySelector('.machine-viz-container');
+            if (!container || hotspotItems.length === 0) return;
+
+            const sequence = [0, 1, 2, null];
+            const activeDurationMs = 1000;
+            const resetDurationMs = 1000;
+            let sequenceIndex = 0;
+            let autoplayTimer = null;
+            let resumeTimer = null;
+            let paused = false;
+
+            function setActiveHotspot(activeIndex) {
+                const nextItem = activeIndex === null ? null : hotspotItems[activeIndex];
+                setHotspotState(nextItem, activeIndex !== null);
+            }
+
+            function stepAutoplay() {
+                if (paused) return;
+
+                const activeIndex = sequence[sequenceIndex];
+                setActiveHotspot(activeIndex);
+
+                const wait = activeIndex === null ? resetDurationMs : activeDurationMs;
+                autoplayTimer = window.setTimeout(() => {
+                    sequenceIndex = (sequenceIndex + 1) % sequence.length;
+                    stepAutoplay();
+                }, wait);
+            }
+
+            function stopAutoplay() {
+                paused = true;
+                window.clearTimeout(autoplayTimer);
+                window.clearTimeout(resumeTimer);
+            }
+
+            function startSequenceFromFirst(delay = 0) {
+                window.clearTimeout(resumeTimer);
+                resumeTimer = window.setTimeout(() => {
+                    paused = false;
+                    sequenceIndex = 0;
+                    stepAutoplay();
+                }, delay);
+            }
+
+            hotspotItems.forEach((hotspot, index) => {
+                hotspot.addEventListener('mouseenter', () => {
+                    stopAutoplay();
+                    setActiveHotspot(index);
+                });
+
+                hotspot.addEventListener('mouseleave', () => {
+                    startSequenceFromFirst(200);
+                });
+            });
+
+            container.addEventListener('mouseenter', () => {
+                stopAutoplay();
+                setActiveHotspot(0);
+                startSequenceFromFirst(0);
+            });
+            container.addEventListener('mouseleave', () => {
+                const hoveringHotspot = hotspotItems.some((hotspot) => hotspot.matches(':hover'));
+                if (!hoveringHotspot) {
+                    startSequenceFromFirst(200);
+                }
+            });
+
+            stepAutoplay();
+        }
+
         switchCase(0);
+        setupHotspotAutoplay();
         const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('opacity-100', 'translate-y-0'); }); }, { threshold: 0.1 });
         document.querySelectorAll('section').forEach(s => { s.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10'); observer.observe(s); });
     </script>
