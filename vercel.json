@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/report",
+      "source": "/usecase",
       "destination": "/report/index.html"
     }
   ]
