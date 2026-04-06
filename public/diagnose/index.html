@@ -159,6 +159,99 @@
             border-bottom: none;
             padding-bottom: 0;
         }
+        .process-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+        }
+        .process-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.55rem 0.85rem;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+        .performance-dashboard {
+            background: linear-gradient(180deg, #202334 0%, #171a27 100%);
+            color: #f8fafc;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+        .metric-strip {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(148, 163, 184, 0.14);
+        }
+        .dashboard-panel {
+            background: rgba(15, 23, 42, 0.22);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+        }
+        .pass-donut {
+            width: min(21rem, 72vw);
+            height: min(21rem, 72vw);
+            border-radius: 9999px;
+            background: conic-gradient(#23408f 0deg 169deg, #d08a3d 169deg 360deg);
+            position: relative;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+        }
+        .quality-donut {
+            width: min(20rem, 72vw);
+            height: min(20rem, 72vw);
+            border-radius: 9999px;
+            background: conic-gradient(
+                #274491 0deg 24deg,
+                #3b82f6 24deg 62deg,
+                #60a5fa 62deg 103deg,
+                #c7d7f4 103deg 145deg,
+                #2f8a60 145deg 186deg,
+                #49ba78 186deg 235deg,
+                #75d39a 235deg 274deg,
+                #9ee3c8 274deg 300deg,
+                #d28a3c 300deg 332deg,
+                #f0a202 332deg 360deg
+            );
+            position: relative;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+        }
+        .pass-donut::after,
+        .quality-donut::after {
+            content: '';
+            position: absolute;
+            inset: 28%;
+            border-radius: 9999px;
+            background: #222532;
+        }
+        .problem-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.7rem 0.85rem;
+            border-radius: 0.9rem;
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+        .problem-button:hover,
+        .problem-button.active {
+            border-color: rgba(45, 212, 191, 0.75);
+            background: rgba(45, 212, 191, 0.12);
+            color: #ffffff;
+        }
+        .problem-detail {
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+        }
     </style>
 </head>
 <body class="text-slate-800 antialiased">
@@ -274,6 +367,22 @@
                     </div>
                 </div>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div class="process-card">
+                    <p class="text-[10px] font-black text-blue-500 uppercase tracking-[0.25em] mb-3">Machinery Process</p>
+                    <h3 class="text-lg font-black text-slate-900 mb-4">Process stages under inspection</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="process-chip"><span class="w-2 h-2 rounded-full bg-[#2dd4bf]"></span>Cutting</span>
+                        <span class="process-chip"><span class="w-2 h-2 rounded-full bg-[#3b82f6]"></span>Coating</span>
+                        <span class="process-chip"><span class="w-2 h-2 rounded-full bg-slate-500"></span>Grinding</span>
+                    </div>
+                </div>
+                <div class="process-card">
+                    <p class="text-[10px] font-black text-blue-500 uppercase tracking-[0.25em] mb-3">Operation Process</p>
+                    <h3 class="text-lg font-black text-slate-900 mb-4">Operator review and closed-loop actions</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Capture, inspect, diagnose, and route feedback back to the manufacturing process for corrective action.</p>
+                </div>
+            </div>
         </section>
 
         <!-- 2. Performance Statistics (Full Width) -->
@@ -282,73 +391,89 @@
                 <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">02. Performance Statistics</h2>
                 <div class="h-[1px] flex-grow bg-slate-200"></div>
             </div>
-            <div class="card p-8">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-                    <div class="max-w-md">
-                        <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Recall & Precision Validation</h4>
-                        <p class="text-xs text-slate-500 mt-1">Cross-referencing algorithmic output with manual annotation ground truth.</p>
-                    </div>
-                    <div class="flex p-1.5 bg-slate-100 rounded-2xl border border-slate-200 shadow-inner">
-                        <button id="cl95" class="btn-toggle active-cl" onclick="switchCL(95)">95% Confidence</button>
-                        <button id="cl99" class="btn-toggle inactive-cl" onclick="switchCL(99)">99% Confidence</button>
+            <div class="card performance-dashboard p-0 border-none overflow-hidden">
+                <div class="p-6 border-b border-white/10">
+                    <div class="flex flex-col lg:flex-row lg:items-center gap-6">
+                        <div class="lg:w-56">
+                            <p class="text-3xl font-black text-blue-400 leading-none">57%</p>
+                            <p class="text-sm text-slate-300 mt-1">Detected 57</p>
+                        </div>
+                        <div class="h-3 bg-white/10 rounded-full overflow-hidden flex-1">
+                            <div class="h-full w-[57%] bg-gradient-to-r from-blue-500 to-[#2dd4bf]"></div>
+                        </div>
+                        <button class="px-10 py-4 bg-blue-600 text-white rounded-sm font-black shadow-lg shadow-blue-950/40">Cancel</button>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr id="performanceHeader" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100">
-                                <!-- JS Inject -->
-                            </tr>
-                        </thead>
-                        <tbody id="performanceTable" class="divide-y divide-slate-50 text-sm">
-                            <!-- JS Inject -->
-                        </tbody>
-                    </table>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 metric-strip px-6 py-5 text-center">
+                    <div>
+                        <p class="text-3xl font-black">57</p>
+                        <p class="text-xs text-slate-400">Total</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black">47%</p>
+                        <p class="text-xs text-slate-400">Pass rate</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black">27</p>
+                        <p class="text-xs text-slate-400">Pass number</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black">30</p>
+                        <p class="text-xs text-slate-400">Failed number</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
+                    <div class="dashboard-panel rounded-2xl p-6">
+                        <h3 class="text-lg font-black mb-8">Pass rate</h3>
+                        <div class="flex justify-center">
+                            <div class="pass-donut"></div>
+                        </div>
+                        <div class="flex justify-between text-sm font-black text-slate-200 mt-8">
+                            <span>Pass <span class="text-blue-400">27</span></span>
+                            <span>Fail <span class="text-blue-400">30</span></span>
+                        </div>
+                    </div>
+                    <div class="dashboard-panel rounded-2xl p-6">
+                        <h3 class="text-lg font-black mb-6">Quality problem distribution</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_220px] gap-8 items-center">
+                            <div class="flex justify-center">
+                                <div class="quality-donut"></div>
+                            </div>
+                            <div class="space-y-3">
+                                <button class="problem-button active" data-problem="crack" onclick="selectProblem('crack')"><span>Crack</span><span class="text-blue-400">4</span></button>
+                                <button class="problem-button" data-problem="scratch" onclick="selectProblem('scratch')"><span>Scratch</span><span class="text-blue-400">4</span></button>
+                                <button class="problem-button" data-problem="surface" onclick="selectProblem('surface')"><span>Surface corrosion</span><span class="text-blue-400">3</span></button>
+                                <button class="problem-button" data-problem="chipping" onclick="selectProblem('chipping')"><span>Chipping</span><span class="text-blue-400">3</span></button>
+                                <button class="problem-button" data-problem="bubble" onclick="selectProblem('bubble')"><span>Sand hole / Bubble</span><span class="text-blue-400">2</span></button>
+                            </div>
+                        </div>
+                        <div class="problem-detail rounded-2xl p-6 mt-6">
+                            <div class="flex items-center justify-between gap-4 mb-4">
+                                <h4 id="problemTitle" class="text-2xl font-black">Crack 4</h4>
+                                <span id="problemShare" class="text-sm font-black text-blue-400">Proportion 13%</span>
+                            </div>
+                            <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                                <div>
+                                    <span class="inline-flex px-3 py-1 rounded-lg bg-red-500 text-white font-black text-xs mb-2">Reason</span>
+                                    <p id="problemReason">The product exhibits surface cracking with stress concentration near the processed edge.</p>
+                                </div>
+                                <div>
+                                    <span class="inline-flex px-3 py-1 rounded-lg bg-[#2dd4bf] text-slate-950 font-black text-xs mb-2">Diagnose</span>
+                                    <p id="problemDiagnosis">Review cutting force, wheel speed, and local handling pressure before the next production run.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. Case Gallery -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase underline decoration-blue-500 decoration-4 underline-offset-4">03. Visual Gallery</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <div class="card group cursor-pointer" onclick="openModal('bubble')">
-                <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
-                    <span class="text-[11px] font-black uppercase tracking-wider">Bubble</span>
-                    <span class="w-4 h-4 rounded bg-blue-600 flex items-center justify-center text-[10px] text-white">+</span>
-                </div>
-                <div class="h-32 bg-slate-100 flex items-center justify-center text-[10px] text-slate-300 font-mono">image_dd1042.jpg</div>
-            </div>
-            <div class="card group cursor-pointer" onclick="openModal('corner')">
-                <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
-                    <span class="text-[11px] font-black uppercase tracking-wider">CornerBreak</span>
-                    <span class="w-4 h-4 rounded bg-blue-600 flex items-center justify-center text-[10px] text-white">+</span>
-                </div>
-                <div class="h-32 bg-slate-100 flex items-center justify-center text-[10px] text-slate-300 font-mono">image_dd1062.jpg</div>
-            </div>
-            <div class="card group cursor-pointer" onclick="openModal('scratches')">
-                <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
-                    <span class="text-[11px] font-black uppercase tracking-wider">Scratches</span>
-                    <span class="w-4 h-4 rounded bg-blue-600 flex items-center justify-center text-[10px] text-white">+</span>
-                </div>
-                <div class="h-32 bg-slate-100 flex items-center justify-center text-[10px] text-slate-300 font-mono">image_dd1080.jpg</div>
-            </div>
-            <div class="card group cursor-pointer" onclick="openModal('chipping')">
-                <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
-                    <span class="text-[11px] font-black uppercase tracking-wider">Chipping</span>
-                    <span class="w-4 h-4 rounded bg-blue-600 flex items-center justify-center text-[10px] text-white">+</span>
-                </div>
-                <div class="h-32 bg-slate-100 flex items-center justify-center text-[10px] text-slate-300 font-mono">image_dd10a0.jpg</div>
-            </div>
-        </div>
-
         <!-- 4. Inspection Decision Workflow (Enhanced Visual) -->
         <section class="mb-10">
             <div class="flex items-center gap-4 mb-6">
-                <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">04. Decision Workflow</h2>
+                <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">03. Decision Workflow</h2>
                 <div class="h-[1px] flex-grow bg-slate-200"></div>
             </div>
             <div class="card p-12 bg-white relative overflow-hidden">
@@ -375,7 +500,7 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                         </div>
                         <p class="text-xs font-black uppercase tracking-tight text-blue-800">Inference</p>
-                        <p class="text-[9px] text-blue-500/70 mt-1">Score: 0.0 - 1.0</p>
+                        <p class="text-[9px] text-blue-500/70 mt-1">Go / No Go</p>
                     </div>
 
                     <div class="flex flex-col items-center">
@@ -383,33 +508,20 @@
                             <span class="text-xs font-black uppercase tracking-widest">CL?</span>
                         </div>
                         <div class="h-12 w-0.5 bg-slate-100 hidden md:block"></div>
-                        <p class="text-[10px] font-black text-slate-400 mt-2 uppercase">Decision Logic</p>
+                        <p class="text-[10px] font-black text-slate-400 mt-2 uppercase">Go / No Go</p>
                     </div>
 
-                    <div class="flex flex-col gap-6 w-48">
-                        <div class="flex items-center p-4 bg-emerald-50 border border-emerald-100 rounded-2xl group hover:shadow-md transition-all">
-                            <div class="mr-4 text-emerald-600 bg-white p-2 rounded-lg shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black text-emerald-700 uppercase">Auto Action</p>
-                                <p class="text-[9px] text-emerald-600/70 leading-tight">If Confidence ≥ Threshold</p>
-                            </div>
+                    <div class="flow-node border-teal-400 bg-teal-50/60 group">
+                        <div class="mb-2 text-teal-600 bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v6h6M20 20v-6h-6M20 9A8 8 0 006.7 5.1L4 10M4 15a8 8 0 0013.3 3.9L20 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                         </div>
-                        <div class="flex items-center p-4 bg-amber-50 border border-amber-100 rounded-2xl group hover:shadow-md transition-all">
-                            <div class="mr-4 text-amber-600 bg-white p-2 rounded-lg shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black text-amber-700 uppercase tracking-tighter">Manual Review</p>
-                                <p class="text-[9px] text-amber-600/70 leading-tight">Recall Protection (If < Threshold)</p>
-                            </div>
-                        </div>
+                        <p class="text-xs font-black uppercase tracking-tight text-teal-800">Feedback Loop</p>
+                        <p class="text-[9px] text-teal-700/70 mt-1">to Manufacturing Process</p>
                     </div>
                 </div>
             </div>
             <div class="mt-4 px-8 py-4 bg-blue-900/5 rounded-2xl text-[11px] text-slate-500 leading-relaxed text-center">
-                * This dual-track workflow ensures <strong>Zero Escape</strong> for critical defects by redirecting low-confidence samples to human experts.
+                * Inspection results route Go / No Go decisions and diagnostic feedback back into the manufacturing process.
             </div>
         </section>
 
@@ -461,60 +573,51 @@
             chipping: { title: "Chipping Detection", id: "image_dd10a0.jpg", desc: "Edge-based model monitors for structural chips. Small-scale chipping is flagged with high precision by identifying irregular pixel dropouts at boundaries." }
         };
 
-        const performanceData = {
-            95: [
-                { type: "Bubble", totalNg: "20", escape: "0", recall: "100.0%" },
-                { type: "CornerBreak", totalNg: "20", escape: "0", recall: "100.0%" },
-                { type: "Chipping", totalNg: "20", escape: "0", recall: "100.0%" },
-                { type: "Scratches", totalNg: "20", escape: "1", recall: "95.0%" },
-                { type: "Oxide/Crack", totalNg: "20", escape: "0", recall: "100.0%" }
-            ],
-            99: [
-                { type: "Bubble", escape: "0", recall: "100.0%" },
-                { type: "CornerBreak", escape: "1", recall: "95.0%" },
-                { type: "Chipping", escape: "1", recall: "95.0%" },
-                { type: "Scratches", escape: "2", recall: "90.0%" },
-                { type: "Oxide/Crack", escape: "0", recall: "100.0%" }
-            ]
+        const problemData = {
+            crack: {
+                title: "Crack 4",
+                share: "Proportion 13%",
+                reason: "Cracks usually appear when stress accumulates during cutting or post-process handling.",
+                diagnosis: "Review cutting force, wheel speed, and local handling pressure before the next production run."
+            },
+            scratch: {
+                title: "Scratch 4",
+                share: "Proportion 13%",
+                reason: "Directional marks indicate surface contact or abrasive friction during transfer and grinding.",
+                diagnosis: "Check fixture alignment, conveyor contact points, and grinding surface cleanliness."
+            },
+            surface: {
+                title: "Surface corrosion 3",
+                share: "Proportion 10%",
+                reason: "Surface corrosion can come from moisture exposure, residue, or coating inconsistency.",
+                diagnosis: "Inspect drying conditions, coating coverage, and environmental exposure between stations."
+            },
+            chipping: {
+                title: "Chipping 3",
+                share: "Proportion 10%",
+                reason: "Edge chipping often indicates brittle impact, clamp pressure, or overly aggressive material removal.",
+                diagnosis: "Review clamping force, edge protection, and feed rate at cutting and grinding steps."
+            },
+            bubble: {
+                title: "Sand hole / Bubble 2",
+                share: "Proportion 7%",
+                reason: "Bubbles can indicate coating voids, trapped contamination, or inconsistent surface preparation.",
+                diagnosis: "Check coating viscosity, surface cleaning, and curing stability for the affected batch."
+            }
         };
 
-        function switchCL(cl) {
-            document.getElementById('cl95').className = `btn-toggle ${cl === 95 ? 'active-cl' : 'inactive-cl'}`;
-            document.getElementById('cl99').className = `btn-toggle ${cl === 99 ? 'active-cl' : 'inactive-cl'}`;
+        function selectProblem(key) {
+            const problem = problemData[key];
+            if (!problem) return;
 
-            const header = document.getElementById('performanceHeader');
-            const table = document.getElementById('performanceTable');
+            document.querySelectorAll('.problem-button').forEach((button) => {
+                button.classList.toggle('active', button.dataset.problem === key);
+            });
 
-            if (cl === 95) {
-                header.innerHTML = `
-                    <th class="pb-4">Defect Type</th>
-                    <th class="pb-4 text-center">Total NG</th>
-                    <th class="pb-4 text-center">Escape Case</th>
-                    <th class="pb-4 text-right">Recall Rate</th>
-                `;
-                table.innerHTML = performanceData[cl].map(row => `
-                    <tr class="hover:bg-slate-50/50 transition-colors group">
-                        <td class="py-4 font-bold text-slate-800 text-sm group-hover:text-blue-600 transition-colors">${row.type}</td>
-                        <td class="py-4 text-center font-black mono text-base text-slate-800">${row.totalNg}</td>
-                        <td class="py-4 text-center font-bold mono ${row.escape === '0' ? 'text-slate-800' : 'text-red-500'}">${row.escape}</td>
-                        <td class="py-4 text-right font-black mono text-base text-slate-900">${row.recall}</td>
-                    </tr>
-                `).join('');
-                return;
-            }
-
-            header.innerHTML = `
-                <th class="pb-4">Defect Type</th>
-                <th class="pb-4 text-center">Escape Case</th>
-                <th class="pb-4 text-right">Correct Recall</th>
-            `;
-            table.innerHTML = performanceData[cl].map(row => `
-                <tr class="hover:bg-slate-50/50 transition-colors group">
-                    <td class="py-4 font-bold text-slate-800 text-sm group-hover:text-blue-600 transition-colors">${row.type}</td>
-                    <td class="py-4 text-center font-bold mono ${row.escape === '0' ? 'text-slate-800' : 'text-red-500'}">${row.escape}</td>
-                    <td class="py-4 text-right font-black mono text-base text-slate-900">${row.recall}</td>
-                </tr>
-            `).join('');
+            document.getElementById('problemTitle').innerText = problem.title;
+            document.getElementById('problemShare').innerText = problem.share;
+            document.getElementById('problemReason').innerText = problem.reason;
+            document.getElementById('problemDiagnosis').innerText = problem.diagnosis;
         }
 
         function openModal(key) {
@@ -531,7 +634,7 @@
             document.body.style.overflow = 'auto';
         }
 
-        window.onload = () => switchCL(95);
+        window.onload = () => selectProblem('crack');
     </script>
 
     <footer class="text-center py-10 text-slate-400 text-[10px] uppercase tracking-[0.4em] font-black opacity-50">
