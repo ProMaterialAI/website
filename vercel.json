@@ -2,8 +2,8 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/usecase",
-      "destination": "/report/index.html"
+      "source": "/inspection",
+      "destination": "/inspection/index.html"
     }
   ]
 }
