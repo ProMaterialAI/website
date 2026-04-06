@@ -57,7 +57,7 @@ server.listen(port, host, () => {
 
 function serveStatic(pathname, res) {
   const normalizedPath = normalize(pathname === "/" ? "/index.html" : pathname).replace(/^(\.\.[/\\])+/, "");
-  const requestedPath = join(publicDir, normalizedPath);
+  let requestedPath = join(publicDir, normalizedPath);
 
   if (!requestedPath.startsWith(publicDir)) {
     res.writeHead(403);
@@ -66,6 +66,19 @@ function serveStatic(pathname, res) {
   }
 
   let filePath = requestedPath;
+
+  if (!existsSync(filePath)) {
+    if (!extname(normalizedPath)) {
+      const htmlPath = `${requestedPath}.html`;
+      const indexPath = join(requestedPath, "index.html");
+
+      if (existsSync(htmlPath)) {
+        filePath = htmlPath;
+      } else if (existsSync(indexPath)) {
+        filePath = indexPath;
+      }
+    }
+  }
 
   if (!existsSync(filePath)) {
     const publicFallback = join(rootDir, normalizedPath.replace(/^[/\\]+/, ""));
