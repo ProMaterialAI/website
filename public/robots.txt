@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /ashare/
+Disallow: /scheduler/
+
+Sitemap: https://www.promaterial.ai/sitemap.xml
