@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>制造业 KPI 管理报告 Demo</title>
+<style>
+:root{
+  --bg:#f7f8fa;--panel:#fff;--text:#222b35;--muted:#667085;--line:#e6e9ee;
+  --blue:#3973b7;--blue2:#90bdd8;--orange:#d9a05d;--red:#c78080;--teal:#86c1c0;
+  --dark:#25313e;--goal:#7a7f87;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}
+.header{
+  height:66px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;
+  justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10
+}
+.brand{display:flex;gap:13px;align-items:center}
+.logo{width:34px;height:34px;border-radius:7px;background:var(--dark);color:#fff;display:grid;place-items:center;font-weight:750}
+.brand h1{font-size:18px;margin:0}
+.brand p{font-size:12px;color:var(--muted);margin:3px 0 0}
+.badge{font-size:11px;border:1px solid var(--line);padding:5px 8px;border-radius:999px;color:var(--muted)}
+.main{max-width:1580px;margin:0 auto;padding:22px 30px 38px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow:auto}
+.tab{
+  border:0;background:transparent;padding:12px 18px;cursor:pointer;font-size:14px;color:#697586;
+  border-bottom:3px solid transparent;white-space:nowrap
+}
+.tab.active{color:var(--text);font-weight:700;border-bottom-color:var(--blue)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+.toolbar .period{color:var(--muted);font-size:12px}
+.toolbar select,.toolbar button{
+  border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 10px;color:#475467;font:inherit
+}
+.kpi-layout{display:grid;grid-template-columns:minmax(290px,360px) minmax(0,1fr);gap:18px;align-items:stretch}
+.info-panel,.chart-panel{background:#fff;border:1px solid var(--line);border-radius:8px}
+.info-panel{padding:24px 22px;min-height:650px}
+.kpi-no{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px}
+.info-panel h2{font-size:23px;line-height:1.28;margin:0 0 18px;letter-spacing:-.2px}
+.target-line{font-size:14px;color:#475467;margin-bottom:16px}
+.target-line b{font-size:25px;color:var(--blue);margin-left:6px}
+.result-box{border-left:4px solid var(--red);background:#fbf7f7;padding:13px 14px;margin-bottom:20px}
+.result-box.good{border-color:#4a9667;background:#f4faf6}
+.result-box.warning{border-color:#d2a04e;background:#fffaf0}
+.result-box label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.result-main{font-size:23px;font-weight:760}
+.result-sub{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.55}
+.block{margin-top:22px}
+.block h3{font-size:14px;margin:0 0 8px}
+.block p{font-size:12px;line-height:1.65;color:#4f5d6c;margin:0}
+.formula{font-size:12px;line-height:1.7;color:#4f5d6c;padding:10px 11px;background:#f7f9fb;border:1px solid #edf0f3;border-radius:6px}
+.watch-list{margin:0;padding-left:18px;color:#4f5d6c;font-size:12px;line-height:1.8}
+.deep-title{font-size:13px;font-weight:700;margin-bottom:9px}
+.deep-buttons{display:flex;flex-wrap:wrap;gap:7px}
+.deep-buttons button{
+  border:1px solid #cfd6df;background:#fff;color:#4a5868;border-radius:5px;padding:7px 9px;cursor:pointer;font-size:12px
+}
+.deep-buttons button:hover{background:#f5f8fb;border-color:#9fb2c7}
+.chart-panel{padding:18px 18px 14px;min-height:650px}
+.chart-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:8px}
+.chart-head h3{font-size:14px;margin:0}
+.chart-head p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:11px;color:#5f6b7a;justify-content:flex-end}
+.legend span{white-space:nowrap}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
+.chart-wrap{height:550px;position:relative}
+canvas{width:100%;height:100%}
+.chart-note{font-size:11px;color:var(--muted);text-align:right;margin-top:6px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(20,28,38,.30);z-index:30;padding:5vh 6vw}
+.modal{background:#fff;max-width:980px;margin:0 auto;border-radius:9px;box-shadow:0 18px 60px rgba(0,0,0,.18);max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:20px 22px;border-bottom:1px solid var(--line)}
+.modal-head h3{margin:0;font-size:18px}
+.modal-head p{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.close{border:1px solid var(--line);background:white;border-radius:6px;width:34px;height:34px;font-size:20px;cursor:pointer}
+.modal-body{padding:20px 22px}
+.summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.summary-card{border:1px solid var(--line);border-radius:7px;padding:11px}
+.summary-card label{font-size:11px;color:var(--muted);display:block}
+.summary-card b{font-size:20px;display:block;margin-top:5px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;color:var(--muted);background:#fafbfc;border-bottom:1px solid var(--line);padding:10px}
+td{font-size:12px;border-bottom:1px solid #edf0f2;padding:11px 10px}
+.barcell{width:250px}
+.mini-bar{height:7px;background:#eef1f4;border-radius:999px;overflow:hidden}
+.mini-bar div{height:100%;background:#7c91a8}
+.rank{font-weight:750;color:#5f6b7a}
+@media(max-width:980px){
+  .kpi-layout{grid-template-columns:1fr}
+  .info-panel{min-height:auto}
+  .chart-panel{min-height:550px}
+  .chart-wrap{height:450px}
+}
+@media(max-width:620px){
+  .main{padding:16px}.header{padding:0 16px}.brand p{display:none}
+  .summary-row{grid-template-columns:1fr}.barcell{width:auto}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="brand">
+    <div class="logo">MI</div>
+    <div><h1>制造业 KPI 管理报告</h1><p>公司级指标总览与分层下钻演示</p></div>
+  </div>
+  <span class="badge">演示数据</span>
+</header>
+
+<main class="main">
+  <nav class="tabs" id="tabs"></nav>
+  <div class="toolbar">
+    <div class="period">报告周期：2026 年第 1–48 周</div>
+    <div>
+      <select><option>全公司</option><option>华东区域</option><option>华南区域</option><option>海外区域</option></select>
+      <select><option>全部工厂</option><option>一号工厂</option><option>二号工厂</option></select>
+      <button onclick="window.print()">导出报告</button>
+    </div>
+  </div>
+
+  <section class="kpi-layout">
+    <aside class="info-panel">
+      <div class="kpi-no" id="kpiNo"></div>
+      <h2 id="kpiTitle"></h2>
+      <div class="target-line">管理目标 <b id="targetValue"></b></div>
+      <div class="result-box" id="resultBox">
+        <label>当前结果</label>
+        <div class="result-main" id="currentValue"></div>
+        <div class="result-sub" id="currentSub"></div>
+      </div>
+
+      <div class="block">
+        <h3>定义</h3>
+        <div class="formula" id="definition"></div>
+      </div>
+
+      <div class="block">
+        <h3>管理层需要关注</h3>
+        <ul class="watch-list" id="watchList"></ul>
+      </div>
+
+      <div class="block">
+        <div class="deep-title">Deep Dive</div>
+        <div class="deep-buttons" id="deepButtons"></div>
+      </div>
+    </aside>
+
+    <div class="chart-panel">
+      <div class="chart-head">
+        <div><h3 id="chartTitle"></h3><p id="chartSub"></p></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart"></canvas></div>
+      <div class="chart-note">虚线表示管理目标；图中数据为 Demo 模拟数据</div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><h3 id="modalTitle"></h3><p id="modalSub"></p></div>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="summary-row" id="summaryRow"></div>
+      <table>
+        <thead><tr><th>排名</th><th id="dimHeader">维度</th><th>当前值</th><th>贡献 / 风险占比</th><th>趋势</th></tr></thead>
+        <tbody id="modalTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const series = {"labels": ["第1周", "第2周", "第3周", "第4周", "第5周", "第6周", "第7周", "第8周", "第9周", "第10周", "第11周", "第12周", "第13周", "第14周", "第15周", "第16周", "第17周", "第18周", "第19周", "第20周", "第21周", "第22周", "第23周", "第24周", "第25周", "第26周", "第27周", "第28周", "第29周", "第30周", "第31周", "第32周", "第33周", "第34周", "第35周", "第36周", "第37周", "第38周", "第39周", "第40周", "第41周", "第42周", "第43周", "第44周", "第45周", "第46周", "第47周", "第48周"], "revenue": {"bar1": [149.7, 151.7, 160.2, 170.2, 156.5, 160.8, 149.0, 124.8, 95.1, 123.9, 130.0, 143.6, 153.3, 149.8, 160.3, 156.0, 150.7, 106.9, 125.8, 103.5, 98.0, 109.2, 121.8, 135.2, 135.4, 174.0, 140.0, 154.2, 134.8, 130.6, 115.9, 111.8, 114.5, 100.2, 146.5, 164.8, 176.6, 174.8, 182.5, 164.7, 187.6, 146.8, 152.7, 140.7, 145.3, 113.7, 157.0, 166.1], "line": [1.9, 3.9, 5.9, 8.1, 10.1, 12.2, 14.1, 15.7, 16.9, 18.5, 20.2, 22.0, 24.0, 25.9, 27.9, 29.9, 31.9, 33.2, 34.8, 36.2, 37.4, 38.8, 40.4, 42.1, 43.9, 46.1, 47.9, 49.9, 51.6, 53.3, 54.8, 56.2, 57.7, 58.9, 60.8, 62.9, 65.2, 67.4, 69.8, 71.9, 74.3, 76.2, 78.1, 79.9, 81.8, 83.3, 85.3, 87.4]}, "receivable": {"bar1": [139.2, 152.4, 148.8, 156.9, 152.8, 151.4, 144.4, 119.9, 120.4, 111.4, 125.4, 134.5, 138.5, 142.5, 135.7, 133.4, 127.8, 114.3, 104.1, 109.1, 95.7, 106.9, 111.5, 121.4, 133.3, 136.7, 133.2, 132.5, 124.8, 111.2, 105.1, 111.1, 113.2, 128.4, 133.9, 149.1, 153.3, 160.2, 163.7, 145.8, 137.2, 135.2, 126.8, 127.2, 124.5, 133.3, 140.9, 156.7], "bar2": [112.1, 123.9, 128.0, 131.1, 121.3, 127.0, 113.3, 95.1, 90.6, 81.4, 74.5, 77.2, 105.6, 105.6, 101.9, 101.5, 103.8, 97.8, 85.8, 93.3, 80.6, 87.4, 90.5, 97.0, 106.1, 98.5, 96.0, 80.6, 90.3, 83.8, 82.5, 88.1, 94.6, 105.4, 120.2, 114.9, 129.7, 135.1, 141.7, 117.1, 113.1, 102.3, 99.3, 99.1, 80.8, 105.8, 115.1, 131.2], "line": [80.5, 81.3, 86.0, 83.6, 79.4, 83.9, 78.5, 79.3, 75.2, 73.1, 59.4, 57.4, 76.2, 74.1, 75.1, 76.1, 81.2, 85.6, 82.4, 85.5, 84.2, 81.8, 81.2, 79.9, 79.6, 72.1, 72.1, 60.8, 72.4, 75.4, 78.5, 79.3, 83.6, 82.1, 89.8, 77.1, 84.6, 84.3, 86.6, 80.3, 82.4, 75.7, 78.3, 77.9, 64.9, 79.4, 81.7, 83.7]}, "material": {"bar1": [16.7, 23.4, 23.9, 28.7, 23.9, 20.6, 16.0, 31, 11.0, 10.0, 13.4, 18.1, 20.7, 20.7, 21.3, 23.6, 17.5, 15.8, 34, 8.1, 6.2, 4.4, 8.5, 16.6, 14.7, 17.2, 21.4, 18.4, 17.6, 39, 9.3, 8.3, 12.1, 14.8, 14.7, 23.4, 27.3, 28, 24.7, 22.0, 24.7, 15.7, 12.7, 36, 19.0, 22.4, 24.4, 28.6], "bar2": [17.1, 16.6, 19.9, 21.7, 20.9, 19.0, 15.8, 10.6, 10.0, 12.0, 11.6, 11.5, 25, 19.0, 16.6, 15.1, 16.2, 12.5, 8.3, 6.4, 4.6, 7.1, 7.3, 11.1, 29, 16.1, 15.2, 13.4, 13.1, 8.8, 10.1, 7.9, 26, 9.8, 14.6, 16.6, 19.2, 19.4, 18.6, 17.1, 15.4, 15.2, 13.1, 10.5, 10.6, 31, 18.0, 18.2], "line": [112.6, 112.4, 114.9, 117.7, 118.0, 120.6, 119.7, 125.8, 125.9, 126.4, 126.6, 130.5, 128.6, 127.4, 129.2, 129.3, 131.7, 131.9, 138.6, 136.7, 136.4, 135.8, 137.1, 137.4, 133.5, 133.0, 135.0, 138.0, 140.0, 151.7, 147.3, 145.1, 140.3, 140.6, 136.9, 140.8, 142.7, 146.9, 147.8, 148.2, 151.6, 150.9, 151.9, 161.8, 163.3, 159.9, 163.1, 168.0]}, "complaint": {"bar1": [12.3, 16.4, 19.3, 18.3, 16.4, 14.6, 13.7, 12.6, 11.0, 22, 8.9, 11.4, 14.2, 15.3, 15.6, 14.3, 13.5, 10.1, 9.5, 6.0, 5.2, 19, 6.9, 10.2, 12.8, 12.9, 14.3, 15.5, 13.5, 10.1, 24, 7.7, 10.2, 10.0, 13.9, 17.2, 16.8, 19.1, 19.6, 17.4, 16.9, 20, 11.9, 11.1, 11.6, 15.6, 14.4, 17.2], "bar2": [14.5, 14.2, 17.3, 18.5, 15.5, 13.6, 13.1, 8.8, 9.4, 10.1, 11.0, 12.6, 13.0, 15.8, 19, 15.5, 12.3, 11.8, 8.6, 6.6, 5.0, 7.9, 8.9, 8.8, 11.5, 12.4, 22, 14.6, 11.8, 9.3, 8.5, 8.6, 7.1, 8.8, 13.2, 16.6, 21, 16.7, 18.1, 15.9, 15.0, 12.0, 10.6, 12.8, 11.4, 13.4, 23, 17.2], "line": [57.0, 57.5, 57.7, 58.8, 60.7, 61.5, 62.1, 62.7, 62.1, 67.9, 65.3, 65.2, 66.3, 67.2, 65.2, 64.6, 63.8, 62.5, 63.9, 62.3, 62.2, 68.1, 65.9, 65.8, 65.2, 66.4, 63.6, 65.1, 67.1, 65.8, 72.9, 71.5, 71.7, 72.6, 73.3, 73.2, 72.7, 72.7, 72.8, 72.7, 72.4, 76.1, 77.1, 77.5, 77.6, 78.0, 73.7, 74.0]}};
+
+const kpis = {
+  revenue:{
+    no:'KPI 1',
+    tab:'收益 KPI',
+    title:'收入目标达成率',
+    target:'≥ 95%',
+    current:'87.4%',
+    sub:'累计确认收入 ¥6,820 万 / 阶段目标 ¥7,800 万，收入缺口 ¥980 万。',
+    box:'warning',
+    definition:'收入目标达成率 = 累计已确认营业收入 ÷ 同期阶段收入目标。<br>收入以 ERP 中已确认、可计入当期损益的收入为准。',
+    watch:[
+      '实际收入是否持续低于阶段目标，而不仅是单周波动。',
+      '收入缺口主要来自哪个区域、产品类别、客户或销售团队。',
+      '高收入是否同时带来合理毛利，避免以低价订单换取收入。'
+    ],
+    buttons:['按区域','按产品类别','按客户','按销售团队'],
+    chartTitle:'每周确认收入与累计目标达成率',
+    chartSub:'柱状图：每周确认收入；折线：累计目标达成率',
+    legend:[
+      ['#90bdd8','每周确认收入（万元）'],
+      ['#3973b7','累计达成率'],
+      ['#7a7f87','目标 95%']
+    ],
+    chart:{key:'revenue', leftUnit:'万元', rightUnit:'%', goal:95, rightMin:0, rightMax:105, singleBar:true},
+    drill:{
+      '按区域':[['华东区域','¥2,480万','36%','-4.8%'],['华南区域','¥1,620万','24%','+2.1%'],['海外区域','¥1,410万','21%','-8.4%'],['华北区域','¥870万','13%','+5.5%'],['其他','¥440万','6%','-1.2%']],
+      '按产品类别':[['精密材料 A','¥2,190万','32%','-6.5%'],['工业部件 B','¥1,760万','26%','+3.2%'],['组件 C','¥1,280万','19%','-2.4%'],['服务与其他','¥930万','14%','+7.8%'],['试制产品','¥660万','9%','+1.0%']],
+      '按客户':[['客户 A','¥920万','13%','-12.0%'],['客户 B','¥810万','12%','+5.4%'],['客户 C','¥690万','10%','-3.2%'],['客户 D','¥610万','9%','+8.8%'],['其他客户','¥3,790万','56%','+0.6%']],
+      '按销售团队':[['销售一部','¥2,030万','30%','-5.1%'],['销售二部','¥1,860万','27%','+2.5%'],['海外销售','¥1,410万','21%','-8.4%'],['渠道团队','¥920万','13%','+6.2%'],['其他','¥600万','9%','-0.7%']]
+    }
+  },
+  receivable:{
+    no:'KPI 2',
+    tab:'客户管理 KPI',
+    title:'应收账款回款达成率',
+    target:'≥ 85%',
+    current:'78.5%',
+    sub:'本期实际回款 ¥4,280 万 / 本期应回款 ¥5,450 万，未完成回款 ¥1,170 万。',
+    box:'warning',
+    definition:'回款达成率 = 报告期内实际收到并完成核销的客户回款 ÷ 报告期内到期应收账款。<br>不将未核销预收款或仅有付款承诺的金额计入实际回款。',
+    watch:[
+      '30 / 60 / 90 天以上逾期是否持续累积。',
+      '客户验收、对账、发票或交付文件不完整，导致付款流程无法启动。',
+      '价格、数量、质量或退货争议造成发票被部分拒付。',
+      '客户集中度过高、账期不断延长，或销售为了接单放宽信用条件。'
+    ],
+    buttons:['按区域','按账龄','按客户','按销售负责人'],
+    chartTitle:'每周应回款、实际回款与回款达成率',
+    chartSub:'柱状图：到期应收与实际回款；折线：周度回款达成率',
+    legend:[
+      ['#d9a05d','本周应回款（万元）'],
+      ['#90bdd8','实际回款（万元）'],
+      ['#3973b7','回款达成率'],
+      ['#7a7f87','目标 85%']
+    ],
+    chart:{key:'receivable', leftUnit:'万元', rightUnit:'%', goal:85, rightMin:45, rightMax:105},
+    drill:{
+      '按区域':[['华东区域','75.4%','38%','-5.6%'],['华南区域','83.8%','24%','+2.3%'],['海外区域','69.7%','21%','-8.9%'],['华北区域','88.6%','11%','+4.2%'],['其他','81.2%','6%','+0.5%']],
+      '按账龄':[['未逾期','¥3,180万','58%','+3.4%'],['1–30天','¥960万','18%','-2.1%'],['31–60天','¥510万','9%','+6.8%'],['61–90天','¥360万','7%','+9.5%'],['90天以上','¥440万','8%','+14.2%']],
+      '按客户':[['客户 B','¥310万逾期','26%','+18.0%'],['客户 F','¥240万逾期','21%','+11.5%'],['客户 A','¥190万逾期','16%','-4.2%'],['客户 H','¥150万逾期','13%','+7.1%'],['其他客户','¥280万逾期','24%','+2.8%']],
+      '按销售负责人':[['张经理','74.2%','28%','-7.5%'],['李经理','82.1%','24%','+1.8%'],['陈经理','69.6%','20%','-10.2%'],['王经理','89.4%','17%','+6.3%'],['其他','84.0%','11%','+0.9%']]
+    }
+  },
+  material:{
+    no:'KPI 3',
+    tab:'原材料风险 KPI',
+    title:'原材料加权风险敞口',
+    target:'≤ 120',
+    current:'168',
+    sub:'当前涉及高风险原材料 12 项，对应采购与库存金额约 ¥3,160 万。',
+    box:'warning',
+    definition:'本周风险敞口 = 上周风险敞口 + 新增风险 × 严重程度权重 − 已解决风险 × 关闭权重。<br>风险来源包括缺货、单一供应商、价格异常、交付延误和来料质量。',
+    watch:[
+      '关键材料库存覆盖天数低于安全线，可能造成停产。',
+      '单一供应商或单一国家来源导致替代能力不足。',
+      '采购价格波动超出预算，但尚未传导至报价和标准成本。',
+      '供应商交付不稳定或来料质量问题重复发生。'
+    ],
+    buttons:['按材料类别','按供应商','按工厂','按风险类型'],
+    chartTitle:'原材料加权风险敞口变化',
+    chartSub:'柱状图：每周新增与解决风险；折线：加权风险敞口',
+    legend:[
+      ['#c78080','新增风险'],
+      ['#d9a05d','已解决风险'],
+      ['#3973b7','加权风险敞口'],
+      ['#7a7f87','目标上限 120']
+    ],
+    chart:{key:'material', leftUnit:'项', rightUnit:'风险分', goal:120, rightMin:70, rightMax:190},
+    drill:{
+      '按材料类别':[['稀有金属类','72风险分','43%','+12.5%'],['精密合金','39风险分','23%','-3.1%'],['包装材料','22风险分','13%','+5.8%'],['化学辅料','19风险分','11%','+1.4%'],['其他','16风险分','10%','-2.0%']],
+      '按供应商':[['供应商 S-003','48风险分','29%','+15.2%'],['供应商 S-006','37风险分','22%','+8.7%'],['供应商 S-011','29风险分','17%','-4.6%'],['供应商 S-002','24风险分','14%','+2.1%'],['其他','30风险分','18%','-1.3%']],
+      '按工厂':[['一号工厂','79风险分','47%','+9.8%'],['二号工厂','54风险分','32%','+4.2%'],['外协工厂','24风险分','14%','-3.5%'],['研发试制线','11风险分','7%','+1.1%']],
+      '按风险类型':[['单一供应商','69风险分','41%','+10.6%'],['价格异常','52风险分','31%','+7.8%'],['来料质量','27风险分','16%','-2.4%'],['交付延误','14风险分','8%','+1.3%'],['库存不足','6风险分','4%','-1.8%']]
+    }
+  },
+  complaint:{
+    no:'KPI 4',
+    tab:'客户投诉 KPI',
+    title:'加权未结客户投诉量',
+    target:'≤ 60',
+    current:'74',
+    sub:'当前未结投诉 41 件，其中重大投诉 6 件；按严重程度及超期时间加权后为 74。',
+    box:'warning',
+    definition:'加权未结客诉 = Σ（未关闭投诉 × 严重程度权重 × 超期权重）。<br>一般投诉权重 1，影响交付权重 3，客户停线或重大索赔权重 5。',
+    watch:[
+      '重大投诉和超期投诉是否持续累积。',
+      '同一产品、批次或工艺问题是否重复发生。',
+      '交付、包装、质量和文件问题分别由哪个团队造成。',
+      '投诉关闭是否仅处理个案，而没有形成纠正和预防措施。'
+    ],
+    buttons:['按投诉类型','按客户','按产品','按工厂'],
+    chartTitle:'每周新增、关闭投诉与加权未结量',
+    chartSub:'柱状图：新增及关闭投诉；折线：加权未结投诉量',
+    legend:[
+      ['#c78080','新增投诉'],
+      ['#d9a05d','已关闭投诉'],
+      ['#3973b7','加权未结量'],
+      ['#7a7f87','目标上限 60']
+    ],
+    chart:{key:'complaint', leftUnit:'件', rightUnit:'加权分', goal:60, rightMin:30, rightMax:95},
+    drill:{
+      '按投诉类型':[['交付延误','29加权分','39%','+12.0%'],['产品质量','24加权分','32%','-3.5%'],['包装运输','11加权分','15%','+8.2%'],['数量/规格','6加权分','8%','+1.0%'],['文件服务','4加权分','6%','-2.2%']],
+      '按客户':[['客户 A','18加权分','24%','+14.0%'],['客户 D','14加权分','19%','-5.1%'],['客户 H','12加权分','16%','+7.6%'],['客户 B','9加权分','12%','+2.8%'],['其他客户','21加权分','29%','-1.4%']],
+      '按产品':[['产品 P-21','24加权分','32%','+8.8%'],['产品 P-08','15加权分','20%','-4.2%'],['产品 P-17','12加权分','16%','+3.4%'],['产品 P-33','9加权分','12%','+1.9%'],['其他产品','14加权分','20%','-2.1%']],
+      '按工厂':[['一号工厂','37加权分','50%','+10.5%'],['二号工厂','21加权分','28%','-3.2%'],['外协工厂','11加权分','15%','+5.7%'],['研发试制线','5加权分','7%','-1.0%']]
+    }
+  }
+};
+
+const keys=['revenue','receivable','material','complaint'];
+let active='revenue';
+
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=keys.map(k=>`<button class="tab ${active===k?'active':''}" onclick="switchKpi('${k}')">${kpis[k].tab}</button>`).join('');
+}
+
+function switchKpi(key){
+  active=key; const k=kpis[key];
+  renderTabs();
+  document.getElementById('kpiNo').textContent=k.no;
+  document.getElementById('kpiTitle').textContent=k.title;
+  document.getElementById('targetValue').textContent=k.target;
+  document.getElementById('currentValue').textContent=k.current;
+  document.getElementById('currentSub').textContent=k.sub;
+  document.getElementById('definition').innerHTML=k.definition;
+  const rb=document.getElementById('resultBox'); rb.className='result-box '+k.box;
+  document.getElementById('watchList').innerHTML=k.watch.map(x=>`<li>${x}</li>`).join('');
+  document.getElementById('deepButtons').innerHTML=k.buttons.map(x=>`<button onclick="openDeep('${x}')">${x}</button>`).join('');
+  document.getElementById('chartTitle').textContent=k.chartTitle;
+  document.getElementById('chartSub').textContent=k.chartSub;
+  document.getElementById('legend').innerHTML=k.legend.map(x=>`<span><i style="background:${x[0]}"></i>${x[1]}</span>`).join('');
+  requestAnimationFrame(()=>drawChart(k));
+}
+
+function niceMax(arr){
+  const m=Math.max(...arr);
+  const pow=Math.pow(10,Math.floor(Math.log10(m)));
+  return Math.ceil(m/pow*1.15)*pow;
+}
+
+function drawChart(k){
+  const cfg=k.chart, d=series[cfg.key], c=document.getElementById('chart');
+  const rect=c.getBoundingClientRect(), ratio=window.devicePixelRatio||1;
+  c.width=rect.width*ratio;c.height=rect.height*ratio;
+  const ctx=c.getContext('2d');ctx.scale(ratio,ratio);
+  const W=rect.width,H=rect.height,p={l:52,r:58,t:25,b:54};
+  const pw=W-p.l-p.r,ph=H-p.t-p.b,n=series.labels.length;
+  const leftVals=(d.bar2?d.bar1.concat(d.bar2):d.bar1);
+  const leftMax=niceMax(leftVals);
+  const rmin=cfg.rightMin,rmax=cfg.rightMax;
+  ctx.clearRect(0,0,W,H);ctx.font='10px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+  ctx.textBaseline='middle';
+
+  // Grid and Y labels
+  for(let i=0;i<=5;i++){
+    const y=p.t+ph*i/5;
+    ctx.strokeStyle='#e8ebef';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(W-p.r,y);ctx.stroke();
+    const lv=Math.round(leftMax-(leftMax*i/5));
+    ctx.fillStyle='#738091';ctx.textAlign='right';ctx.fillText(lv,p.l-8,y);
+    const rv=Math.round(rmax-((rmax-rmin)*i/5));
+    ctx.textAlign='left';ctx.fillText(rv,W-p.r+8,y);
+  }
+  ctx.save();
+  ctx.fillStyle='#738091';ctx.textAlign='center';
+  ctx.translate(12,p.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText(cfg.leftUnit,0,0);ctx.restore();
+  ctx.save();ctx.translate(W-12,p.t+ph/2);ctx.rotate(Math.PI/2);ctx.fillText(cfg.rightUnit,0,0);ctx.restore();
+
+  const step=pw/n, bw=Math.max(3,Math.min(9,step*(d.bar2?0.34:0.56)));
+  const yL=v=>p.t+ph-(v/leftMax)*ph;
+  const yR=v=>p.t+ph-((v-rmin)/(rmax-rmin))*ph;
+
+  // bars
+  for(let i=0;i<n;i++){
+    const cx=p.l+step*i+step/2;
+    if(d.bar2){
+      ctx.fillStyle=cfg.key==='receivable'?'#d9a05d':'#c78080';
+      ctx.fillRect(cx-bw-1,yL(d.bar1[i]),bw,p.t+ph-yL(d.bar1[i]));
+      ctx.fillStyle=cfg.key==='receivable'?'#90bdd8':'#d9a05d';
+      ctx.fillRect(cx+1,yL(d.bar2[i]),bw,p.t+ph-yL(d.bar2[i]));
+    }else{
+      ctx.fillStyle='#90bdd8';
+      ctx.fillRect(cx-bw/2,yL(d.bar1[i]),bw,p.t+ph-yL(d.bar1[i]));
+    }
+  }
+
+  // Goal line
+  const gy=yR(cfg.goal);
+  ctx.save();ctx.setLineDash([5,5]);ctx.strokeStyle='#7a7f87';ctx.lineWidth=1.3;
+  ctx.beginPath();ctx.moveTo(p.l,gy);ctx.lineTo(W-p.r,gy);ctx.stroke();ctx.restore();
+  ctx.fillStyle='#6d737b';ctx.textAlign='right';ctx.fillText('目标',W-p.r-4,gy-8);
+
+  // line
+  ctx.beginPath();
+  d.line.forEach((v,i)=>{
+    const x=p.l+step*i+step/2,y=yR(v);
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='#3973b7';ctx.lineWidth=2.2;ctx.stroke();
+
+  // selected points and labels
+  const labelIdx=[0,7,15,23,31,39,47];
+  labelIdx.forEach(i=>{
+    const x=p.l+step*i+step/2,y=yR(d.line[i]);
+    ctx.beginPath();ctx.arc(x,y,3.2,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    ctx.strokeStyle='#3973b7';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='#405267';ctx.textAlign='center';
+    ctx.fillText(d.line[i].toFixed(1),x,y-12);
+  });
+
+  // X labels
+  const monthLabels=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  monthLabels.forEach((m,idx)=>{
+    const i=idx*4+1.5,x=p.l+step*i+step/2;
+    ctx.fillStyle='#738091';ctx.textAlign='center';ctx.fillText(m,x,H-28);
+  });
+  ctx.fillStyle='#738091';ctx.fillText('周次',p.l+pw/2,H-10);
+}
+
+function openDeep(dim){
+  const k=kpis[active], rows=k.drill[dim];
+  document.getElementById('modalTitle').textContent=`${k.title} · ${dim}`;
+  document.getElementById('modalSub').textContent='用于从公司级 KPI 下钻定位主要差距、风险和责任范围。';
+  document.getElementById('dimHeader').textContent=dim.replace('按','');
+  const top=rows[0];
+  document.getElementById('summaryRow').innerHTML=`
+    <div class="summary-card"><label>当前公司级结果</label><b>${k.current}</b></div>
+    <div class="summary-card"><label>最大问题来源</label><b>${top[0]}</b></div>
+    <div class="summary-card"><label>最大贡献占比</label><b>${top[2]}</b></div>`;
+  document.getElementById('modalTable').innerHTML=rows.map((r,i)=>`
+    <tr><td class="rank">${i+1}</td><td><b>${r[0]}</b></td><td>${r[1]}</td>
+    <td class="barcell"><div>${r[2]}</div><div class="mini-bar"><div style="width:${parseFloat(r[2])}%"></div></div></td>
+    <td>${r[3]}</td></tr>`).join('');
+  document.getElementById('modalBg').style.display='block';
+}
+function closeModal(){document.getElementById('modalBg').style.display='none'}
+window.addEventListener('resize',()=>drawChart(kpis[active]));
+switchKpi('revenue');
+</script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo</title>
+    <meta name="robots" content="noindex, nofollow">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * { font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+
+        /* Login page */
+        .login-bg {
+            background: radial-gradient(ellipse at 60% 40%, rgba(37,99,235,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse at 20% 80%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                        #030712;
+        }
+        .login-card {
+            background: rgba(15,23,42,0.8);
+            border: 1px solid rgba(255,255,255,0.07);
+            backdrop-filter: blur(16px);
+        }
+        .input-field {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        .input-field::placeholder { color: rgba(255,255,255,0.25); }
+        .btn-login {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transition: all 0.2s;
+        }
+        .btn-login:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,99,235,0.35); }
+        .error-shake { animation: shake 0.4s ease; }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%,60% { transform: translateX(-6px); }
+            40%,80% { transform: translateX(6px); }
+        }
+
+        /* Dashboard */
+        .dashboard { display: flex; height: 100vh; }
+        .sidebar { 
+            width: 240px; 
+            background: #0a0e1a; 
+            border-right: 1px solid rgba(255,255,255,0.06); 
+            display: flex; 
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed { 
+            width: 60px;
+        }
+        .sidebar-header { 
+            padding: 16px 14px; 
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sidebar-brand { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-weight: 700; 
+            font-size: 14px; 
+            color: #fff;
+        }
+        .sidebar.collapsed .sidebar-brand-text { display: none; }
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .sidebar-toggle:hover { color: rgba(255,255,255,0.9); }
+        .sidebar-nav { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 12px 8px;
+        }
+        .nav-section { 
+            margin-bottom: 14px; 
+        }
+        .nav-label { 
+            font-size: 11px; 
+            font-weight: 600; 
+            color: rgba(255,255,255,0.35); 
+            padding: 8px 12px; 
+            margin-bottom: 4px; 
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sidebar.collapsed .nav-label { display: none; }
+        .nav-section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+        .nav-section-header:hover {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.85);
+        }
+        .nav-toggle { 
+            width: 16px; 
+            height: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 10px; 
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+        .nav-toggle.open { transform: rotate(90deg); }
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            color: rgba(255,255,255,0.6); 
+            font-size: 13px; 
+            cursor: pointer; 
+            transition: all 0.15s;
+            margin-bottom: 2px;
+        }
+        .nav-item:hover { 
+            background: rgba(255,255,255,0.05); 
+            color: rgba(255,255,255,0.85);
+        }
+        .nav-item.active { 
+            background: rgba(37,99,235,0.2); 
+            color: #60a5fa;
+        }
+        .nav-children { 
+            display: none; 
+            padding-left: 12px;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .nav-children.show { 
+            display: flex;
+        }
+        .sidebar.collapsed .nav-children { display: none !important; }
+        .nav-item-icon {
+            width: 16px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .sidebar.collapsed .nav-item-text { display: none; }
+        .sidebar-footer { 
+            padding: 12px 14px; 
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .user-info { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            font-size: 12px; 
+            color: rgba(255,255,255,0.6);
+        }
+        .sidebar.collapsed .user-info-text { display: none; }
+        .logout-btn { 
+            background: none; 
+            border: none; 
+            color: rgba(255,255,255,0.5); 
+            cursor: pointer; 
+            font-size: 12px; 
+            transition: color 0.2s; 
+        }
+        .logout-btn:hover { color: rgba(255,255,255,0.8); }
+
+        .main-content { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            background: #0a0e1a;
+        }
+        .topbar { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 14px 24px; 
+            border-bottom: 1px solid rgba(255,255,255,0.06); 
+            background: rgba(10,14,26,0.95); 
+            backdrop-filter: blur(8px);
+        }
+        .topbar-title { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            color: #fff;
+        }
+        .topbar-title i { color: #60a5fa; font-size: 14px; }
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 6px 10px;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            color: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.08);
+        }
+        .lang-btn.active {
+            color: #60a5fa;
+            background: rgba(96,165,250,0.15);
+        }
+        .lang-divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(255,255,255,0.1);
+        }
+        .content-area { 
+            flex: 1; 
+            overflow: hidden;
+            display: flex;
+        }
+        #contentArea {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+
+        /* Logo SVG styling */
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body class="bg-gray-950 text-white">
+
+<!-- ======================== LOGIN PAGE ======================== -->
+<div id="loginPage" class="login-bg min-h-screen flex flex-col items-center justify-center px-4">
+    <div class="mb-8 flex items-center gap-3">
+        <img src="/demo/ProMaterial黑白Logo.png" alt="珀玛科技" class="h-8 w-auto" style="filter: brightness(0) invert(1);">
+        <span class="text-white font-bold text-lg tracking-tight">珀玛科技</span>
+    </div>
+
+    <div class="login-card rounded-2xl p-8 w-full max-w-sm shadow-2xl" id="loginCard">
+        <h1 class="text-xl font-bold text-white mb-1">欢迎登录</h1>
+        <p class="text-sm text-gray-500 mb-6">登录即可访问演示环境</p>
+
+        <div id="errorMsg" class="hidden mb-4 bg-red-500/10 border border-red-500/25 text-red-400 text-sm px-4 py-2.5 rounded-lg flex items-center gap-2">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>用户名或密码错误</span>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="mb-4">
+                <label class="block text-xs font-medium text-gray-400 mb-1.5">用户名</label>
+                <input id="username" type="text" autocomplete="username" placeholder="请输入用户名"
+                    class="input-field w-full px-4 py-2.5 rounded-lg text-sm">
+            </div>
+            <div class="mb-6">
+                <label class="block text-xs font-medium text-gray-400 mb-1.5">密码</label>
+                <div class="relative">
+                    <input id="password" type="password" autocomplete="current-password" placeholder="请输入密码"
+                        class="input-field w-full px-4 py-2.5 rounded-lg text-sm pr-10">
+                    <button type="button" onclick="togglePwd()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
+                        <i class="fa-solid fa-eye text-xs" id="eyeIcon"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn-login w-full py-2.5 rounded-lg text-sm font-semibold text-white">
+                登 录
+            </button>
+        </form>
+    </div>
+
+    <p class="mt-6 text-xs text-gray-600">&copy; 2026 珀玛科技</p>
+</div>
+
+<!-- ======================== DASHBOARD ======================== -->
+<div id="dashboardPage" class="hidden dashboard">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <img src="/demo/ProMaterial黑白Logo.png" alt="珀玛科技" class="h-6 w-auto" style="filter: brightness(0) invert(1);">
+                <span class="sidebar-brand-text">珀玛科技</span>
+            </div>
+            <button class="sidebar-toggle" onclick="toggleSidebar()" title="收缩菜单">
+                <i class="fa-solid fa-angles-left"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebarNav">
+            <!-- Navigation items will be inserted here -->
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <span class="user-info-text">已登录：<b id="sidebarUser"></b></span>
+            </div>
+            <button class="logout-btn w-full text-left" onclick="handleLogout()">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="user-info-text">登出</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-title">
+                <i class="fa-solid fa-chart-bar"></i>
+                <span id="pageTitle">管理面板</span>
+            </div>
+            <div class="topbar-actions">
+                <div class="lang-switcher">
+                    <button class="lang-btn active" id="langZh" onclick="setLanguage('zh')">中文</button>
+                    <div class="lang-divider"></div>
+                    <button class="lang-btn" id="langEn" onclick="setLanguage('en')">English</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="contentArea">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const USERS = {
+        'yonju':  'youju',
+        'admin':  'admin123',
+        'client_yonju':  'yj123'
+    };
+
+    // Language settings
+    let currentLanguage = localStorage.getItem('demoLanguage') || 'zh';
+
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('demoLanguage', lang);
+        
+        // Update button states
+        document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+        document.getElementById('langEn').classList.toggle('active', lang === 'en');
+        
+        // Reload current page to apply language
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageTitle && pageTitle.dataset.route) {
+            navigateTo(pageTitle.dataset.route);
+        }
+    }
+
+    // Route configuration
+    const ROUTES = {
+        '000kpi': { title: '管理仪表板', page: 'dashboard', section: 'main' },
+        '110marketingDataEye': { title: '数据天眼', page: 'market/data-eye', section: 'market' },
+        '120marketingTrx': { title: '成交明细', page: 'market/deals', section: 'market' },
+        '130marketingInventory': { title: '库存分析', page: 'market/inventory', section: 'market' },
+        '140marketingMaterials': { title: '原材料数据库', page: 'market/materials', section: 'market' }
+    };
+
+    const NAVIGATION = [
+        {
+            label: '主菜单',
+            items: [
+                { name: '管理仪表板', icon: 'fa-chart-bar', page: 'dashboard', route: '000kpi' }
+            ]
+        },
+        {
+            label: '市场部',
+            collapsible: true,
+            items: [
+                { name: '数据天眼', icon: 'fa-eye', page: 'market/data-eye', route: '110marketingDataEye' },
+                { name: '成交明细', icon: 'fa-receipt', page: 'market/deals', route: '120marketingTrx' },
+                { name: '库存分析', icon: 'fa-boxes', page: 'market/inventory', route: '130marketingInventory' },
+                { name: '原材料数据库', icon: 'fa-flask', page: 'market/materials', route: '140marketingMaterials' }
+            ]
+        },
+        {
+            label: '财务部',
+            collapsible: true,
+            items: [
+                { name: '敬请期待', icon: 'fa-lock', page: null }
+            ]
+        },
+        {
+            label: '技术部',
+            collapsible: true,
+            items: [
+                { name: '敬请期待', icon: 'fa-lock', page: null }
+            ]
+        }
+    ];
+
+    let sidebarState = localStorage.getItem('sidebarCollapsed') === 'true';
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const errMsg   = document.getElementById('errorMsg');
+        const card     = document.getElementById('loginCard');
+
+        if (USERS[username] && USERS[username] === password) {
+            sessionStorage.setItem('demo_user', username);
+            showDashboard(username);
+        } else {
+            errMsg.classList.remove('hidden');
+            card.classList.add('error-shake');
+            card.addEventListener('animationend', () => card.classList.remove('error-shake'), { once: true });
+        }
+    }
+
+    function togglePwd() {
+        const pwd  = document.getElementById('password');
+        const icon = document.getElementById('eyeIcon');
+        pwd.type = pwd.type === 'password' ? 'text' : 'password';
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebarState = !sidebarState;
+        localStorage.setItem('sidebarCollapsed', sidebarState);
+        
+        if (sidebarState) {
+            sidebar.classList.add('collapsed');
+        } else {
+            sidebar.classList.remove('collapsed');
+        }
+    }
+
+    function buildNav() {
+        const nav = document.getElementById('sidebarNav');
+        let html = '';
+
+        NAVIGATION.forEach((section, idx) => {
+            if (section.label === '主菜单') {
+                section.items.forEach(item => {
+                    html += `
+                        <div class="nav-item" onclick="navigateTo('${item.route}')" style="${item.page ? '' : 'opacity-50; cursor: not-allowed;'}">
+                            <i class="fa-solid ${item.icon} nav-item-icon"></i>
+                            <span class="nav-item-text">${item.name}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                const sectionId = `section-${idx}`;
+                const isOpen = localStorage.getItem(`section-${section.label}`) !== 'false';
+                html += `
+                    <div class="nav-section">
+                        <div class="nav-section-header" onclick="toggleSection('${section.label}', this)">
+                            <i class="fa-solid fa-chevron-right nav-toggle ${isOpen ? 'open' : ''}"></i>
+                            <span class="nav-item-text">${section.label}</span>
+                        </div>
+                        <div class="nav-children ${isOpen ? 'show' : ''}">
+                            ${section.items.map(item => `
+                                <div class="nav-item" onclick="navigateTo('${item.route}')" style="${item.page ? '' : 'opacity-50; cursor: not-allowed;'}">
+                                    <i class="fa-solid ${item.icon} nav-item-icon"></i>
+                                    <span class="nav-item-text">${item.name}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        nav.innerHTML = html;
+
+        // Apply collapse state
+        if (sidebarState) {
+            document.getElementById('sidebar').classList.add('collapsed');
+        }
+    }
+
+    function toggleSection(label, element) {
+        const children = element.nextElementSibling;
+        const toggle = element.querySelector('.nav-toggle');
+        const isOpen = children.classList.contains('show');
+
+        if (isOpen) {
+            children.classList.remove('show');
+            toggle.classList.remove('open');
+            localStorage.setItem(`section-${label}`, 'false');
+        } else {
+            children.classList.add('show');
+            toggle.classList.add('open');
+            localStorage.setItem(`section-${label}`, 'true');
+        }
+    }
+
+    function navigateTo(route) {
+        const config = ROUTES[route];
+        if (!config) return;
+        
+        window.history.pushState(null, null, `/${route}`);
+        loadPage(config.page, config.title);
+    }
+
+    function loadPage(page, title) {
+        if (!page) return;
+        document.getElementById('pageTitle').textContent = title;
+        document.getElementById('pageTitle').dataset.route = Object.keys(ROUTES).find(k => ROUTES[k].page === page) || '000kpi';
+        
+        // Mark active nav item
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        event?.currentTarget?.classList.add('active');
+
+        // Load content based on page
+        const contentArea = document.getElementById('contentArea');
+        const langParam = `lang=${currentLanguage}`;
+        
+        if (page === 'dashboard') {
+            loadDashboardContent();
+        } else if (page === 'market/data-eye') {
+            loadDataEyeContent();
+        } else if (page === 'market/deals') {
+            loadDealsContent();
+        } else if (page === 'market/inventory') {
+            loadInventoryContent();
+        } else if (page === 'market/materials') {
+            loadMaterialsContent();
+        }
+    }
+
+    // Content loaders - load full dashboard pages
+    function loadDashboardContent() {
+        document.getElementById('contentArea').innerHTML = `<iframe src="/demo/manufacturing_kpi_demo.html?lang=${currentLanguage}" style="width:100%; min-height:calc(100vh - 60px); border:none; background:#0a0e1a; display:block;"></iframe>`;
+    }
+
+    function loadDataEyeContent() {
+        document.getElementById('contentArea').innerHTML = `<iframe src="/demo/dashboard-dataeye.html?lang=${currentLanguage}" style="width:100%; min-height:calc(100vh - 60px); border:none; background:#0a0e1a; display:block;"></iframe>`;
+    }
+
+    function loadDealsContent() {
+        document.getElementById('contentArea').innerHTML = `<iframe src="/demo/dashboard-transaction.html?lang=${currentLanguage}" style="width:100%; min-height:calc(100vh - 60px); border:none; background:#0a0e1a; display:block;"></iframe>`;
+    }
+
+    function loadInventoryContent() {
+        document.getElementById('contentArea').innerHTML = `<iframe src="/demo/dashboard-inventory.html?lang=${currentLanguage}" style="width:100%; min-height:calc(100vh - 60px); border:none; background:#0a0e1a; display:block;"></iframe>`;
+    }
+
+    function loadMaterialsContent() {
+        document.getElementById('contentArea').innerHTML = `<iframe src="/demo/dashboard-materials.html?lang=${currentLanguage}" style="width:100%; min-height:calc(100vh - 60px); border:none; background:#0a0e1a; display:block;"></iframe>`;
+    }
+
+    function showDashboard(username) {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('dashboardPage').classList.remove('hidden');
+        document.getElementById('sidebarUser').textContent = username;
+        
+        // Initialize language button state
+        document.getElementById('langZh').classList.toggle('active', currentLanguage === 'zh');
+        document.getElementById('langEn').classList.toggle('active', currentLanguage === 'en');
+        
+        buildNav();
+        
+        // Check if route is in URL, otherwise load default
+        let path = window.location.pathname.split('/').pop() || '';
+        
+        // If path is empty, 'demo', or not found in ROUTES, use default
+        if (!path || path === 'demo' || path === 'index.html' || !ROUTES[path]) {
+            path = '000kpi';
+        }
+        
+        const config = ROUTES[path];
+        if (config) {
+            loadPage(config.page, config.title);
+        } else {
+            loadPage('dashboard', '管理仪表板');
+        }
+    }
+
+    function handleLogout() {
+        sessionStorage.removeItem('demo_user');
+        document.getElementById('dashboardPage').classList.add('hidden');
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('errorMsg').classList.add('hidden');
+    }
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', () => {
+        const savedUser = sessionStorage.getItem('demo_user');
+        if (savedUser && USERS[savedUser]) {
+            let path = window.location.pathname.split('/').pop() || '';
+            if (!path || path === 'demo' || path === 'index.html' || !ROUTES[path]) {
+                path = '000kpi';
+            }
+            const config = ROUTES[path];
+            if (config) {
+                loadPage(config.page, config.title);
+            }
+        }
+    });
+
+    // Auto-login if session exists
+    const savedUser = sessionStorage.getItem('demo_user');
+    if (savedUser && USERS[savedUser]) showDashboard(savedUser);
+</script>
+</body>
+</html>

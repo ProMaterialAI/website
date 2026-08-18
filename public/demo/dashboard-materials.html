@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>钕铁硼原材料数据库 · 原型</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --bg:#0b1220; --panel:#121b2e; --panel2:#0f1830; --border:#243252;
+    --text:#e8edf7; --sub:#93a1c2; --gold:#e0b25e; --blue:#4f8cff;
+    --green:#3ecf8e; --red:#ff6b6b; --amber:#f5a623;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,#0a0f1c,#0b1220 300px);color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif;}
+  .app-shell{}
+  .main{}
+  .wrap{max-width:1360px;margin:0 auto;padding:20px 24px 60px;}
+  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;
+    padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:22px;}
+  header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.5px;}
+  header h1 span{color:var(--amber);}
+  header .meta{color:var(--sub);font-size:12.5px;margin-top:4px;}
+  .refresh{background:var(--panel2);border:1px solid var(--border);color:var(--sub);
+    padding:8px 14px;border-radius:8px;font-size:12.5px;cursor:pointer;}
+  .refresh:hover{border-color:var(--blue);color:var(--text);}
+
+  section{margin-bottom:28px;}
+  .sec-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .sec-title .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);}
+  .sec-title h2{font-size:16px;margin:0;font-weight:700;}
+  .sec-title .desc{color:var(--sub);font-size:12px;margin-left:4px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .subtle{color:var(--sub);font-size:12px;}
+
+  .mat-search{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:12px;}
+  .mat-search:focus{outline:none;border-color:var(--blue);}
+  .mat-search::placeholder{color:#5f6c8c;}
+
+  .cat-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .cat-chip{font-size:11.5px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);
+    color:var(--sub);cursor:pointer;background:var(--panel2);}
+  .cat-chip:hover{border-color:var(--blue);color:var(--text);}
+  .cat-chip.active{border-color:var(--blue);color:var(--text);background:rgba(79,140,255,.1);}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--sub);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .cat-tag{font-size:11px;color:var(--sub);}
+  .up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--sub);}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+  .kpi .label{color:var(--sub);font-size:12px;}
+  .kpi .val{font-size:19px;font-weight:700;margin-top:6px;}
+  .kpi .sub2{font-size:11.5px;color:var(--sub);margin-top:4px;}
+
+  footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--border);color:#5f6c8c;font-size:11.5px;line-height:1.8;}
+  @media(max-width:980px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main">
+  <div class="wrap">
+
+  <header>
+    <div>
+      <h1>钕铁硼原材料<span>数据库</span></h1>
+      <div class="meta">全量原料 / 辅料价格参考表 &nbsp;|&nbsp; 数据更新时间：<span id="now"></span></div>
+    </div>
+    <button class="refresh" onclick="location.reload()">↻ 刷新数据</button>
+  </header>
+
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <section>
+    <div class="sec-title"><span class="dot"></span><h2>原材料价格库</h2><span class="desc">覆盖钕铁硼生产全部原料及辅料，支持按名称 / 类别搜索</span></div>
+    <div class="panel">
+      <input type="text" id="matSearch" placeholder="搜索原材料名称，如：镨、钕、镝、铽、钴、镓、铜…" class="mat-search">
+      <div class="cat-filter" id="catFilter"></div>
+      <table>
+        <thead><tr><th>名称</th><th>类别</th><th>最新价</th><th>单位</th><th>较昨日</th><th>更新时间</th></tr></thead>
+        <tbody id="matListTbl"></tbody>
+      </table>
+      <div class="subtle" id="matEmpty" style="display:none;padding:10px 0;">未找到匹配的原材料</div>
+    </div>
+  </section>
+
+  <footer>
+    数据来源示例：上海有色网 SMM、亚洲金属网 AMM、我的钢铁网 Mysteel、中国稀土行业协会公开报价。<br>
+    合规说明：本页数据为<b>示例数据</b>，用于演示可搜索原料价格库的结构。生产环境建议优先对接官方数据接口 / 付费数据商 API；若需网页采集，须遵守目标网站 robots 协议、控制访问频率、避免采集需登录的付费内容。<br>
+    决策汇总请见「库存分析」页，报价核算与今日成交请见「成交流水」页。<br>
+    最后更新：<span id="now2"></span>
+  </footer>
+
+  </div>
+  </div>
+
+</div>
+
+<script>
+const now = new Date();
+document.getElementById('now').textContent = now.toLocaleString('zh-CN');
+document.getElementById('now2').textContent = now.toLocaleString('zh-CN');
+
+const matList = [
+  {name:'氧化镨钕', cat:'轻稀土氧化物', price:76.3, unit:'万元/吨', chg:0.9, time:'09:30'},
+  {name:'镨钕金属', cat:'轻稀土金属', price:92.6, unit:'万元/吨', chg:1.1, time:'09:30'},
+  {name:'氧化镨', cat:'轻稀土氧化物', price:75.1, unit:'万元/吨', chg:0.6, time:'09:30'},
+  {name:'氧化钕', cat:'轻稀土氧化物', price:76.8, unit:'万元/吨', chg:0.8, time:'09:30'},
+  {name:'金属镨', cat:'轻稀土金属', price:90.4, unit:'万元/吨', chg:0.7, time:'09:30'},
+  {name:'金属钕', cat:'轻稀土金属', price:93.2, unit:'万元/吨', chg:1.0, time:'09:30'},
+  {name:'氧化镝', cat:'重稀土氧化物', price:142.5, unit:'万元/吨', chg:-0.5, time:'09:15'},
+  {name:'金属镝', cat:'重稀土金属', price:181.0, unit:'万元/吨', chg:-0.4, time:'09:15'},
+  {name:'氧化铽', cat:'重稀土氧化物', price:645.0, unit:'万元/吨', chg:-1.2, time:'09:15'},
+  {name:'金属铽', cat:'重稀土金属', price:712.0, unit:'万元/吨', chg:-0.9, time:'09:15'},
+  {name:'氧化镧', cat:'轻稀土氧化物', price:0.46, unit:'万元/吨', chg:0.0, time:'09:00'},
+  {name:'氧化铈', cat:'轻稀土氧化物', price:0.92, unit:'万元/吨', chg:0.2, time:'09:00'},
+  {name:'电解钴', cat:'基础金属', price:26.4, unit:'万元/吨', chg:0.3, time:'10:00'},
+  {name:'金属镓', cat:'稀有金属', price:2150, unit:'元/kg', chg:-1.5, time:'10:00'},
+  {name:'金属铌', cat:'合金辅料', price:19.2, unit:'万元/吨', chg:0.1, time:'10:00'},
+  {name:'电解铜', cat:'基础金属', price:7.85, unit:'万元/吨', chg:0.4, time:'10:00'},
+  {name:'工业硼铁', cat:'合金辅料', price:1.38, unit:'万元/吨', chg:0.0, time:'10:00'},
+  {name:'纯铁粉', cat:'基础原料', price:0.68, unit:'万元/吨', chg:0.1, time:'10:00'},
+];
+
+// KPI
+const catCount = new Set(matList.map(m=>m.cat)).size;
+const upCount = matList.filter(m=>m.chg>0.05).length;
+const downCount = matList.filter(m=>m.chg<-0.05).length;
+const kpiData = [
+  {label:'收录原料种类', val: matList.length+' 项'},
+  {label:'覆盖类别', val: catCount+' 类'},
+  {label:'今日上涨', val: upCount+' 项', sub:'较昨日'},
+  {label:'今日下跌', val: downCount+' 项', sub:'较昨日'},
+];
+document.getElementById('kpiRow').innerHTML = kpiData.map(k=>`
+  <div class="kpi"><div class="label">${k.label}</div><div class="val">${k.val}</div>
+  ${k.sub?`<div class="sub2">${k.sub}</div>`:''}</div>`).join('');
+
+// 类别筛选
+const cats = ['全部', ...new Set(matList.map(m=>m.cat))];
+let activeCat = '全部';
+let searchKw = '';
+document.getElementById('catFilter').innerHTML = cats.map(c=>
+  `<span class="cat-chip ${c===activeCat?'active':''}" data-cat="${c}">${c}</span>`
+).join('');
+document.querySelectorAll('.cat-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    activeCat = chip.dataset.cat;
+    document.querySelectorAll('.cat-chip').forEach(c=>c.classList.toggle('active', c.dataset.cat===activeCat));
+    renderMatList();
+  });
+});
+
+function renderMatList(){
+  const kw = searchKw.trim();
+  const rows = matList.filter(m =>
+    (activeCat==='全部' || m.cat===activeCat) &&
+    (!kw || m.name.includes(kw) || m.cat.includes(kw))
+  );
+  document.getElementById('matEmpty').style.display = rows.length ? 'none' : 'block';
+  document.getElementById('matListTbl').innerHTML = rows.map(m=>{
+    const cls = m.chg>0.05?'up':(m.chg<-0.05?'down':'flat');
+    const arrow = m.chg>0.05?'▲':(m.chg<-0.05?'▼':'—');
+    return `<tr><td><b>${m.name}</b></td><td class="cat-tag">${m.cat}</td><td>${m.price}</td>
+      <td class="subtle">${m.unit}</td><td class="${cls}">${arrow} ${Math.abs(m.chg).toFixed(1)}%</td>
+      <td class="subtle">${m.time}</td></tr>`;
+  }).join('');
+}
+renderMatList();
+document.getElementById('matSearch').addEventListener('input', e => { searchKw = e.target.value; renderMatList(); });
+</script>
+</body>
+</html>

@@ -2,6 +2,90 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "mi.promaterial.ai"
+        }
+      ],
+      "destination": "/demo/index-cn.html"
+    },
+    {
+      "source": "/000kpi",
+      "has": [
+        {
+          "type": "host",
+          "value": "mi.promaterial.ai"
+        }
+      ],
+      "destination": "/demo/"
+    },
+    {
+      "source": "/110marketingDataEye",
+      "has": [
+        {
+          "type": "host",
+          "value": "mi.promaterial.ai"
+        }
+      ],
+      "destination": "/demo/"
+    },
+    {
+      "source": "/120marketingTrx",
+      "has": [
+        {
+          "type": "host",
+          "value": "mi.promaterial.ai"
+        }
+      ],
+      "destination": "/demo/"
+    },
+    {
+      "source": "/130marketingInventory",
+      "has": [
+        {
+          "type": "host",
+          "value": "mi.promaterial.ai"
+        }
+      ],
+      "destination": "/demo/"
+    },
+    {
+      "source": "/140marketingMaterials",
+      "has": [
+        {
+          "type": "host",
+          "value": "mi.promaterial.ai"
+        }
+      ],
+      "destination": "/demo/"
+    },
+    {
+      "source": "/cn",
+      "destination": "/demo/index-cn.html"
+    },
+    {
+      "source": "/000kpi",
+      "destination": "/demo/"
+    },
+    {
+      "source": "/110marketingDataEye",
+      "destination": "/demo/"
+    },
+    {
+      "source": "/120marketingTrx",
+      "destination": "/demo/"
+    },
+    {
+      "source": "/130marketingInventory",
+      "destination": "/demo/"
+    },
+    {
+      "source": "/140marketingMaterials",
+      "destination": "/demo/"
+    },
+    {
       "source": "/inspection",
       "destination": "/inspection/index.html"
     }

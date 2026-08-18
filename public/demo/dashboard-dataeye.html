@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>钕铁硼数据天眼 · 决策看板原型</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#121b2e; --panel2:#0f1830; --border:#243252;
+    --text:#e8edf7; --sub:#93a1c2; --gold:#e0b25e; --blue:#4f8cff;
+    --green:#3ecf8e; --red:#ff6b6b; --amber:#f5a623;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,#0a0f1c,#0b1220 300px);color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif;}
+  .wrap{max-width:1360px;margin:0 auto;padding:20px 24px 60px;}
+  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;
+    padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:22px;}
+  header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.5px;}
+  header h1 span{color:var(--gold);}
+  header .meta{color:var(--sub);font-size:12.5px;margin-top:4px;}
+  .badge{display:inline-block;background:rgba(224,178,94,.12);border:1px solid rgba(224,178,94,.4);
+    color:var(--gold);padding:2px 8px;border-radius:20px;font-size:11px;margin-left:8px;}
+  .refresh{background:var(--panel2);border:1px solid var(--border);color:var(--sub);
+    padding:8px 14px;border-radius:8px;font-size:12.5px;cursor:pointer;}
+  .refresh:hover{border-color:var(--blue);color:var(--text);}
+
+  .decision-panel{background:linear-gradient(135deg,#16213f,#121b2e);border:1px solid rgba(224,178,94,.35);
+    border-radius:14px;padding:18px 20px;margin-bottom:24px;position:relative;overflow:hidden;}
+  .decision-panel::before{content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;
+    background:radial-gradient(circle,rgba(224,178,94,.18),transparent 70%);}
+  .decision-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .decision-head .title{display:flex;align-items:center;gap:10px;}
+  .decision-head h2{margin:0;font-size:16.5px;font-weight:700;color:var(--gold);}
+  .decision-head .ai-badge{background:rgba(224,178,94,.15);border:1px solid rgba(224,178,94,.5);color:var(--gold);
+    font-size:11px;padding:2px 9px;border-radius:20px;}
+  .decision-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative;}
+  .dcard{background:rgba(15,24,48,.7);border:1px solid var(--border);border-left:3px solid var(--sub);
+    border-radius:10px;padding:12px 14px;}
+  .dcard.pri-high{border-left-color:var(--red);}
+  .dcard.pri-mid{border-left-color:var(--amber);}
+  .dcard.pri-low{border-left-color:var(--green);}
+  .dcard .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .dcard .head .label{font-size:12px;color:var(--sub);font-weight:600;}
+  .dcard .head .prio{font-size:10.5px;padding:1px 7px;border-radius:8px;}
+  .dcard .prio.pri-high{background:rgba(255,107,107,.12);color:var(--red);}
+  .dcard .prio.pri-mid{background:rgba(245,166,35,.12);color:var(--amber);}
+  .dcard .prio.pri-low{background:rgba(62,207,142,.12);color:var(--green);}
+  .dcard .msg{font-size:13.5px;line-height:1.55;font-weight:600;margin-bottom:6px;}
+  .dcard .support{font-size:11.5px;color:var(--sub);line-height:1.5;}
+  .decision-foot{margin-top:12px;font-size:11px;color:#5f6c8c;}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+  .kpi .label{color:var(--sub);font-size:12px;}
+  .kpi .val{font-size:20px;font-weight:700;margin-top:6px;}
+  .kpi .chg{font-size:12px;margin-top:4px;}
+  .up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--sub);}
+
+  section{margin-bottom:28px;}
+  .sec-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .sec-title .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
+  .sec-title h2{font-size:16px;margin:0;font-weight:700;}
+  .sec-title .desc{color:var(--sub);font-size:12px;margin-left:4px;}
+
+  .grid3{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .panel h3{margin:0 0 10px;font-size:13.5px;color:var(--text);font-weight:600;}
+  .subtle{color:var(--sub);font-size:12px;}
+
+  .price-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+  .pcard{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:.15s;}
+  .pcard.active{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue) inset;}
+  .pcard:hover{border-color:var(--blue);}
+  .pcard .name{font-size:12px;color:var(--sub);}
+  .pcard .price{font-size:17px;font-weight:700;margin-top:4px;}
+  .pcard .unit{font-size:11px;color:var(--sub);}
+  .pcard .chg{font-size:11.5px;margin-top:4px;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--sub);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;border:1px solid var(--border);}
+  .tag.hi{color:var(--green);border-color:rgba(62,207,142,.4);background:rgba(62,207,142,.08);}
+  .tag.lo{color:var(--red);border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.08);}
+  .tag.mid{color:var(--amber);border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.08);}
+
+  .mat-search{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:12px;}
+  .mat-search:focus{outline:none;border-color:var(--blue);}
+  .mat-search::placeholder{color:#5f6c8c;}
+  .cat-tag{font-size:11px;color:var(--sub);}
+
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .field{margin-bottom:10px;}
+  .field label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px;}
+  .field .row{display:flex;align-items:center;gap:8px;}
+  .field input[type=range]{flex:1;}
+  .field input[type=number]{width:78px;background:var(--panel2);border:1px solid var(--border);
+    color:var(--text);border-radius:6px;padding:5px 6px;font-size:12.5px;}
+  .result{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .result .row2{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--border);font-size:13px;}
+  .result .row2:last-child{border-bottom:none;}
+  .result .big{font-size:24px;font-weight:800;color:var(--gold);}
+
+  .policy-feed{display:flex;flex-direction:column;gap:10px;}
+  .pf-item{display:flex;gap:12px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);}
+  .pf-item .tags{display:flex;flex-direction:column;gap:4px;min-width:78px;}
+  .pf-item .content{flex:1;}
+  .pf-item .title{font-size:13.5px;font-weight:600;margin-bottom:4px;}
+  .pf-item .summary{font-size:12px;color:var(--sub);line-height:1.6;}
+  .pf-item .src{font-size:11px;color:#5f6c8c;margin-top:6px;}
+
+  footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--border);color:#5f6c8c;font-size:11.5px;line-height:1.8;}
+  .legend-swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;}
+  select{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;}
+  @media(max-width:980px){.kpi-row{grid-template-columns:repeat(2,1fr);}.grid3{grid-template-columns:1fr;}.price-cards{grid-template-columns:repeat(2,1fr);}.calc{grid-template-columns:1fr;}.decision-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>钕铁硼数据<span>天眼</span></h1>
+      <div class="meta">市场价格 · 企业报价 · 成本核算 · 宏观政策 &nbsp;|&nbsp; 数据更新时间：<span id="now"></span></div>
+    </div>
+    <button class="refresh" onclick="location.reload()">↻ 刷新数据</button>
+  </header>
+
+  <!-- 决策建议 -->
+  <div class="decision-panel">
+    <div class="decision-head">
+      <div class="title"><h2>★ 今日决策建议</h2><span class="ai-badge">综合研判 · 自动生成</span></div>
+      <span class="subtle">基于下方市场价格、报价偏离、成交毛利与政策信息自动汇总</span>
+    </div>
+    <div class="decision-grid" id="decisionGrid"></div>
+    <div class="decision-foot">以上建议由规则引擎基于示例数据自动生成，仅供决策参考，请结合实际库存、订单排期与风险偏好综合判断。</div>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <!-- 市场价格监控 -->
+  <section>
+    <div class="sec-title"><span class="dot"></span><h2>一、市场价格监控</h2><span class="desc">原材料 → 半成品 → 成品，全链条价格追踪</span></div>
+    <div class="price-cards" id="materialCards"></div>
+    <div class="grid3">
+      <div class="panel">
+        <h3 id="chartTitle">氧化镨钕 · 近30日价格走势</h3>
+        <canvas id="priceChart" height="110"></canvas>
+      </div>
+      <div class="panel">
+        <h3>成品磁材价格（今日）</h3>
+        <table>
+          <thead><tr><th>牌号</th><th>规格特征</th><th>参考价 元/kg</th><th>较昨日</th></tr></thead>
+          <tbody id="finishedTbl"></tbody>
+        </table>
+        <div class="subtle" style="margin-top:10px;">来源：SMM上海有色网 / 亚洲金属网 / 我的钢铁网（示例聚合，实际应对接官方数据接口）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 企业历史报价 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:var(--gold)"></span><h2>二、本企业历史报价 vs 市场基准</h2><span class="desc">识别报价偏离，辅助定价决策</span></div>
+    <div class="grid3">
+      <div class="panel">
+        <h3>报价 vs 市场指数（近30日，N35基准）</h3>
+        <canvas id="quoteChart" height="110"></canvas>
+      </div>
+      <div class="panel">
+        <h3>最近报价明细</h3>
+        <table>
+          <thead><tr><th>客户</th><th>牌号</th><th>日期</th><th>报价</th><th>价差</th></tr></thead>
+          <tbody id="quoteTbl"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 今日成交 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><h2>三、今日成交价</h2><span class="desc">实时成交订单与毛利即时核算</span></div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>时间</th><th>客户</th><th>牌号</th><th>数量(kg)</th><th>成交单价</th><th>成交额</th><th>理论成本</th><th>毛利率</th></tr></thead>
+        <tbody id="dealTbl"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 原材料价格库 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:var(--amber)"></span><h2>四、原材料价格库</h2><span class="desc">覆盖钕铁硼生产主要原料及辅料，支持按名称搜索</span></div>
+    <div class="panel">
+      <input type="text" id="matSearch" placeholder="搜索原材料名称，如：镨、钕、镝、铽、钴、镓、铜…" class="mat-search">
+      <table>
+        <thead><tr><th>名称</th><th>类别</th><th>最新价</th><th>单位</th><th>较昨日</th><th>更新时间</th></tr></thead>
+        <tbody id="matListTbl"></tbody>
+      </table>
+      <div class="subtle" id="matEmpty" style="display:none;padding:10px 0;">未找到匹配的原材料</div>
+    </div>
+  </section>
+
+  <!-- 报价成本核算器 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:#4f8cff"></span><h2>五、报价成本核算器</h2></div>
+    <div class="panel calc">
+      <div>
+        <div class="field">
+          <label>牌号</label>
+          <select id="qGrade" style="width:100%;"></select>
+        </div>
+        <div class="field">
+          <label>形状（影响加工/磨削/损耗成本）</label>
+          <select id="qShape" style="width:100%;"></select>
+        </div>
+        <div class="field">
+          <label>镀层（影响表面处理成本）</label>
+          <select id="qCoating" style="width:100%;"></select>
+        </div>
+        <div class="field">
+          <label>数量（kg）</label>
+          <div class="row"><input type="range" id="qQty" min="10" max="5000" step="10" value="500"><input type="number" id="qQtyNum" value="500"></div>
+        </div>
+        <div class="field">
+          <label>目标毛利率（%）</label>
+          <div class="row"><input type="range" id="qMargin" min="0" max="40" value="15"><input type="number" id="qMarginNum" value="15"></div>
+        </div>
+      </div>
+      <div>
+        <div class="result">
+          <div class="row2"><span>理论成本（元/kg）</span><span class="big" id="qCost">-</span></div>
+          <div class="row2"><span>建议报价（元/kg）</span><span id="qPrice">-</span></div>
+          <div class="row2"><span>建议报价总额</span><span id="qTotal">-</span></div>
+          <div class="row2"><span>该牌号今日市场参考价</span><span id="qMarket">-</span></div>
+          <div class="row2"><span>与市场价差</span><span id="qDiff">-</span></div>
+          <div class="row2"><span>结论</span><span id="qConclusion">-</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 宏观政策 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:#a68cff"></span><h2>六、宏观政策 / 行业动态雷达</h2><span class="desc">聚合工信部、商务部、行业协会公告（示例：生产环境接入合规爬虫/RSS/官方API）</span></div>
+    <div class="policy-feed" id="policyFeed"></div>
+  </section>
+
+  <footer>
+    数据来源示例：上海有色网 SMM（氧化镨钕/镨钕金属/氧化镝/氧化铽）、亚洲金属网 AMM、我的钢铁网 Mysteel、中国稀土行业协会、工业和信息化部、商务部产业安全与进出口管制局公告。<br>
+    合规说明：本原型中所有价格、报价、成交与政策数据均为<b>示例数据</b>，用于演示看板结构与交互逻辑。生产环境建议：① 优先对接官方数据接口/付费数据商 API，而非直接爬取网页；② 若需网页采集，须遵守目标网站 robots 协议、控制访问频率、避免采集需登录的付费内容；③ 政策类信息建议优先订阅工信部、商务部官方 RSS/公告频道，降低信息滞后与合规风险；④ 企业内部报价与成交数据应通过 ERP/CRM 系统对接，而非人工誊抄。<br>
+    最后更新：<span id="now2"></span>
+  </footer>
+
+</div>
+
+<script>
+const now = new Date();
+document.getElementById('now').textContent = now.toLocaleString('zh-CN');
+document.getElementById('now2').textContent = now.toLocaleString('zh-CN');
+
+// ---------- 生成30天示例序列 ----------
+function genSeries(base, vol, n=30, drift=0){
+  let arr=[]; let v=base;
+  for(let i=0;i<n;i++){
+    v = v + (Math.random()-0.48)*vol + drift;
+    arr.push(Math.round(v*100)/100);
+  }
+  return arr;
+}
+const days = Array.from({length:30},(_,i)=>{
+  const d = new Date(now); d.setDate(d.getDate() - (29-i));
+  return `${d.getMonth()+1}/${d.getDate()}`;
+});
+
+const materials = {
+  '氧化镨钕': {series: genSeries(76.2, 0.9, 30, 0.01), unit:'万元/吨', latest:null},
+  '镨钕金属': {series: genSeries(92.5, 1.1, 30, 0.01), unit:'万元/吨', latest:null},
+  '氧化镝':   {series: genSeries(142, 2.2, 30, -0.03), unit:'万元/吨', latest:null},
+  '氧化铽':   {series: genSeries(645, 8, 30, -0.05), unit:'万元/吨', latest:null},
+};
+Object.keys(materials).forEach(k=>{
+  const s = materials[k].series;
+  materials[k].latest = s[s.length-1];
+  materials[k].chg = ((s[s.length-1]-s[s.length-2])/s[s.length-2]*100);
+});
+
+// ---------- KPI ----------
+const kpiData = [
+  {label:'氧化镨钕现价', val: materials['氧化镨钕'].latest.toFixed(2)+' 万元/吨', chg: materials['氧化镨钕'].chg},
+  {label:'镨钕金属现价', val: materials['镨钕金属'].latest.toFixed(2)+' 万元/吨', chg: materials['镨钕金属'].chg},
+  {label:'氧化镝现价', val: materials['氧化镝'].latest.toFixed(1)+' 万元/吨', chg: materials['氧化镝'].chg},
+  {label:'今日成交均价（N35）', val: '196 元/kg', chg: 0.8},
+  {label:'今日综合毛利率', val: '17.4%', chg: -1.2},
+];
+document.getElementById('kpiRow').innerHTML = kpiData.map(k=>{
+  const cls = k.chg>0.05?'up':(k.chg<-0.05?'down':'flat');
+  const arrow = k.chg>0.05?'▲':(k.chg<-0.05?'▼':'—');
+  return `<div class="kpi"><div class="label">${k.label}</div><div class="val">${k.val}</div>
+    <div class="chg ${cls}">${arrow} ${Math.abs(k.chg).toFixed(2)}% 较昨日</div></div>`;
+}).join('');
+
+// ---------- 原材料卡片 + 图表 ----------
+let currentMat = '氧化镨钕';
+function renderCards(){
+  document.getElementById('materialCards').innerHTML = Object.keys(materials).map(k=>{
+    const m = materials[k];
+    const cls = m.chg>0.05?'up':(m.chg<-0.05?'down':'flat');
+    const arrow = m.chg>0.05?'▲':(m.chg<-0.05?'▼':'—');
+    return `<div class="pcard ${k===currentMat?'active':''}" onclick="selectMat('${k}')">
+      <div class="name">${k}</div>
+      <div class="price">${m.latest.toFixed(2)}<span class="unit"> ${m.unit}</span></div>
+      <div class="chg ${cls}">${arrow} ${Math.abs(m.chg).toFixed(2)}%</div>
+    </div>`;
+  }).join('');
+}
+renderCards();
+
+let priceChart;
+function renderPriceChart(){
+  document.getElementById('chartTitle').textContent = currentMat + ' · 近30日价格走势';
+  const ctx = document.getElementById('priceChart');
+  const data = materials[currentMat].series;
+  if(priceChart) priceChart.destroy();
+  priceChart = new Chart(ctx, {
+    type:'line',
+    data:{labels:days, datasets:[{
+      label:currentMat, data:data, borderColor:'#4f8cff', backgroundColor:'rgba(79,140,255,.12)',
+      fill:true, tension:.3, pointRadius:0, borderWidth:2
+    }]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#93a1c2', maxTicksLimit:8}, grid:{color:'#1c2743'}},
+        y:{ticks:{color:'#93a1c2'}, grid:{color:'#1c2743'}}
+      }
+    }
+  });
+}
+function selectMat(k){ currentMat = k; renderCards(); renderPriceChart(); }
+renderPriceChart();
+
+// ---------- 成品磁材价格表 ----------
+const finished = [
+  {grade:'N35', spec:'常规牌号，无重稀土', price:196, chg:0.8},
+  {grade:'N42', spec:'常规牌号，磁能积中等', price:214, chg:0.5},
+  {grade:'42SH', spec:'含Dy，耐温150℃', price:268, chg:-0.6},
+  {grade:'N52', spec:'高磁能积，常温应用', price:246, chg:1.1},
+  {grade:'48H', spec:'含Dy，耐温120℃', price:257, chg:0.2},
+  {grade:'40UH', spec:'高Dy含量，耐温180℃', price:312, chg:-1.4},
+];
+document.getElementById('finishedTbl').innerHTML = finished.map(f=>{
+  const cls = f.chg>0?'up':(f.chg<0?'down':'flat');
+  const arrow = f.chg>0?'▲':(f.chg<0?'▼':'—');
+  return `<tr><td><b>${f.grade}</b></td><td class="subtle">${f.spec}</td><td>${f.price}</td>
+    <td class="${cls}">${arrow} ${Math.abs(f.chg)}%</td></tr>`;
+}).join('');
+
+// ---------- 报价 vs 市场指数 ----------
+const marketIdx = genSeries(196, 2.5, 30, 0.2);
+const companyQuote = marketIdx.map(v => Math.round((v + (Math.random()-0.5)*6 - 3)*100)/100);
+new Chart(document.getElementById('quoteChart'), {
+  type:'line',
+  data:{labels:days, datasets:[
+    {label:'市场基准价 N35', data:marketIdx, borderColor:'#93a1c2', borderDash:[4,3], pointRadius:0, borderWidth:1.5, tension:.3},
+    {label:'本企业报价', data:companyQuote, borderColor:'#e0b25e', backgroundColor:'rgba(224,178,94,.1)', fill:true, pointRadius:0, borderWidth:2, tension:.3}
+  ]},
+  options:{
+    plugins:{legend:{labels:{color:'#93a1c2', font:{size:11}}}},
+    scales:{x:{ticks:{color:'#93a1c2', maxTicksLimit:8}, grid:{color:'#1c2743'}}, y:{ticks:{color:'#93a1c2'}, grid:{color:'#1c2743'}}}
+  }
+});
+
+const quoteRows = [
+  {cust:'客户A-新能源汽车电机厂', grade:'N42', date:'07-20', quote:212, mkt:214},
+  {cust:'客户B-家电压缩机厂', grade:'N35', date:'07-19', quote:199, mkt:195},
+  {cust:'客户C-工业机器人厂', grade:'42SH', date:'07-18', quote:271, mkt:266},
+  {cust:'客户D-风电发电机厂', grade:'N52', date:'07-17', quote:243, mkt:247},
+  {cust:'客户E-人形机器人关节厂', grade:'48H', date:'07-16', quote:262, mkt:257},
+];
+document.getElementById('quoteTbl').innerHTML = quoteRows.map(q=>{
+  const diff = (q.quote - q.mkt);
+  const cls = diff>0?'hi':(diff<0?'lo':'mid');
+  return `<tr><td>${q.cust}</td><td>${q.grade}</td><td class="subtle">${q.date}</td><td>${q.quote}</td>
+    <td><span class="tag ${cls}">${diff>0?'+':''}${diff.toFixed(1)}</span></td></tr>`;
+}).join('');
+
+// ---------- 今日成交 ----------
+const deals = [
+  {t:'09:12', cust:'客户A', grade:'N42', qty:500, price:213.5, cost:178.2},
+  {t:'10:45', cust:'客户F-声学器件厂', grade:'N35', qty:1200, price:197.0, cost:165.4},
+  {t:'11:30', cust:'客户C', grade:'42SH', qty:300, price:269.0, cost:229.6},
+  {t:'13:50', cust:'客户D', grade:'N52', qty:800, price:245.0, cost:203.8},
+  {t:'15:20', cust:'客户G-医疗设备厂', grade:'48H', qty:150, price:259.0, cost:221.3},
+];
+document.getElementById('dealTbl').innerHTML = deals.map(d=>{
+  const amt = (d.qty*d.price/1000).toFixed(2)+' 千元';
+  const margin = ((d.price-d.cost)/d.price*100);
+  const cls = margin>18?'hi':(margin<12?'lo':'mid');
+  return `<tr><td>${d.t}</td><td>${d.cust}</td><td>${d.grade}</td><td>${d.qty}</td>
+    <td>${d.price}</td><td>${amt}</td><td class="subtle">${d.cost}</td>
+    <td><span class="tag ${cls}">${margin.toFixed(1)}%</span></td></tr>`;
+}).join('');
+
+// ---------- 原材料价格库（可搜索） ----------
+const matList = [
+  {name:'氧化镨钕', cat:'轻稀土氧化物', price:76.3, unit:'万元/吨', chg:0.9, time:'09:30'},
+  {name:'镨钕金属', cat:'轻稀土金属', price:92.6, unit:'万元/吨', chg:1.1, time:'09:30'},
+  {name:'氧化镨', cat:'轻稀土氧化物', price:75.1, unit:'万元/吨', chg:0.6, time:'09:30'},
+  {name:'氧化钕', cat:'轻稀土氧化物', price:76.8, unit:'万元/吨', chg:0.8, time:'09:30'},
+  {name:'金属镨', cat:'轻稀土金属', price:90.4, unit:'万元/吨', chg:0.7, time:'09:30'},
+  {name:'金属钕', cat:'轻稀土金属', price:93.2, unit:'万元/吨', chg:1.0, time:'09:30'},
+  {name:'氧化镝', cat:'重稀土氧化物', price:142.5, unit:'万元/吨', chg:-0.5, time:'09:15'},
+  {name:'金属镝', cat:'重稀土金属', price:181.0, unit:'万元/吨', chg:-0.4, time:'09:15'},
+  {name:'氧化铽', cat:'重稀土氧化物', price:645.0, unit:'万元/吨', chg:-1.2, time:'09:15'},
+  {name:'金属铽', cat:'重稀土金属', price:712.0, unit:'万元/吨', chg:-0.9, time:'09:15'},
+  {name:'氧化镧', cat:'轻稀土氧化物', price:0.46, unit:'万元/吨', chg:0.0, time:'09:00'},
+  {name:'氧化铈', cat:'轻稀土氧化物', price:0.92, unit:'万元/吨', chg:0.2, time:'09:00'},
+  {name:'电解钴', cat:'基础金属', price:26.4, unit:'万元/吨', chg:0.3, time:'10:00'},
+  {name:'金属镓', cat:'稀有金属', price:2150, unit:'元/kg', chg:-1.5, time:'10:00'},
+  {name:'金属铌', cat:'合金辅料', price:19.2, unit:'万元/吨', chg:0.1, time:'10:00'},
+  {name:'电解铜', cat:'基础金属', price:7.85, unit:'万元/吨', chg:0.4, time:'10:00'},
+  {name:'工业硼铁', cat:'合金辅料', price:1.38, unit:'万元/吨', chg:0.0, time:'10:00'},
+  {name:'纯铁粉', cat:'基础原料', price:0.68, unit:'万元/吨', chg:0.1, time:'10:00'},
+];
+function renderMatList(filter=''){
+  const kw = filter.trim();
+  const rows = matList.filter(m => !kw || m.name.includes(kw) || m.cat.includes(kw));
+  document.getElementById('matEmpty').style.display = rows.length ? 'none' : 'block';
+  document.getElementById('matListTbl').innerHTML = rows.map(m=>{
+    const cls = m.chg>0.05?'up':(m.chg<-0.05?'down':'flat');
+    const arrow = m.chg>0.05?'▲':(m.chg<-0.05?'▼':'—');
+    return `<tr><td><b>${m.name}</b></td><td class="cat-tag">${m.cat}</td><td>${m.price}</td>
+      <td class="subtle">${m.unit}</td><td class="${cls}">${arrow} ${Math.abs(m.chg).toFixed(1)}%</td>
+      <td class="subtle">${m.time}</td></tr>`;
+  }).join('');
+}
+renderMatList();
+document.getElementById('matSearch').addEventListener('input', e => renderMatList(e.target.value));
+
+// ---------- 报价成本核算器（牌号 + 形状 + 镀层） ----------
+// 内部配方权重（每kg磁体所含元素重量占比），不在界面展示，仅用于后台成本测算
+const gradeRecipe = {
+  'N35' : {wNdPr:0.300, wDy:0.000, wTb:0.000, marketPrice:196},
+  'N42' : {wNdPr:0.310, wDy:0.000, wTb:0.000, marketPrice:214},
+  'N52' : {wNdPr:0.320, wDy:0.005, wTb:0.000, marketPrice:246},
+  '42SH': {wNdPr:0.300, wDy:0.025, wTb:0.003, marketPrice:268},
+  '48H' : {wNdPr:0.310, wDy:0.018, wTb:0.002, marketPrice:257},
+  '40UH': {wNdPr:0.290, wDy:0.045, wTb:0.006, marketPrice:312},
+};
+// 形状附加工费（元/kg）：环形/瓦形需线切割、曲面磨削，异形需专用工装，损耗更高
+const shapeSurcharge = {
+  '块状 / 方块（基础形状）': 0,
+  '环形（内孔线切割）': 25,
+  '瓦形 / 弧形（曲面磨削）': 35,
+  '异形 / 定制（专用工装）': 55,
+};
+// 镀层附加成本（元/kg）
+const coatingSurcharge = {
+  '无镀层（烧结毛坯）': 0,
+  '镀镍 Ni': 8,
+  '镀锌 Zn': 6,
+  '化学镀镍 Ni-P': 12,
+  '达克罗 Dacromet': 15,
+  '环氧树脂喷涂': 10,
+  '镍铜镍三层 Ni-Cu-Ni': 18,
+};
+const BASE_PROCESS_FEE = 65;   // 基础烧结/磨加工费，元/kg
+const OTHER_AUX_COST = 14;     // 其他辅料（铁/硼/钴/镓等），元/kg
+
+const qGradeSel = document.getElementById('qGrade');
+qGradeSel.innerHTML = Object.keys(gradeRecipe).map(g=>`<option value="${g}">${g}</option>`).join('');
+const qShapeSel = document.getElementById('qShape');
+qShapeSel.innerHTML = Object.keys(shapeSurcharge).map(s=>`<option value="${s}">${s}</option>`).join('');
+const qCoatingSel = document.getElementById('qCoating');
+qCoatingSel.innerHTML = Object.keys(coatingSurcharge).map(c=>`<option value="${c}">${c}</option>`).join('');
+
+function calcQuote(){
+  const grade = qGradeSel.value;
+  const shape = qShapeSel.value;
+  const coating = qCoatingSel.value;
+  const qty = +document.getElementById('qQty').value;
+  const margin = +document.getElementById('qMargin').value/100;
+
+  const r = gradeRecipe[grade];
+  const pNdPr = materials['镨钕金属'].latest * 10;   // 万元/吨 -> 元/kg
+  const pDy   = materials['氧化镝'].latest * 10;
+  const pTb   = materials['氧化铽'].latest * 10;
+
+  const materialCost = r.wNdPr*pNdPr + r.wDy*pDy + r.wTb*pTb;
+  const cost = materialCost + OTHER_AUX_COST + BASE_PROCESS_FEE + shapeSurcharge[shape] + coatingSurcharge[coating];
+  const suggestPrice = cost * (1+margin);
+  const suggestTotal = suggestPrice * qty;
+  const marketPrice = r.marketPrice;
+  const diff = (suggestPrice - marketPrice)/marketPrice*100;
+
+  document.getElementById('qCost').textContent = cost.toFixed(1)+' 元/kg';
+  document.getElementById('qPrice').textContent = suggestPrice.toFixed(1)+' 元/kg';
+  document.getElementById('qTotal').textContent = (suggestTotal/1000).toFixed(2)+' 千元（'+qty+'kg）';
+  document.getElementById('qMarket').textContent = marketPrice.toFixed(1)+' 元/kg（'+grade+'基础形态/无镀层参考价）';
+
+  const diffCls = diff>3?'down':(diff<-3?'up':'flat');
+  document.getElementById('qDiff').innerHTML = `<span class="${diffCls}">${diff>=0?'+':''}${diff.toFixed(1)}%</span>`;
+
+  let concl, cls;
+  if(diff > 8){ concl='建议报价明显高于市场基础参考价，需向客户说明形状/镀层附加成本，避免直接对比误判'; cls='flat'; }
+  else if(diff < -5){ concl='建议报价低于市场参考价，存在提价空间，可适度上调目标毛利率'; cls='up'; }
+  else { concl='建议报价处于合理区间，可直接用于对客户报价'; cls='up'; }
+  document.getElementById('qConclusion').innerHTML = `<span class="${cls}">${concl}</span>`;
+}
+['qGrade','qShape','qCoating'].forEach(id=>document.getElementById(id).addEventListener('change', calcQuote));
+['qQty','qMargin'].forEach(id=>{
+  const range = document.getElementById(id);
+  const num = document.getElementById(id+'Num');
+  range.addEventListener('input', ()=>{ num.value = range.value; calcQuote(); });
+  num.addEventListener('input', ()=>{ range.value = num.value; calcQuote(); });
+});
+calcQuote();
+
+// ---------- 政策雷达 ----------
+const policies = [
+  {tags:['出口管制'], title:'商务部、海关总署暂停部分稀土出口管制措施（至2026年11月10日）', summary:'2025年11月商务部与海关总署公告暂停6项对中重稀土相关物项的出口管制措施，期限一年，需持续跟踪到期后是否延续或收紧，直接影响镝、铽等原料的进口成本与供应稳定性。', src:'商务部产业安全与进出口管制局 · 示例摘要', date:'2025-11-07'},
+  {tags:['行业监管'], title:'《稀土行业合规监管工作方案》发布，开展开采分离加工全覆盖核查', summary:'工信部部署对稀土开采、冶炼分离、加工利用企业开展合规核查，中长期有利于规范供给、稳定价格中枢，短期需关注核查期间部分产能受限对原料价格的扰动。', src:'工业和信息化部 · 示例摘要', date:'2025-10-15'},
+  {tags:['需求端','利好'], title:'人形机器人产业创新发展行动计划：2027年量产突破10万台', summary:'规划明确人形机器人产业化目标，关节电机、灵巧手等部件对高性能钕铁硼（含Dy/Tb高牌号）需求预计显著增长，建议提前评估高牌号产能与重稀土库存策略。', src:'工业和信息化部 · 示例摘要', date:'2025-09-20'},
+  {tags:['中重稀土','管制'], title:'商务部公告2025年第18号：对钐、铽、镝等中重稀土物项实施出口管制', summary:'公告对钐、钆、铽、镝、镥、钪、钇及相关制品（含高性能钕铁硼永磁材料）实施出口管制，涉及重稀土采购与出口业务的企业需申请许可，交期与成本需重新评估。', src:'商务部、海关总署 · 示例摘要', date:'2025-04-04'},
+];
+document.getElementById('policyFeed').innerHTML = policies.map(p=>{
+  const tagHtml = p.tags.map(t=>`<span class="tag mid">${t}</span>`).join('');
+  return `<div class="pf-item">
+    <div class="tags">${tagHtml}<span class="subtle" style="margin-top:4px;">${p.date}</span></div>
+    <div class="content">
+      <div class="title">${p.title}</div>
+      <div class="summary">${p.summary}</div>
+      <div class="src">来源：${p.src}</div>
+    </div>
+  </div>`;
+}).join('');
+
+// ---------- 决策建议引擎（规则型，基于上方数据实时汇总） ----------
+function buildDecisions(){
+  // 1. 采购建议：原材料近期涨跌幅（镨钕、镝铽均纳入，镝铽波动权重更高）
+  const chgNdPr = (materials['氧化镨钕'].chg + materials['镨钕金属'].chg)/2;
+  const chgHeavy = (materials['氧化镝'].chg + materials['氧化铽'].chg)/2;
+  const avgChg = chgNdPr*0.5 + chgHeavy*0.5;
+  let d1;
+  if(avgChg > 0.4){
+    d1 = {label:'采购建议', prio:'pri-high',
+      msg:`原材料价格上行（轻稀土${chgNdPr>=0?'+':''}${chgNdPr.toFixed(2)}% / 重稀土${chgHeavy>=0?'+':''}${chgHeavy.toFixed(2)}%），建议提前锁价或加快在途采购`,
+      support:`氧化镨钕 ${materials['氧化镨钕'].latest.toFixed(1)}万/吨，氧化镝 ${materials['氧化镝'].latest.toFixed(1)}万/吨，均较昨日走高`};
+  } else if(avgChg < -0.4){
+    d1 = {label:'采购建议', prio:'pri-low',
+      msg:`原材料价格走弱（轻稀土${chgNdPr.toFixed(2)}% / 重稀土${chgHeavy.toFixed(2)}%），可逢低分批补库降低平均成本`,
+      support:`建议关注氧化镨钕、氧化镝是否延续跌势，避免一次性大额补库`};
+  } else {
+    d1 = {label:'采购建议', prio:'pri-mid',
+      msg:`原材料价格窄幅震荡，维持正常采购节奏，按订单排期滚动补库即可`,
+      support:`轻稀土${chgNdPr>=0?'+':''}${chgNdPr.toFixed(2)}%，重稀土${chgHeavy>=0?'+':''}${chgHeavy.toFixed(2)}%，无明显趋势信号`};
+  }
+
+  // 2. 报价建议：本企业报价相对市场基准的平均价差
+  const avgDiff = quoteRows.reduce((s,q)=>s+(q.quote-q.mkt),0)/quoteRows.length;
+  let d2;
+  if(avgDiff < -1.5){
+    d2 = {label:'报价建议', prio:'pri-mid',
+      msg:`近5笔报价平均低于市场基准 ${Math.abs(avgDiff).toFixed(1)} 元/kg，存在上调空间，建议下一轮报价适度提价`,
+      support:`市场基准以N35为例，报价明细见「本企业历史报价」模块`};
+  } else if(avgDiff > 1.5){
+    d2 = {label:'报价建议', prio:'pri-mid',
+      msg:`近5笔报价平均高于市场基准 ${avgDiff.toFixed(1)} 元/kg，需关注客户流失风险，可对重点客户适度让利`,
+      support:`建议优先核查报价明显偏高的订单，评估客户粘性与替代供应商情况`};
+  } else {
+    d2 = {label:'报价建议', prio:'pri-low',
+      msg:`报价与市场基准基本同步（价差 ${avgDiff.toFixed(1)} 元/kg），维持当前报价策略`,
+      support:`持续跟踪市场基准变化，避免报价滞后于原料成本波动`};
+  }
+
+  // 3. 毛利预警：今日成交平均毛利率
+  const avgMargin = deals.reduce((s,d)=>s+((d.price-d.cost)/d.price*100),0)/deals.length;
+  let d3;
+  if(avgMargin < 14){
+    d3 = {label:'毛利预警', prio:'pri-high',
+      msg:`今日平均毛利率 ${avgMargin.toFixed(1)}%，低于健康区间（≥15%），建议复核低毛利订单定价`,
+      support:`可结合「成本核算器」测算各牌号安全报价下限，避免薄利甚至倒挂订单`};
+  } else if(avgMargin < 18){
+    d3 = {label:'毛利预警', prio:'pri-mid',
+      msg:`今日平均毛利率 ${avgMargin.toFixed(1)}%，处于合理区间但偏薄，需关注原料价格波动风险`,
+      support:`重点关注含Dy/Tb高牌号订单成本敏感度更高`};
+  } else {
+    d3 = {label:'毛利预警', prio:'pri-low',
+      msg:`今日平均毛利率 ${avgMargin.toFixed(1)}%，处于健康区间，可维持当前定价策略`,
+      support:`建议继续保持成本与报价的动态联动核算`};
+  }
+
+  // 4. 政策与风险提示（静态示例，实际应由政策雷达模块自动抽取近期高优先级条目）
+  const d4 = {label:'政策与风险', prio:'pri-mid',
+    msg:`稀土出口管制暂停措施将于 2026-11-10 到期，叠加人形机器人放量拉动高牌号需求，建议提前评估重稀土安全库存与高牌号（SH/UH）产能储备`,
+    support:`详见下方「宏观政策 / 行业动态雷达」模块相关公告`};
+
+  return [d1, d2, d3, d4];
+}
+
+document.getElementById('decisionGrid').innerHTML = buildDecisions().map(d=>{
+  return `<div class="dcard ${d.prio}">
+    <div class="head"><span class="label">${d.label}</span><span class="prio ${d.prio}">${d.prio==='pri-high'?'高优先级':d.prio==='pri-mid'?'关注':'正常'}</span></div>
+    <div class="msg">${d.msg}</div>
+    <div class="support">${d.support}</div>
+  </div>`;
+}).join('');
+</script>
+</body>
+</html>

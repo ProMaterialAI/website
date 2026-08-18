@@ -1,0 +1,22 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+  <!-- P shaped logo with white stroke -->
+  <g fill="none" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left vertical line -->
+    <line x1="40" y1="20" x2="40" y2="180" />
+    
+    <!-- Top horizontal line -->
+    <line x1="40" y1="20" x2="110" y2="20" />
+    
+    <!-- Right curved top (arc) -->
+    <path d="M 110 20 Q 150 20 150 70 Q 150 100 110 100" />
+    
+    <!-- Left horizontal middle line -->
+    <line x1="40" y1="100" x2="110" y2="100" />
+    
+    <!-- Bottom left horizontal -->
+    <line x1="40" y1="180" x2="100" y2="180" />
+    
+    <!-- Right curved bottom (arc) -->
+    <path d="M 100 100 Q 140 100 150 140 Q 150 180 100 180" />
+  </g>
+</svg>

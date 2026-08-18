@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>钕铁硼库存资金分析与采购优化 · 决策看板原型</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#121b2e; --panel2:#0f1830; --border:#243252;
+    --text:#e8edf7; --sub:#93a1c2; --gold:#e0b25e; --blue:#4f8cff;
+    --green:#3ecf8e; --red:#ff6b6b; --amber:#f5a623;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,#0a0f1c,#0b1220 300px);color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif;}
+  .app-shell{}
+  .main{}
+  .wrap{max-width:1360px;margin:0 auto;padding:20px 24px 60px;}
+  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;
+    padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:22px;}
+  header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.5px;}
+  header h1 span{color:var(--green);}
+  header .meta{color:var(--sub);font-size:12.5px;margin-top:4px;}
+  .refresh{background:var(--panel2);border:1px solid var(--border);color:var(--sub);
+    padding:8px 14px;border-radius:8px;font-size:12.5px;cursor:pointer;}
+  .refresh:hover{border-color:var(--blue);color:var(--text);}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+  .kpi .label{color:var(--sub);font-size:12px;}
+  .kpi .val{font-size:19px;font-weight:700;margin-top:6px;}
+  .kpi .chg{font-size:12px;margin-top:4px;}
+  .up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--sub);}
+
+  section{margin-bottom:28px;}
+  .sec-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .sec-title .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
+  .sec-title h2{font-size:16px;margin:0;font-weight:700;}
+  .sec-title .desc{color:var(--sub);font-size:12px;margin-left:4px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .panel h3{margin:0 0 10px;font-size:13.5px;color:var(--text);font-weight:600;}
+  .subtle{color:var(--sub);font-size:12px;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--sub);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;border:1px solid var(--border);}
+  .tag.hi{color:var(--green);border-color:rgba(62,207,142,.4);background:rgba(62,207,142,.08);}
+  .tag.lo{color:var(--red);border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.08);}
+  .tag.mid{color:var(--amber);border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.08);}
+
+  .stock-bar-row{margin-bottom:14px;}
+  .stock-bar-row .lbl{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;}
+  .stock-bar-row .lbl .amt{color:var(--text);font-weight:600;}
+  .stock-bar-track{background:var(--panel2);border:1px solid var(--border);border-radius:6px;height:10px;overflow:hidden;}
+  .stock-bar-fill{height:100%;border-radius:6px;}
+
+  .badge-strip{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+  .mini-badge{font-size:11.5px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--sub);}
+  .mini-badge.good{color:var(--green);border-color:rgba(62,207,142,.4);background:rgba(62,207,142,.08);}
+  .mini-badge.warn{color:var(--amber);border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.08);}
+
+  footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--border);color:#5f6c8c;font-size:11.5px;line-height:1.8;}
+  @media(max-width:980px){.kpi-row{grid-template-columns:repeat(2,1fr);}.grid2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main">
+  <div class="wrap">
+
+  <header>
+    <div>
+      <h1>钕铁硼库存<span>资金分析</span>与采购优化</h1>
+      <div class="meta">需求预测 · 智能补货 · 供应商绩效 · 资金占用 · 节省测算 &nbsp;|&nbsp; 数据更新时间：<span id="now"></span></div>
+    </div>
+    <button class="refresh" onclick="location.reload()">↻ 刷新数据</button>
+  </header>
+
+  <!-- KPI -->
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <!-- 需求预测 & 采购价格波动 -->
+  <section>
+    <div class="sec-title"><span class="dot"></span><h2>一、需求预测 & 采购价格波动分析</h2><span class="desc">结合历史销售趋势预测未来需求，识别原料价格低点，合理安排采购时机</span></div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>N42 成品需求预测（近12个月实际 + 未来3个月预测）</h3>
+        <canvas id="demandChart" height="130"></canvas>
+        <div class="subtle" style="margin-top:10px;">预测方法：历史销量 + 季节性系数 + 近3月趋势外推（示例逻辑，生产环境建议接入时间序列模型）</div>
+      </div>
+      <div class="panel">
+        <h3>氧化镨钕采购价格走势（近30日）</h3>
+        <div class="badge-strip">
+          <span class="mini-badge good" id="timingBadge">测算中…</span>
+        </div>
+        <canvas id="timingChart" height="130"></canvas>
+        <div class="subtle" style="margin-top:10px;">当价格低于近30日均值一定幅度时，提示进入采购择时窗口</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 智能补货 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:var(--gold)"></span><h2>二、智能补货建议</h2><span class="desc">按当前库存、日均消耗与采购/生产周期自动生成补货动作</span></div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>物料 / 牌号</th><th>类型</th><th>当前库存</th><th>日均消耗</th><th>覆盖天数</th><th>采购/生产周期</th><th>建议动作</th></tr></thead>
+        <tbody id="replenishTbl"></tbody>
+      </table>
+      <div class="subtle" style="margin-top:10px;">覆盖天数 = 当前库存 ÷ 日均消耗；覆盖天数 &lt; 周期 → 加急采购，覆盖天数 &lt; 周期×1.3 → 建议采购，其余为库存充足</div>
+    </div>
+  </section>
+
+  <!-- 呆滞库存 & 周转天数 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:var(--red)"></span><h2>三、呆滞库存预警 & 库存周转天数（DOH）</h2><span class="desc">监控库存消耗速度，及时发现积压风险</span></div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>呆滞库存明细</h3>
+        <table>
+          <thead><tr><th>物料 / 仓库</th><th>库龄</th><th>库存金额</th><th>状态</th></tr></thead>
+          <tbody id="deadstockTbl"></tbody>
+        </table>
+        <div class="subtle" style="margin-top:10px;">库龄 ≥ 90 天标记「呆滞」，60–90 天标记「预警」</div>
+      </div>
+      <div class="panel">
+        <h3>各品类库存周转天数（DOH）</h3>
+        <table>
+          <thead><tr><th>品类</th><th>库存金额</th><th>月均出库</th><th>DOH（天）</th><th>状态</th></tr></thead>
+          <tbody id="dohTbl"></tbody>
+        </table>
+        <div class="subtle" style="margin-top:10px;">DOH = 库存金额 ÷ 月均出库金额 × 30，越高代表资金占用周期越长</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 供应商绩效 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><h2>四、供应商绩效分析</h2><span class="desc">综合交期、价格、质量表现，辅助采购决策</span></div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>供应商</th><th>主供品类</th><th>交期达成率</th><th>价格指数</th><th>质检合格率</th><th>综合评分</th><th>建议</th></tr></thead>
+        <tbody id="supplierTbl"></tbody>
+      </table>
+      <div class="subtle" style="margin-top:10px;">价格指数以市场均价为100，低于100代表价格更具竞争力；综合评分 = 交期40% + 价格30% + 质量30%</div>
+    </div>
+  </section>
+
+  <!-- 资金占用分析 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:#a68cff"></span><h2>五、库存资金占用分析（财务视角）</h2><span class="desc">统计各品类 / 仓库占用资金，帮助释放现金流</span></div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>按品类划分</h3>
+        <div id="catBreakdown"></div>
+      </div>
+      <div class="panel">
+        <h3>按仓库划分</h3>
+        <div id="whBreakdown"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <footer>
+    数据来源示例：企业 ERP / WMS 库存台账、采购订单系统、供应商交期与质检记录、上海有色网 SMM 原料价格。<br>
+    说明：本页所有库存、销量、供应商与节省测算数据均为<b>示例数据</b>，用于演示"库存分析能否量化为可执行决策与可预估收益"。生产环境建议：① 库存与销量数据对接 ERP/WMS 系统，避免人工台账滞后；② 需求预测建议采用时间序列/机器学习模型并结合业务季节性人工修正；③ 节省测算口径需与财务部门共同核定资金成本率与统计范围，确保数字可向老板/董事会交代。<br>
+    最后更新：<span id="now2"></span>
+  </footer>
+
+  </div>
+  </div>
+
+</div>
+
+<script>
+const now = new Date();
+document.getElementById('now').textContent = now.toLocaleString('zh-CN');
+document.getElementById('now2').textContent = now.toLocaleString('zh-CN');
+
+function genSeries(base, vol, n=30, drift=0){
+  let arr=[]; let v=base;
+  for(let i=0;i<n;i++){
+    v = v + (Math.random()-0.48)*vol + drift;
+    arr.push(Math.round(v*100)/100);
+  }
+  return arr;
+}
+
+// ---------- 一、需求预测 ----------
+const monthLabels = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月','预测1','预测2','预测3'];
+const demandHist = [7800,7600,8200,8900,9300,9700,10200,10600,10100,9800,10400,11200];
+const lastVal = demandHist[demandHist.length-1];
+const demandForecast = [lastVal*1.04, lastVal*1.09, lastVal*1.14].map(v=>Math.round(v));
+const demandFull = demandHist.concat(demandForecast);
+const demandHistLine = demandHist.concat([null,null,null]);
+const demandForeLine = Array(demandHist.length-1).fill(null).concat([demandHist[demandHist.length-1]]).concat(demandForecast);
+
+new Chart(document.getElementById('demandChart'), {
+  type:'line',
+  data:{labels:monthLabels, datasets:[
+    {label:'历史实际(kg)', data:demandHistLine, borderColor:'#4f8cff', backgroundColor:'rgba(79,140,255,.12)', fill:true, pointRadius:2, borderWidth:2, tension:.3},
+    {label:'预测(kg)', data:demandForeLine, borderColor:'#e0b25e', borderDash:[5,4], pointRadius:2, borderWidth:2, tension:.3}
+  ]},
+  options:{
+    plugins:{legend:{labels:{color:'#93a1c2', font:{size:11}}}},
+    scales:{x:{ticks:{color:'#93a1c2', maxTicksLimit:10}, grid:{color:'#1c2743'}}, y:{ticks:{color:'#93a1c2'}, grid:{color:'#1c2743'}}}
+  }
+});
+
+// ---------- 采购价格波动 / 择时 ----------
+const days = Array.from({length:30},(_,i)=>{
+  const d = new Date(now); d.setDate(d.getDate() - (29-i));
+  return `${d.getMonth()+1}/${d.getDate()}`;
+});
+const ndprSeries = genSeries(76.2, 0.9, 30, 0.01);
+const ndprLatest = ndprSeries[ndprSeries.length-1];
+const ndprAvg30 = ndprSeries.reduce((a,b)=>a+b,0)/ndprSeries.length;
+const diffPct = (ndprLatest-ndprAvg30)/ndprAvg30*100;
+
+new Chart(document.getElementById('timingChart'), {
+  type:'line',
+  data:{labels:days, datasets:[
+    {label:'氧化镨钕(万元/吨)', data:ndprSeries, borderColor:'#4f8cff', backgroundColor:'rgba(79,140,255,.12)', fill:true, pointRadius:0, borderWidth:2, tension:.3},
+    {label:'30日均值', data:Array(30).fill(Math.round(ndprAvg30*100)/100), borderColor:'#93a1c2', borderDash:[4,3], pointRadius:0, borderWidth:1.5}
+  ]},
+  options:{
+    plugins:{legend:{labels:{color:'#93a1c2', font:{size:11}}}},
+    scales:{x:{ticks:{color:'#93a1c2', maxTicksLimit:8}, grid:{color:'#1c2743'}}, y:{ticks:{color:'#93a1c2'}, grid:{color:'#1c2743'}}}
+  }
+});
+const timingBadge = document.getElementById('timingBadge');
+if(diffPct < -1.5){
+  timingBadge.textContent = `当前价格低于30日均值 ${Math.abs(diffPct).toFixed(1)}%，处于采购择时窗口`;
+  timingBadge.className = 'mini-badge good';
+} else if(diffPct > 1.5){
+  timingBadge.textContent = `当前价格高于30日均值 ${diffPct.toFixed(1)}%，建议观望或分批采购`;
+  timingBadge.className = 'mini-badge warn';
+} else {
+  timingBadge.textContent = `当前价格接近30日均值（${diffPct>=0?'+':''}${diffPct.toFixed(1)}%），无明显择时信号`;
+  timingBadge.className = 'mini-badge';
+}
+
+// ---------- 二、智能补货建议 ----------
+const replenish = [
+  {name:'氧化镨钕', type:'原料', stock:1200, daily:45, cycle:20},
+  {name:'镨钕金属', type:'原料', stock:800, daily:30, cycle:15},
+  {name:'氧化镝', type:'原料', stock:60, daily:3.2, cycle:30},
+  {name:'氧化铽', type:'原料', stock:15, daily:0.6, cycle:35},
+  {name:'N35 烧结毛坯', type:'半成品', stock:2400, daily:180, cycle:7},
+  {name:'N42 成品', type:'成品', stock:900, daily:95, cycle:5},
+  {name:'42SH 成品', type:'成品', stock:120, daily:35, cycle:10},
+  {name:'40UH 成品', type:'成品', stock:340, daily:12, cycle:20},
+];
+document.getElementById('replenishTbl').innerHTML = replenish.map(r=>{
+  const coverage = r.stock/r.daily;
+  let action, cls;
+  if(coverage < r.cycle){ action='加急采购'; cls='lo'; }
+  else if(coverage < r.cycle*1.3){ action='建议采购'; cls='mid'; }
+  else { action='库存充足'; cls='hi'; }
+  return `<tr><td><b>${r.name}</b></td><td class="subtle">${r.type}</td><td>${r.stock} kg</td>
+    <td>${r.daily} kg/日</td><td>${coverage.toFixed(1)} 天</td><td class="subtle">${r.cycle} 天</td>
+    <td><span class="tag ${cls}">${action}</span></td></tr>`;
+}).join('');
+
+// ---------- 三、呆滞库存 & DOH ----------
+const deadstock = [
+  {name:'40UH 成品', wh:'西安仓', age:132, amount:58},
+  {name:'氧化镧', wh:'苏州仓', age:210, amount:12},
+  {name:'48H 半成品', wh:'昆山仓', age:75, amount:40},
+  {name:'达克罗镀层成品', wh:'东莞仓', age:95, amount:33},
+  {name:'42SH 成品', wh:'苏州仓', age:68, amount:45},
+  {name:'氧化铈', wh:'苏州仓', age:180, amount:9},
+  {name:'N52 成品(小批量定制)', wh:'东莞仓', age:101, amount:88},
+];
+document.getElementById('deadstockTbl').innerHTML = deadstock.map(d=>{
+  const cls = d.age>=90?'lo':(d.age>=60?'mid':'hi');
+  const status = d.age>=90?'呆滞':(d.age>=60?'预警':'正常');
+  return `<tr><td><b>${d.name}</b></td><td class="subtle">${d.wh}</td><td>${d.age} 天</td>
+    <td>${d.amount} 万元</td><td><span class="tag ${cls}">${status}</span></td></tr>`;
+}).join('');
+
+const dohData = [
+  {cat:'原材料（稀土氧化物/金属）', stock:1450, outbound:920},
+  {cat:'半成品（烧结毛坯）', stock:860, outbound:780},
+  {cat:'成品（各牌号+镀层）', stock:950, outbound:610},
+];
+document.getElementById('dohTbl').innerHTML = dohData.map(d=>{
+  const doh = d.stock/d.outbound*30;
+  const cls = doh>50?'lo':(doh>35?'mid':'hi');
+  const status = doh>50?'偏高':(doh>35?'关注':'健康');
+  return `<tr><td>${d.cat}</td><td>${d.stock} 万元</td><td>${d.outbound} 万元</td>
+    <td>${doh.toFixed(0)} 天</td><td><span class="tag ${cls}">${status}</span></td></tr>`;
+}).join('');
+
+// ---------- 四、供应商绩效 ----------
+const suppliers = [
+  {name:'供应商A · 稀土集团', cat:'氧化镨钕 / 镨钕金属', otd:96, price:98, qc:99.5},
+  {name:'供应商B · 赣州稀土', cat:'氧化镝 / 氧化铽', otd:88, price:103, qc:98.2},
+  {name:'供应商C · 包头磁材代工', cat:'烧结毛坯代工', otd:91, price:95, qc:97.0},
+  {name:'供应商D · 东莞电镀厂', cat:'表面镀层加工', otd:79, price:108, qc:95.5},
+  {name:'供应商E · 赣州稀土贸易', cat:'氧化镨 / 氧化钕', otd:93, price:101, qc:99.0},
+];
+document.getElementById('supplierTbl').innerHTML = suppliers.map(s=>{
+  const priceScore = Math.max(0, 100-(s.price-90));
+  const score = s.otd*0.4 + priceScore*0.3 + s.qc*0.3;
+  let advice, cls;
+  if(score>=85){ advice='优先合作'; cls='hi'; }
+  else if(score>=70){ advice='观察'; cls='mid'; }
+  else { advice='建议淘汰/寻找替代'; cls='lo'; }
+  return `<tr><td><b>${s.name}</b></td><td class="subtle">${s.cat}</td><td>${s.otd}%</td>
+    <td>${s.price}</td><td>${s.qc}%</td><td>${score.toFixed(0)} 分</td>
+    <td><span class="tag ${cls}">${advice}</span></td></tr>`;
+}).join('');
+
+// ---------- 五、资金占用分布 ----------
+const catColors = ['#4f8cff','#e0b25e','#3ecf8e'];
+const catData = [
+  {name:'原材料', amount:1450},
+  {name:'半成品', amount:860},
+  {name:'成品', amount:950},
+];
+const catTotal = catData.reduce((s,c)=>s+c.amount,0);
+document.getElementById('catBreakdown').innerHTML = catData.map((c,i)=>{
+  const pct = (c.amount/catTotal*100).toFixed(1);
+  return `<div class="stock-bar-row">
+    <div class="lbl"><span>${c.name}</span><span class="amt">${c.amount} 万元 · ${pct}%</span></div>
+    <div class="stock-bar-track"><div class="stock-bar-fill" style="width:${pct}%;background:${catColors[i]};"></div></div>
+  </div>`;
+}).join('');
+
+const whColors = ['#4f8cff','#e0b25e','#3ecf8e','#ff6b6b'];
+const whData = [
+  {name:'苏州仓', amount:1380},
+  {name:'昆山仓', amount:920},
+  {name:'东莞仓', amount:620},
+  {name:'西安仓', amount:340},
+];
+const whTotal = whData.reduce((s,c)=>s+c.amount,0);
+document.getElementById('whBreakdown').innerHTML = whData.map((c,i)=>{
+  const pct = (c.amount/whTotal*100).toFixed(1);
+  return `<div class="stock-bar-row">
+    <div class="lbl"><span>${c.name}</span><span class="amt">${c.amount} 万元 · ${pct}%</span></div>
+    <div class="stock-bar-track"><div class="stock-bar-fill" style="width:${pct}%;background:${whColors[i]};"></div></div>
+  </div>`;
+}).join('');
+
+// ---------- KPI ----------
+const totalStockVal = catTotal;
+const deadTotal = deadstock.reduce((s,d)=>s+d.amount,0);
+const avgDoh = dohData.reduce((s,d)=>s+d.stock,0)/dohData.reduce((s,d)=>s+d.outbound,0)*30;
+const avgSupplierScore = suppliers.reduce((s,sp)=>{
+  const priceScore = Math.max(0, 100-(sp.price-90));
+  return s + (sp.otd*0.4+priceScore*0.3+sp.qc*0.3);
+},0)/suppliers.length;
+
+const kpiData = [
+  {label:'库存总值（资金占用）', val: totalStockVal+' 万元', chg:-2.1},
+  {label:'库存周转天数 DOH', val: avgDoh.toFixed(0)+' 天（目标35天）', chg: avgDoh>35?1.5:-1.5, invert:true},
+  {label:'呆滞库存占比', val: (deadTotal/totalStockVal*100).toFixed(1)+'%', chg:1.2, invert:true},
+  {label:'供应商综合评分', val: avgSupplierScore.toFixed(0)+' 分', chg:0.8},
+  {label:'氧化镨钕采购时机', val: (diffPct<0?'低于':'高于')+'30日均值'+Math.abs(diffPct).toFixed(1)+'%', chg: diffPct<0?1:-1},
+];
+document.getElementById('kpiRow').innerHTML = kpiData.map(k=>{
+  let cls = k.chg>0.05?'up':(k.chg<-0.05?'down':'flat');
+  if(k.invert) cls = k.chg>0.05?'down':(k.chg<-0.05?'up':'flat');
+  const arrow = k.chg>0.05?'▲':(k.chg<-0.05?'▼':'—');
+  return `<div class="kpi"><div class="label">${k.label}</div><div class="val">${k.val}</div>
+    <div class="chg ${cls}">${arrow} ${Math.abs(k.chg).toFixed(1)}% 较上月</div></div>`;
+}).join('');
+
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>钕铁硼报价与成交工作流水 · 原型</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --bg:#0b1220; --panel:#121b2e; --panel2:#0f1830; --border:#243252;
+    --text:#e8edf7; --sub:#93a1c2; --gold:#e0b25e; --blue:#4f8cff;
+    --green:#3ecf8e; --red:#ff6b6b; --amber:#f5a623;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,#0a0f1c,#0b1220 300px);color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif;}
+  .app-shell{}
+  .main{}
+  .wrap{max-width:1360px;margin:0 auto;padding:20px 24px 60px;}
+  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;
+    padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:22px;}
+  header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.5px;}
+  header h1 span{color:var(--blue);}
+  header .meta{color:var(--sub);font-size:12.5px;margin-top:4px;}
+  .refresh{background:var(--panel2);border:1px solid var(--border);color:var(--sub);
+    padding:8px 14px;border-radius:8px;font-size:12.5px;cursor:pointer;}
+  .refresh:hover{border-color:var(--blue);color:var(--text);}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+  .kpi .label{color:var(--sub);font-size:12px;}
+  .kpi .val{font-size:19px;font-weight:700;margin-top:6px;}
+  .kpi .chg{font-size:12px;margin-top:4px;}
+  .up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--sub);}
+
+  section{margin-bottom:28px;}
+  .sec-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .sec-title .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
+  .sec-title h2{font-size:16px;margin:0;font-weight:700;}
+  .sec-title .desc{color:var(--sub);font-size:12px;margin-left:4px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .panel h3{margin:0 0 10px;font-size:13.5px;color:var(--text);font-weight:600;}
+  .subtle{color:var(--sub);font-size:12px;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--sub);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;border:1px solid var(--border);}
+  .tag.hi{color:var(--green);border-color:rgba(62,207,142,.4);background:rgba(62,207,142,.08);}
+  .tag.lo{color:var(--red);border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.08);}
+  .tag.mid{color:var(--amber);border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.08);}
+
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .field{margin-bottom:10px;}
+  .field label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px;}
+  .field .row{display:flex;align-items:center;gap:8px;}
+  .field input[type=range]{flex:1;}
+  .field input[type=number]{width:78px;background:var(--panel2);border:1px solid var(--border);
+    color:var(--text);border-radius:6px;padding:5px 6px;font-size:12.5px;}
+  .result{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .result .row2{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--border);font-size:13px;}
+  .result .row2:last-child{border-bottom:none;}
+  .result .big{font-size:24px;font-weight:800;color:var(--gold);}
+  select{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;}
+
+  footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--border);color:#5f6c8c;font-size:11.5px;line-height:1.8;}
+  @media(max-width:980px){.kpi-row{grid-template-columns:repeat(2,1fr);}.calc{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main">
+  <div class="wrap">
+
+  <header>
+    <div>
+      <h1>钕铁硼报价与<span>成交工作流水</span></h1>
+      <div class="meta">报价成本核算 · 今日成交记录 &nbsp;|&nbsp; 数据更新时间：<span id="now"></span></div>
+    </div>
+    <button class="refresh" onclick="location.reload()">↻ 刷新数据</button>
+  </header>
+
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <!-- 报价成本核算器 -->
+  <section>
+    <div class="sec-title"><span class="dot"></span><h2>报价成本核算器</h2></div>
+    <div class="panel calc">
+      <div>
+        <div class="field">
+          <label>牌号</label>
+          <select id="qGrade" style="width:100%;"></select>
+        </div>
+        <div class="field">
+          <label>形状（影响加工/磨削/损耗成本）</label>
+          <select id="qShape" style="width:100%;"></select>
+        </div>
+        <div class="field">
+          <label>镀层（影响表面处理成本）</label>
+          <select id="qCoating" style="width:100%;"></select>
+        </div>
+        <div class="field">
+          <label>数量（kg）</label>
+          <div class="row"><input type="range" id="qQty" min="10" max="5000" step="10" value="500"><input type="number" id="qQtyNum" value="500"></div>
+        </div>
+        <div class="field">
+          <label>目标毛利率（%）</label>
+          <div class="row"><input type="range" id="qMargin" min="0" max="40" value="15"><input type="number" id="qMarginNum" value="15"></div>
+        </div>
+      </div>
+      <div>
+        <div class="result">
+          <div class="row2"><span>理论成本（元/kg）</span><span class="big" id="qCost">-</span></div>
+          <div class="row2"><span>建议报价（元/kg）</span><span id="qPrice">-</span></div>
+          <div class="row2"><span>建议报价总额</span><span id="qTotal">-</span></div>
+          <div class="row2"><span>该牌号今日市场参考价</span><span id="qMarket">-</span></div>
+          <div class="row2"><span>与市场价差</span><span id="qDiff">-</span></div>
+          <div class="row2"><span>结论</span><span id="qConclusion">-</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 今日成交 -->
+  <section>
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><h2>今日成交价</h2><span class="desc">实时成交订单与毛利即时核算</span></div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>时间</th><th>客户</th><th>牌号</th><th>数量(kg)</th><th>成交单价</th><th>成交额</th><th>理论成本</th><th>毛利率</th></tr></thead>
+        <tbody id="dealTbl"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    数据说明：本页牌号成本测算基于「原材料价格」页同源原料价格（示例数据，本页独立生成一份同分布的示例序列）。今日成交明细为示例数据，用于演示报价 → 成交 → 毛利核算的工作流闭环。<br>
+    决策汇总请见「库存分析」页，原料全量价目请见「原材料价格」页，库存与采购优化请见「库存台账」页。<br>
+    最后更新：<span id="now2"></span>
+  </footer>
+
+  </div>
+  </div>
+
+</div>
+
+<script>
+const now = new Date();
+document.getElementById('now').textContent = now.toLocaleString('zh-CN');
+document.getElementById('now2').textContent = now.toLocaleString('zh-CN');
+
+function genSeries(base, vol, n=30, drift=0){
+  let arr=[]; let v=base;
+  for(let i=0;i<n;i++){
+    v = v + (Math.random()-0.48)*vol + drift;
+    arr.push(Math.round(v*100)/100);
+  }
+  return arr;
+}
+
+// 本页独立生成一份与「原材料价格」页同分布的原料价格序列，供成本测算使用
+const materials = {
+  '氧化镨钕': {series: genSeries(76.2, 0.9, 30, 0.01), unit:'万元/吨', latest:null},
+  '镨钕金属': {series: genSeries(92.5, 1.1, 30, 0.01), unit:'万元/吨', latest:null},
+  '氧化镝':   {series: genSeries(142, 2.2, 30, -0.03), unit:'万元/吨', latest:null},
+  '氧化铽':   {series: genSeries(645, 8, 30, -0.05), unit:'万元/吨', latest:null},
+};
+Object.keys(materials).forEach(k=>{
+  const s = materials[k].series;
+  materials[k].latest = s[s.length-1];
+  materials[k].chg = ((s[s.length-1]-s[s.length-2])/s[s.length-2]*100);
+});
+
+// ---------- 报价成本核算器（牌号 + 形状 + 镀层） ----------
+// 内部配方权重（每kg磁体所含元素重量占比），不在界面展示，仅用于后台成本测算
+const gradeRecipe = {
+  'N35' : {wNdPr:0.300, wDy:0.000, wTb:0.000, marketPrice:196},
+  'N42' : {wNdPr:0.310, wDy:0.000, wTb:0.000, marketPrice:214},
+  'N52' : {wNdPr:0.320, wDy:0.005, wTb:0.000, marketPrice:246},
+  '42SH': {wNdPr:0.300, wDy:0.025, wTb:0.003, marketPrice:268},
+  '48H' : {wNdPr:0.310, wDy:0.018, wTb:0.002, marketPrice:257},
+  '40UH': {wNdPr:0.290, wDy:0.045, wTb:0.006, marketPrice:312},
+};
+const shapeSurcharge = {
+  '块状 / 方块（基础形状）': 0,
+  '环形（内孔线切割）': 25,
+  '瓦形 / 弧形（曲面磨削）': 35,
+  '异形 / 定制（专用工装）': 55,
+};
+const coatingSurcharge = {
+  '无镀层（烧结毛坯）': 0,
+  '镀镍 Ni': 8,
+  '镀锌 Zn': 6,
+  '化学镀镍 Ni-P': 12,
+  '达克罗 Dacromet': 15,
+  '环氧树脂喷涂': 10,
+  '镍铜镍三层 Ni-Cu-Ni': 18,
+};
+const BASE_PROCESS_FEE = 65;
+const OTHER_AUX_COST = 14;
+
+const qGradeSel = document.getElementById('qGrade');
+qGradeSel.innerHTML = Object.keys(gradeRecipe).map(g=>`<option value="${g}">${g}</option>`).join('');
+const qShapeSel = document.getElementById('qShape');
+qShapeSel.innerHTML = Object.keys(shapeSurcharge).map(s=>`<option value="${s}">${s}</option>`).join('');
+const qCoatingSel = document.getElementById('qCoating');
+qCoatingSel.innerHTML = Object.keys(coatingSurcharge).map(c=>`<option value="${c}">${c}</option>`).join('');
+
+function calcQuote(){
+  const grade = qGradeSel.value;
+  const shape = qShapeSel.value;
+  const coating = qCoatingSel.value;
+  const qty = +document.getElementById('qQty').value;
+  const margin = +document.getElementById('qMargin').value/100;
+
+  const r = gradeRecipe[grade];
+  const pNdPr = materials['镨钕金属'].latest * 10;
+  const pDy   = materials['氧化镝'].latest * 10;
+  const pTb   = materials['氧化铽'].latest * 10;
+
+  const materialCost = r.wNdPr*pNdPr + r.wDy*pDy + r.wTb*pTb;
+  const cost = materialCost + OTHER_AUX_COST + BASE_PROCESS_FEE + shapeSurcharge[shape] + coatingSurcharge[coating];
+  const suggestPrice = cost * (1+margin);
+  const suggestTotal = suggestPrice * qty;
+  const marketPrice = r.marketPrice;
+  const diff = (suggestPrice - marketPrice)/marketPrice*100;
+
+  document.getElementById('qCost').textContent = cost.toFixed(1)+' 元/kg';
+  document.getElementById('qPrice').textContent = suggestPrice.toFixed(1)+' 元/kg';
+  document.getElementById('qTotal').textContent = (suggestTotal/1000).toFixed(2)+' 千元（'+qty+'kg）';
+  document.getElementById('qMarket').textContent = marketPrice.toFixed(1)+' 元/kg（'+grade+'基础形态/无镀层参考价）';
+
+  const diffCls = diff>3?'down':(diff<-3?'up':'flat');
+  document.getElementById('qDiff').innerHTML = `<span class="${diffCls}">${diff>=0?'+':''}${diff.toFixed(1)}%</span>`;
+
+  let concl, cls;
+  if(diff > 8){ concl='建议报价明显高于市场基础参考价，需向客户说明形状/镀层附加成本，避免直接对比误判'; cls='flat'; }
+  else if(diff < -5){ concl='建议报价低于市场参考价，存在提价空间，可适度上调目标毛利率'; cls='up'; }
+  else { concl='建议报价处于合理区间，可直接用于对客户报价'; cls='up'; }
+  document.getElementById('qConclusion').innerHTML = `<span class="${cls}">${concl}</span>`;
+}
+['qGrade','qShape','qCoating'].forEach(id=>document.getElementById(id).addEventListener('change', calcQuote));
+['qQty','qMargin'].forEach(id=>{
+  const range = document.getElementById(id);
+  const num = document.getElementById(id+'Num');
+  range.addEventListener('input', ()=>{ num.value = range.value; calcQuote(); });
+  num.addEventListener('input', ()=>{ range.value = num.value; calcQuote(); });
+});
+calcQuote();
+
+// ---------- 今日成交 ----------
+const deals = [
+  {t:'09:12', cust:'客户A', grade:'N42', qty:500, price:213.5, cost:178.2},
+  {t:'10:45', cust:'客户F-声学器件厂', grade:'N35', qty:1200, price:197.0, cost:165.4},
+  {t:'11:30', cust:'客户C', grade:'42SH', qty:300, price:269.0, cost:229.6},
+  {t:'13:50', cust:'客户D', grade:'N52', qty:800, price:245.0, cost:203.8},
+  {t:'15:20', cust:'客户G-医疗设备厂', grade:'48H', qty:150, price:259.0, cost:221.3},
+];
+document.getElementById('dealTbl').innerHTML = deals.map(d=>{
+  const amt = (d.qty*d.price/1000).toFixed(2)+' 千元';
+  const margin = ((d.price-d.cost)/d.price*100);
+  const cls = margin>18?'hi':(margin<12?'lo':'mid');
+  return `<tr><td>${d.t}</td><td>${d.cust}</td><td>${d.grade}</td><td>${d.qty}</td>
+    <td>${d.price}</td><td>${amt}</td><td class="subtle">${d.cost}</td>
+    <td><span class="tag ${cls}">${margin.toFixed(1)}%</span></td></tr>`;
+}).join('');
+
+// ---------- KPI ----------
+const totalAmt = deals.reduce((s,d)=>s+d.qty*d.price,0)/1000;
+const avgMargin = deals.reduce((s,d)=>s+((d.price-d.cost)/d.price*100),0)/deals.length;
+const totalQty = deals.reduce((s,d)=>s+d.qty,0);
+const kpiData = [
+  {label:'今日成交笔数', val: deals.length+' 笔'},
+  {label:'今日成交总量', val: totalQty+' kg'},
+  {label:'今日成交总额', val: totalAmt.toFixed(1)+' 千元'},
+  {label:'今日平均毛利率', val: avgMargin.toFixed(1)+'%'},
+];
+document.getElementById('kpiRow').innerHTML = kpiData.map(k=>`
+  <div class="kpi"><div class="label">${k.label}</div><div class="val">${k.val}</div></div>`).join('');
+</script>
+</body>
+</html>
