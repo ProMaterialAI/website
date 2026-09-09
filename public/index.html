@@ -605,30 +605,238 @@
 
             .machine-viz-stage {
                 aspect-ratio: auto;
-                min-height: 640px;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
             }
 
             .machine-viz-image {
+                height: auto;
+                aspect-ratio: 1230 / 762;
                 object-fit: contain;
                 transform: none;
+                margin-bottom: 0.5rem;
             }
 
             .hotspot-item {
-                transform: translateX(-50%);
+                position: relative;
+                top: auto !important;
+                left: auto !important;
+                width: 100%;
+                transform: none;
+            }
+
+            .hotspot-tag {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 0.875rem 1rem;
+                border-radius: 0.5rem;
+                animation: none;
+            }
+
+            .hotspot-tag:hover,
+            .hotspot-tag:focus-visible,
+            .hotspot-item.is-active .hotspot-tag {
+                transform: none;
             }
 
             .detail-box {
-                width: min(260px, calc(100vw - 3rem));
-                left: 50% !important;
+                position: relative;
+                width: 100%;
+                max-height: 0;
+                left: auto !important;
                 right: auto !important;
-                top: calc(100% + 0.9rem) !important;
-                transform: translate(-50%, 12px);
+                top: auto !important;
+                margin: 0;
+                padding: 0 1rem;
+                overflow: hidden;
+                border-width: 0;
+                transform: none;
             }
 
             .hotspot-item:hover .detail-box,
             .hotspot-item:focus-within .detail-box,
             .hotspot-item.is-active .detail-box {
-                transform: translate(-50%, 0);
+                max-height: 28rem;
+                margin-top: 0.75rem;
+                padding: 1rem;
+                border-width: 1px;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+            }
+
+            nav.glass-card:hover {
+                transform: none;
+            }
+
+            nav > div {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            nav > div > div {
+                height: 4.5rem;
+            }
+
+            nav .flex.items-center.gap-3 {
+                gap: 0.5rem;
+                min-width: 0;
+            }
+
+            nav img {
+                width: 2rem;
+                height: 2rem;
+            }
+
+            nav .nav-logo {
+                font-size: 1.25rem;
+                letter-spacing: 0;
+            }
+
+            nav a[href="#diagnostic-center"] {
+                flex-shrink: 0;
+                padding: 0.625rem 1rem;
+                border-radius: 0.5rem;
+                line-height: 1.2;
+            }
+
+            .hero-gradient {
+                min-height: 94svh;
+                padding-top: 6.75rem;
+                padding-bottom: 3.25rem;
+                display: flex;
+                align-items: center;
+            }
+
+            .hero-gradient > .relative {
+                width: 100%;
+                min-height: 0;
+            }
+
+            .hero-gradient .max-w-\[760px\] {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .hero-gradient h1 {
+                max-width: 21rem;
+                margin-bottom: 1.5rem;
+                font-size: 2.5rem;
+                line-height: 1.08;
+                letter-spacing: 0;
+            }
+
+            .hero-gradient h1 .whitespace-nowrap {
+                white-space: normal;
+            }
+
+            .hero-gradient p {
+                margin-bottom: 2rem;
+                font-size: 1.125rem;
+                line-height: 1.6;
+            }
+
+            .hero-gradient a[href="#diagnostic-center"] {
+                width: 100%;
+                max-width: 20rem;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                text-align: center;
+                transform: none;
+            }
+
+            section {
+                scroll-margin-top: 4.5rem;
+            }
+
+            #focus,
+            #solutions,
+            #performance,
+            #diagnostic-center {
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+
+            #focus .grid.lg\:grid-cols-2 {
+                gap: 3rem;
+            }
+
+            .focus-card,
+            #solutions .glass-card,
+            .case-tab,
+            #case-content,
+            #diagnostic-center .glass-card,
+            #ai-response-container {
+                border-radius: 0.5rem;
+            }
+
+            #solutions .glass-card {
+                padding: 1.5rem;
+            }
+
+            .case-tab {
+                padding: 1rem;
+            }
+
+            #case-content {
+                min-height: 0;
+                padding: 1.5rem;
+            }
+
+            #impact {
+                padding-top: 5rem;
+                padding-bottom: 5rem;
+            }
+
+            #diagnostic-center .glass-card {
+                padding: 1.5rem;
+            }
+
+            #unified-form input,
+            #unified-form textarea {
+                width: 100%;
+            }
+
+            footer a,
+            footer p {
+                overflow-wrap: anywhere;
+            }
+        }
+
+        @media (max-width: 359px) {
+            nav .nav-logo {
+                font-size: 1.125rem;
+            }
+
+            nav a[href="#diagnostic-center"] {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            .hero-gradient h1 {
+                font-size: 2.25rem;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 899px) {
+            nav .hidden.md\:flex {
+                display: none;
+            }
+
+            .hero-gradient .max-w-\[760px\] {
+                width: calc(100% - 2rem);
+                margin-left: 2rem;
+            }
+
+            .hero-gradient h1 {
+                font-size: 4rem;
+                letter-spacing: 0;
+            }
+
+            .machine-viz-stage {
+                width: 76vw;
             }
         }
     </style>
@@ -1261,6 +1469,12 @@
         function setupHotspotAutoplay() {
             const container = document.querySelector('.machine-viz-container');
             if (!container || hotspotItems.length === 0) return;
+
+            const usesTapLayout = window.matchMedia('(max-width: 767px), (pointer: coarse)').matches;
+            if (usesTapLayout) {
+                setHotspotState(null, false);
+                return;
+            }
 
             const sequence = [0, 1, 2, null];
             const activeDurationMs = 1500;
