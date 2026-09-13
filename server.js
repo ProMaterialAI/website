@@ -69,7 +69,13 @@ function serveStatic(pathname, res) {
 
   let filePath = requestedPath;
 
-  if (!existsSync(filePath)) {
+  if (existsSync(filePath) && statSync(filePath).isDirectory()) {
+    const indexPath = join(filePath, "index.html");
+
+    if (existsSync(indexPath)) {
+      filePath = indexPath;
+    }
+  } else if (!existsSync(filePath)) {
     if (!extname(normalizedPath)) {
       const htmlPath = `${requestedPath}.html`;
       const indexPath = join(requestedPath, "index.html");
