@@ -452,26 +452,27 @@ h1 {
     font-size: 13px;
 }
 
-.apply-panel .button {
-    width: 100%;
-}
-
 .apply-email {
     display: block;
-    margin-top: 14px;
-    color: #dce5e8;
-    font-size: 11px;
-    text-align: center;
+    margin-top: 18px;
+    padding: 16px 14px;
+    border-left: 3px solid var(--teal);
+    background: rgba(45, 212, 191, 0.08);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.4;
     overflow-wrap: anywhere;
+    user-select: all;
 }
 
-.copy-status {
+.apply-email-label {
     display: block;
-    min-height: 18px;
-    margin-top: 8px;
+    margin-bottom: 4px;
     color: var(--teal);
-    font-size: 11px;
-    text-align: center;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .role-facts {

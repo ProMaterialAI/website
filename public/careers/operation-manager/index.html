@@ -127,10 +127,11 @@
 
             <aside class="apply-panel" id="apply" aria-labelledby="apply-heading">
                 <h2 id="apply-heading">Interested in this role?</h2>
-                <p>Copy our recruitment email, then send your application with the role reference in the subject line.</p>
-                <button class="button" id="copy-application-email" type="button">Copy application email</button>
-                <span class="apply-email">info@promaterial.co.uk</span>
-                <span class="copy-status" id="copy-status" role="status" aria-live="polite"></span>
+                <p>Send your CV with the role reference in the subject line.</p>
+                <span class="apply-email">
+                    <span class="apply-email-label">Application email</span>
+                    info@promaterial.co.uk
+                </span>
                 <dl class="role-facts">
                     <div><dt>Reference</dt><dd>PM-OPS-2026-01</dd></div>
                     <div><dt>Posted</dt><dd>13 Sep 2026</dd></div>
@@ -158,39 +159,5 @@
             <span>info@promaterial.co.uk</span>
         </div>
     </footer>
-    <script>
-        const applicationEmail = 'info@promaterial.co.uk';
-        const copyButton = document.getElementById('copy-application-email');
-        const copyStatus = document.getElementById('copy-status');
-
-        async function copyApplicationEmail() {
-            try {
-                if (navigator.clipboard && window.isSecureContext) {
-                    await navigator.clipboard.writeText(applicationEmail);
-                } else {
-                    const copyField = document.createElement('textarea');
-                    copyField.value = applicationEmail;
-                    copyField.setAttribute('readonly', '');
-                    copyField.style.position = 'fixed';
-                    copyField.style.opacity = '0';
-                    document.body.appendChild(copyField);
-                    copyField.select();
-
-                    if (!document.execCommand('copy')) {
-                        throw new Error('Copy command was not accepted.');
-                    }
-
-                    copyField.remove();
-                }
-
-                copyButton.textContent = 'Email copied';
-                copyStatus.textContent = 'Paste it into your preferred email app.';
-            } catch (error) {
-                copyStatus.textContent = `Copy this address: ${applicationEmail}`;
-            }
-        }
-
-        copyButton.addEventListener('click', copyApplicationEmail);
-    </script>
 </body>
 </html>

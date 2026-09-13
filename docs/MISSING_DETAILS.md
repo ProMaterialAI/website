@@ -154,6 +154,15 @@ For the website form recipients:
 - Disaster recovery plan?
 - Analytics/monitoring setup?
 
+## Future Careers Enhancements
+
+- [ ] Replace the email-only application step with an in-page CV application form or modal.
+- [ ] Collect only the applicant's name, email address, CV, and privacy consent; attach the role title and reference automatically.
+- [ ] Add a dedicated `/api/apply` endpoint that accepts `multipart/form-data` without mixing applications into the demo enquiry flow.
+- [ ] Accept PDF, DOC, and DOCX files up to 5 MB, with server-side MIME type, file signature, and filename validation.
+- [ ] Deliver applications through the configured email provider using a fixed sender and the applicant's address as `Reply-To`.
+- [ ] Add rate limiting, bot protection, submission feedback, and a UK GDPR retention notice before launch.
+
 ## 📞 Quick Reference
 
 | Item | Needed For | Priority |
