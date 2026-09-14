@@ -105,6 +105,39 @@ img {
     gap: 24px;
 }
 
+.language-switch {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.language-switch button {
+    min-width: 36px;
+    min-height: 32px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 3px;
+    background: transparent;
+    color: #9eabb3;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.language-switch button:hover {
+    color: var(--white);
+}
+
+.language-switch button[aria-pressed="true"] {
+    background: var(--teal);
+    color: var(--ink);
+}
+
 .nav-link,
 .footer-link,
 .breadcrumb a {
@@ -154,6 +187,7 @@ img {
 }
 
 .button:focus-visible,
+.language-switch button:focus-visible,
 .nav-link:focus-visible,
 .brand:focus-visible,
 .footer-link:focus-visible,
@@ -570,6 +604,10 @@ h1 {
         display: none;
     }
 
+    .nav-actions {
+        gap: 10px;
+    }
+
     .dark-intro::after {
         background-size: 42px 42px;
     }
@@ -672,8 +710,15 @@ h1 {
     }
 
     .button {
-        padding-right: 14px;
-        padding-left: 14px;
+        padding-right: 7px;
+        padding-left: 7px;
+        font-size: 11px;
+    }
+
+    .language-switch button {
+        min-width: 32px;
+        padding-right: 6px;
+        padding-left: 6px;
     }
 
     .logo-row {
