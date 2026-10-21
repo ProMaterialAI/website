@@ -72,6 +72,10 @@
       "destination": "/demo/"
     },
     {
+      "source": "/login",
+      "destination": "/demo/"
+    },
+    {
       "source": "/cn",
       "destination": "/demo/index-cn"
     },

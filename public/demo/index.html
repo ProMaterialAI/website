@@ -348,30 +348,35 @@
 
 <!-- ======================== LOGIN PAGE ======================== -->
 <div id="loginPage" class="login-bg min-h-screen flex flex-col items-center justify-center px-4">
+    <div class="lang-switcher fixed top-5 right-5 z-10" aria-label="Language">
+        <button class="lang-btn" data-lang="zh" onclick="setLanguage('zh')">中文</button>
+        <div class="lang-divider"></div>
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">English</button>
+    </div>
     <div class="mb-8 flex items-center gap-3">
         <img src="/demo/ProMaterial黑白Logo.png" alt="ProMaterial" class="h-8 w-auto" style="filter: brightness(0) invert(1);">
         <span class="text-white font-bold text-lg tracking-tight">ProMaterial</span>
     </div>
 
     <div class="login-card rounded-2xl p-8 w-full max-w-sm shadow-2xl" id="loginCard">
-        <h1 class="text-xl font-bold text-white mb-1">Welcome</h1>
-        <p class="text-sm text-gray-500 mb-6">Sign in to access the demo</p>
+        <h1 class="text-xl font-bold text-white mb-1" data-i18n="welcome">Welcome</h1>
+        <p class="text-sm text-gray-500 mb-6" data-i18n="signInPrompt">Sign in to access the demo</p>
 
         <div id="errorMsg" class="hidden mb-4 bg-red-500/10 border border-red-500/25 text-red-400 text-sm px-4 py-2.5 rounded-lg flex items-center gap-2">
             <i class="fa-solid fa-circle-exclamation"></i>
-            <span>Invalid username or password</span>
+            <span data-i18n="invalidCredentials">Invalid username or password</span>
         </div>
 
         <form id="loginForm" onsubmit="handleLogin(event)">
             <div class="mb-4">
-                <label class="block text-xs font-medium text-gray-400 mb-1.5">Username</label>
-                <input id="username" type="text" autocomplete="username" placeholder="Enter username"
+                <label class="block text-xs font-medium text-gray-400 mb-1.5" data-i18n="username">Username</label>
+                <input id="username" type="text" autocomplete="username" placeholder="Enter username" data-i18n-placeholder="usernamePlaceholder"
                     class="input-field w-full px-4 py-2.5 rounded-lg text-sm">
             </div>
             <div class="mb-6">
-                <label class="block text-xs font-medium text-gray-400 mb-1.5">Password</label>
+                <label class="block text-xs font-medium text-gray-400 mb-1.5" data-i18n="password">Password</label>
                 <div class="relative">
-                    <input id="password" type="password" autocomplete="current-password" placeholder="Enter password"
+                    <input id="password" type="password" autocomplete="current-password" placeholder="Enter password" data-i18n-placeholder="passwordPlaceholder"
                         class="input-field w-full px-4 py-2.5 rounded-lg text-sm pr-10">
                     <button type="button" onclick="togglePwd()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
                         <i class="fa-solid fa-eye text-xs" id="eyeIcon"></i>
@@ -379,7 +384,7 @@
                 </div>
             </div>
             <button type="submit" class="btn-login w-full py-2.5 rounded-lg text-sm font-semibold text-white">
-                Sign In
+                <span data-i18n="signIn">Sign In</span>
             </button>
         </form>
     </div>
@@ -389,28 +394,33 @@
 
 <!-- ======================== REGION SELECTOR ======================== -->
 <div id="regionPage" class="hidden region-bg flex flex-col items-center justify-center px-4">
+    <div class="lang-switcher fixed top-5 right-5 z-10" aria-label="Language">
+        <button class="lang-btn" data-lang="zh" onclick="setLanguage('zh')">中文</button>
+        <div class="lang-divider"></div>
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">English</button>
+    </div>
     <div class="mb-10 text-center">
         <div class="mb-4 flex items-center justify-center gap-3">
             <img src="/demo/ProMaterial黑白Logo.png" alt="ProMaterial" class="h-8 w-auto" style="filter: brightness(0) invert(1);">
             <span class="text-white font-bold text-lg tracking-tight">ProMaterial</span>
         </div>
-        <h1 class="text-2xl font-semibold text-white">Select region</h1>
+        <h1 class="text-2xl font-semibold text-white" data-i18n="selectRegion">Select region</h1>
     </div>
     <div class="region-options">
         <button type="button" class="region-option" onclick="enterRegion('global')">
             <span class="region-icon"><i class="fa-solid fa-globe"></i></span>
-            <span class="block text-lg font-semibold">Global</span>
-            <span class="mt-1 block text-sm text-gray-500">Magnet Materials Operating Report</span>
+            <span class="block text-lg font-semibold" data-i18n="globalRegion">Global</span>
+            <span class="mt-1 block text-sm text-gray-500" data-i18n="globalDescription">Magnet Materials Operating Report</span>
         </button>
         <button type="button" class="region-option" onclick="enterRegion('asia')">
             <span class="region-icon"><i class="fa-solid fa-earth-asia"></i></span>
-            <span class="block text-lg font-semibold">Asia</span>
-            <span class="mt-1 block text-sm text-gray-500">Management Dashboard</span>
+            <span class="block text-lg font-semibold" data-i18n="asiaRegion">Asia</span>
+            <span class="mt-1 block text-sm text-gray-500" data-i18n="asiaDescription">Management Dashboard</span>
         </button>
     </div>
     <div class="mt-8 flex items-center gap-4 text-xs text-gray-600">
-        <span>Signed in as <b id="regionUser"></b></span>
-        <button type="button" onclick="handleLogout()" class="hover:text-gray-400">Logout</button>
+        <span><span data-i18n="signedInAs">Signed in as</span> <b id="regionUser"></b></span>
+        <button type="button" onclick="handleLogout()" class="hover:text-gray-400" data-i18n="logout">Logout</button>
     </div>
 </div>
 
@@ -419,9 +429,9 @@
     <div class="global-toolbar">
         <button type="button" onclick="showRegionSelection(document.getElementById('globalUser').textContent, true)" title="Select region">
             <i class="fa-solid fa-arrow-left"></i>
-            <span>Regions</span>
+            <span data-i18n="regions">Regions</span>
         </button>
-        <strong>Global</strong>
+        <strong data-i18n="globalRegion">Global</strong>
         <button type="button" onclick="handleLogout()">
             <span id="globalUser"></span>
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -450,13 +460,13 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <span class="user-info-text">Logged in: <b id="sidebarUser"></b></span>
+                <span class="user-info-text"><span data-i18n="loggedIn">Logged in:</span> <b id="sidebarUser"></b></span>
             </div>
             <button class="logout-btn w-full text-left" onclick="showRegionSelection(document.getElementById('sidebarUser').textContent, true)">
-                <i class="fa-solid fa-globe"></i> <span class="user-info-text">Regions</span>
+                <i class="fa-solid fa-globe"></i> <span class="user-info-text" data-i18n="regions">Regions</span>
             </button>
             <button class="logout-btn w-full text-left" onclick="handleLogout()">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="user-info-text">Logout</span>
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="user-info-text" data-i18n="logout">Logout</span>
             </button>
         </div>
     </aside>
@@ -470,9 +480,9 @@
             </div>
             <div class="topbar-actions">
                 <div class="lang-switcher">
-                    <button class="lang-btn" id="langZh" onclick="setLanguage('zh')">中文</button>
+                    <button class="lang-btn" id="langZh" data-lang="zh" onclick="setLanguage('zh')">中文</button>
                     <div class="lang-divider"></div>
-                    <button class="lang-btn active" id="langEn" onclick="setLanguage('en')">English</button>
+                    <button class="lang-btn" id="langEn" data-lang="en" onclick="setLanguage('en')">English</button>
                 </div>
             </div>
         </div>
@@ -492,16 +502,67 @@
         'client_yonju':  'yj123'
     };
 
-    // Language settings
-    let currentLanguage = localStorage.getItem('demoLanguage') || 'en';
+    const SHELL_COPY = {
+        en: {
+            welcome: 'Welcome',
+            signInPrompt: 'Sign in to access the demo',
+            invalidCredentials: 'Invalid username or password',
+            username: 'Username',
+            usernamePlaceholder: 'Enter username',
+            password: 'Password',
+            passwordPlaceholder: 'Enter password',
+            signIn: 'Sign In',
+            selectRegion: 'Select region',
+            globalRegion: 'Global',
+            globalDescription: 'Magnet Materials Operating Report',
+            asiaRegion: 'Asia',
+            asiaDescription: 'Management Dashboard',
+            signedInAs: 'Signed in as',
+            loggedIn: 'Logged in:',
+            regions: 'Regions',
+            logout: 'Logout'
+        },
+        zh: {
+            welcome: '欢迎使用',
+            signInPrompt: '登录以访问演示系统',
+            invalidCredentials: '用户名或密码错误',
+            username: '用户名',
+            usernamePlaceholder: '请输入用户名',
+            password: '密码',
+            passwordPlaceholder: '请输入密码',
+            signIn: '登录',
+            selectRegion: '选择区域',
+            globalRegion: '全球',
+            globalDescription: '磁性材料运营报告',
+            asiaRegion: '亚洲',
+            asiaDescription: '管理仪表板',
+            signedInAs: '当前用户',
+            loggedIn: '当前用户：',
+            regions: '区域选择',
+            logout: '退出登录'
+        }
+    };
+
+    let currentLanguage = localStorage.getItem('demoLanguage') || 'zh';
+
+    function applyShellLanguage() {
+        const copy = SHELL_COPY[currentLanguage];
+        document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+        document.querySelectorAll('[data-lang]').forEach(button => {
+            button.classList.toggle('active', button.dataset.lang === currentLanguage);
+        });
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            element.textContent = copy[element.dataset.i18n] ?? element.textContent;
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            element.placeholder = copy[element.dataset.i18nPlaceholder] ?? element.placeholder;
+        });
+    }
 
     function setLanguage(lang) {
         currentLanguage = lang;
         localStorage.setItem('demoLanguage', lang);
-        
-        // Update button states
-        document.getElementById('langZh').classList.toggle('active', lang === 'zh');
-        document.getElementById('langEn').classList.toggle('active', lang === 'en');
+        applyShellLanguage();
         
         // Update brand name
         const brandName = document.getElementById('brandName');
@@ -618,7 +679,7 @@
     }
 
     function regionHomePath() {
-        return window.location.hostname === 'mi.promaterial.ai' ? '/' : '/demo/';
+        return '/login';
     }
 
     function hideAuthenticatedPages() {
@@ -630,6 +691,7 @@
     function showRegionSelection(username, updateHistory = false) {
         document.getElementById('loginPage').classList.add('hidden');
         hideAuthenticatedPages();
+        applyShellLanguage();
         document.getElementById('regionUser').textContent = username;
         document.getElementById('regionPage').classList.remove('hidden');
         if (updateHistory) window.history.pushState(null, null, regionHomePath());
@@ -638,6 +700,7 @@
     function showGlobalReport(username) {
         document.getElementById('loginPage').classList.add('hidden');
         hideAuthenticatedPages();
+        applyShellLanguage();
         document.getElementById('globalUser').textContent = username;
         const reportFrame = document.getElementById('globalReport');
         if (!reportFrame.getAttribute('src')) reportFrame.src = reportFrame.dataset.src;
@@ -857,6 +920,7 @@
     });
 
     // Auto-login if session exists
+    applyShellLanguage();
     const savedUser = sessionStorage.getItem('demo_user');
     if (savedUser && USERS[savedUser]) showAuthenticatedStart(savedUser);
 </script>
