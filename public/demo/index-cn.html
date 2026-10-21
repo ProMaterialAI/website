@@ -40,6 +40,79 @@
             transition: all 0.2s;
         }
         .btn-login:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,99,235,0.35); }
+        .region-bg {
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 60% 40%, rgba(37,99,235,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse at 20% 80%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                        #030712;
+        }
+        .region-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            width: min(100%, 520px);
+        }
+        .region-option {
+            min-height: 144px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            background: rgba(15,23,42,0.82);
+            color: #fff;
+            text-align: left;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+        .region-option:hover {
+            border-color: rgba(96,165,250,0.55);
+            background: rgba(30,41,59,0.95);
+            transform: translateY(-2px);
+        }
+        .region-icon {
+            display: grid;
+            width: 38px;
+            height: 38px;
+            margin-bottom: 24px;
+            place-items: center;
+            border-radius: 8px;
+            background: rgba(37,99,235,0.18);
+            color: #60a5fa;
+        }
+        .global-page {
+            height: 100vh;
+            background: #f3f4f6;
+        }
+        .global-toolbar {
+            height: 52px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e4e6eb;
+            background: #fff;
+            color: #0d1014;
+        }
+        .global-toolbar button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 0;
+            background: transparent;
+            color: #565d69;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .global-toolbar button:hover { color: #0d1014; }
+        .global-report {
+            width: 100%;
+            height: calc(100vh - 52px);
+            border: 0;
+            display: block;
+        }
+        @media (max-width: 560px) {
+            .region-options { grid-template-columns: 1fr; }
+            .region-option { min-height: 118px; }
+        }
         .error-shake { animation: shake 0.4s ease; }
         @keyframes shake {
             0%,100% { transform: translateX(0); }
@@ -320,6 +393,49 @@
     <p class="mt-6 text-xs text-gray-600">&copy; 2026 珀玛科技</p>
 </div>
 
+<!-- ======================== REGION SELECTOR ======================== -->
+<div id="regionPage" class="hidden region-bg flex flex-col items-center justify-center px-4">
+    <div class="mb-10 text-center">
+        <div class="mb-4 flex items-center justify-center gap-3">
+            <img src="/demo/ProMaterial黑白Logo.png" alt="珀玛科技" class="h-8 w-auto" style="filter: brightness(0) invert(1);">
+            <span class="text-white font-bold text-lg tracking-tight">珀玛科技</span>
+        </div>
+        <h1 class="text-2xl font-semibold text-white">选择区域</h1>
+    </div>
+    <div class="region-options">
+        <button type="button" class="region-option" onclick="enterRegion('global')">
+            <span class="region-icon"><i class="fa-solid fa-globe"></i></span>
+            <span class="block text-lg font-semibold">Global</span>
+            <span class="mt-1 block text-sm text-gray-500">磁性材料运营报告</span>
+        </button>
+        <button type="button" class="region-option" onclick="enterRegion('asia')">
+            <span class="region-icon"><i class="fa-solid fa-earth-asia"></i></span>
+            <span class="block text-lg font-semibold">Asia</span>
+            <span class="mt-1 block text-sm text-gray-500">管理仪表板</span>
+        </button>
+    </div>
+    <div class="mt-8 flex items-center gap-4 text-xs text-gray-600">
+        <span>当前用户：<b id="regionUser"></b></span>
+        <button type="button" onclick="handleLogout()" class="hover:text-gray-400">登出</button>
+    </div>
+</div>
+
+<!-- ======================== GLOBAL REPORT ======================== -->
+<div id="globalPage" class="hidden global-page">
+    <div class="global-toolbar">
+        <button type="button" onclick="showRegionSelection(document.getElementById('globalUser').textContent, true)" title="选择区域">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>区域</span>
+        </button>
+        <strong>Global</strong>
+        <button type="button" onclick="handleLogout()">
+            <span id="globalUser"></span>
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+    </div>
+    <iframe id="globalReport" class="global-report" data-src="/demo/magnet-materials-operating-report.html" title="磁性材料运营报告"></iframe>
+</div>
+
 <!-- ======================== DASHBOARD ======================== -->
 <div id="dashboardPage" class="hidden dashboard">
     <!-- Sidebar -->
@@ -342,6 +458,9 @@
             <div class="user-info">
                 <span class="user-info-text">已登录：<b id="sidebarUser"></b></span>
             </div>
+            <button class="logout-btn w-full text-left" onclick="showRegionSelection(document.getElementById('sidebarUser').textContent, true)">
+                <i class="fa-solid fa-globe"></i> <span class="user-info-text">选择区域</span>
+            </button>
             <button class="logout-btn w-full text-left" onclick="handleLogout()">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="user-info-text">登出</span>
             </button>
@@ -450,7 +569,7 @@
 
         if (USERS[username] && USERS[username] === password) {
             sessionStorage.setItem('demo_user', username);
-            showDashboard(username);
+            showAuthenticatedStart(username);
         } else {
             errMsg.classList.remove('hidden');
             card.classList.add('error-shake');
@@ -464,6 +583,57 @@
         pwd.type = pwd.type === 'password' ? 'text' : 'password';
         icon.classList.toggle('fa-eye');
         icon.classList.toggle('fa-eye-slash');
+    }
+
+    function regionHomePath() {
+        return window.location.hostname === 'mi.promaterial.ai' ? '/' : '/demo/';
+    }
+
+    function hideAuthenticatedPages() {
+        document.getElementById('regionPage').classList.add('hidden');
+        document.getElementById('globalPage').classList.add('hidden');
+        document.getElementById('dashboardPage').classList.add('hidden');
+    }
+
+    function showRegionSelection(username, updateHistory = false) {
+        document.getElementById('loginPage').classList.add('hidden');
+        hideAuthenticatedPages();
+        document.getElementById('regionUser').textContent = username;
+        document.getElementById('regionPage').classList.remove('hidden');
+        if (updateHistory) window.history.pushState(null, null, regionHomePath());
+    }
+
+    function showGlobalReport(username) {
+        document.getElementById('loginPage').classList.add('hidden');
+        hideAuthenticatedPages();
+        document.getElementById('globalUser').textContent = username;
+        const reportFrame = document.getElementById('globalReport');
+        if (!reportFrame.getAttribute('src')) reportFrame.src = reportFrame.dataset.src;
+        document.getElementById('globalPage').classList.remove('hidden');
+    }
+
+    function enterRegion(region) {
+        const username = sessionStorage.getItem('demo_user');
+        if (!username || !USERS[username]) return;
+
+        if (region === 'global') {
+            window.history.pushState(null, null, '/global');
+            showGlobalReport(username);
+        } else if (region === 'asia') {
+            window.history.pushState(null, null, '/000kpi');
+            showDashboard(username);
+        }
+    }
+
+    function showAuthenticatedStart(username) {
+        const path = window.location.pathname.split('/').filter(Boolean).pop() || '';
+        if (path === 'global') {
+            showGlobalReport(username);
+        } else if (ROUTES[path]) {
+            showDashboard(username);
+        } else {
+            showRegionSelection(username);
+        }
     }
 
     function toggleSidebar() {
@@ -595,6 +765,8 @@
 
     function showDashboard(username) {
         document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('regionPage').classList.add('hidden');
+        document.getElementById('globalPage').classList.add('hidden');
         document.getElementById('dashboardPage').classList.remove('hidden');
         document.getElementById('sidebarUser').textContent = username;
         
@@ -622,31 +794,25 @@
 
     function handleLogout() {
         sessionStorage.removeItem('demo_user');
-        document.getElementById('dashboardPage').classList.add('hidden');
+        hideAuthenticatedPages();
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
         document.getElementById('errorMsg').classList.add('hidden');
+        window.history.replaceState(null, null, regionHomePath());
     }
 
     // Handle browser back/forward
     window.addEventListener('popstate', () => {
         const savedUser = sessionStorage.getItem('demo_user');
         if (savedUser && USERS[savedUser]) {
-            let path = window.location.pathname.split('/').pop() || '';
-            if (!path || path === 'demo' || path === 'index.html' || !ROUTES[path]) {
-                path = '000kpi';
-            }
-            const config = ROUTES[path];
-            if (config) {
-                loadPage(config.page, config.title);
-            }
+            showAuthenticatedStart(savedUser);
         }
     });
 
     // Auto-login if session exists
     const savedUser = sessionStorage.getItem('demo_user');
-    if (savedUser && USERS[savedUser]) showDashboard(savedUser);
+    if (savedUser && USERS[savedUser]) showAuthenticatedStart(savedUser);
 </script>
 </body>
 </html>

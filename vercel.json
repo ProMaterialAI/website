@@ -22,6 +22,16 @@
       "destination": "/demo/"
     },
     {
+      "source": "/global",
+      "has": [
+        {
+          "type": "host",
+          "value": "mi.promaterial.ai"
+        }
+      ],
+      "destination": "/demo/"
+    },
+    {
       "source": "/110marketingDataEye",
       "has": [
         {
@@ -67,6 +77,10 @@
     },
     {
       "source": "/000kpi",
+      "destination": "/demo/"
+    },
+    {
+      "source": "/global",
       "destination": "/demo/"
     },
     {
