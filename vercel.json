@@ -9,7 +9,7 @@
           "value": "mi.promaterial.ai"
         }
       ],
-      "destination": "/demo/index-cn.html"
+      "destination": "/demo/index-cn"
     },
     {
       "source": "/000kpi",
@@ -73,7 +73,7 @@
     },
     {
       "source": "/cn",
-      "destination": "/demo/index-cn.html"
+      "destination": "/demo/index-cn"
     },
     {
       "source": "/000kpi",
