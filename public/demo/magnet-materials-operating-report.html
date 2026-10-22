@@ -416,7 +416,7 @@ table.lean th:nth-child(4),table.lean td:nth-child(4),table.lean th:nth-child(5)
 </div></div>
 
 <main class="gut">
-<div class="ph"><span class="dot"></span><span>Demo data · amounts in US$ thousands ($k) unless stated</span><details><summary>About the sample data</summary><p>Entities, customers, sales reps and material names are placeholders until the client supplies master data (entity from <code>azw_file.azw02</code>, customer <code>occ_file.occ02</code>, sales rep <code>occ_file.occ04</code>). Business lines and departments are examples; the client's real organisation wins. Sample figures are stated directly in US dollars; market prices are converted from CNY at a demo rate of 6.68 CNY per USD.</p></details></div>
+<div class="ph"><span class="dot"></span><span>Demo data · amounts in US$ thousands ($k) unless stated</span><details><summary>About the sample data</summary><p>Entities, customers, sales reps and material names are placeholders until the client supplies master data (entity from <code>azw_file.azw02</code>, customer <code>occ_file.occ02</code>, sales rep <code>occ_file.occ04</code>). Business lines and departments are examples; the client's real organisation wins. Sample figures are stated directly in US dollars; market prices are converted from JPY at a demo rate of 149.50 JPY per USD.</p></details></div>
 
 <section id="mgmt">
   <div class="kpis" id="kpis"></div>
@@ -558,7 +558,7 @@ table.lean th:nth-child(4),table.lean td:nth-child(4),table.lean th:nth-child(5)
     <div class="rule"><h3>Price-adjusted revenue</h3><p>Key inputs are priced at market, so raw-material moves pass straight into selling prices. Book revenue is <b>+8.0%</b> YoY; with pass-through removed it is <b>+2.1%</b>. Base, coefficient and formula are for the client to decide; price feeds are placeholders.</p></div>
     <div class="rule"><h3>FPY ≠ final yield</h3><p><b>First-pass yield</b> counts only units that pass every step without rework; <b>final yield</b> also counts reworked units that eventually pass. Coating rework hides inside final yield, so the Quality page reports FPY.</p></div>
     <div class="rule"><h3>OTD has two clocks</h3><p>On-time delivery is measured against the <b>first promised date</b>, not the latest re-promised one. Measuring against the latest date makes every order "on time", the same trap as supplier lead time (<code>pmn33</code> vs <code>pmn36</code>).</p></div>
-    <div class="rule"><h3>Reporting currency: US dollars</h3><p>The ERP books in <b>CNY</b>; the report shows <b>US$</b>. P&amp;L lines convert at the <b>monthly average rate</b>, balance-sheet items (cash, receivables, inventory) at the <b>month-end rate</b>, the usual translation method under IAS 21.</p><p>★★ Rate source (bank, PBOC central parity or treasury rate) and who maintains it are for the client to decide. Exchange-rate moves show up as a separate translation difference, not as operating performance.</p></div>
+    <div class="rule"><h3>Reporting currency: US dollars</h3><p>The ERP books in <b>JPY</b>; the report shows <b>US$</b>. P&amp;L lines convert at the <b>monthly average rate</b>, balance-sheet items (cash, receivables, inventory) at the <b>month-end rate</b>, the usual translation method under IAS 21.</p><p>★★ Rate source (bank, ECB reference rate or treasury rate) and who maintains it are for the client to decide. Exchange-rate moves show up as a separate translation difference, not as operating performance.</p></div>
   </div></div></div>
   <div class="card"><header><h2>Blockers</h2><div class="src">Three SQL queries; each one unblocks a group of reports</div></header><div class="pad"><div class="rules">
     <div class="rule block"><h3>Which field carries "business line"</h3><p>TIPTOP has no field called business line. Candidates: the 10 flexible analysis codes on <code>abb_file</code> / profit centre <code>gem09='2'</code> / product family.</p>
@@ -1334,11 +1334,11 @@ SCREEN.r_rev=function(){return ''
  +card('Revenue mix','Core dimensions · business line / region / channel / customer type',
    '<div class="pad"><div class="dgrid">'
   +donut("By business line",[["Material 1",11480],["Material 2",3260],["Material 3",2540],["Material 4",960]],{sub:"$k"})
-   +donut("By sales region",[["East China",7940],["South China",4120],["Export",3980],["North China",1480],["Other",720]],{sub:"$k"})
+  +donut("By sales region",[["Eastern Europe",7940],["Southern Europe",4120],["Export",3980],["Northern Europe",1480],["Other",720]],{sub:"$k"})
    +donut("By channel",[["Direct",11309],["Distributors",4742],["E-commerce",1459],["Other",730]],{sub:"$k"})
   +donut("By customer type",[["Customer Type 1",6931],["Customer Type 2",4378],["Customer Type 3",3466],["Customer Type 4",2371],["Other",1094]],{sub:"$k"})
    +'</div></div>',
-  'Two-thirds of revenue is Material 1; East China and export together are <b>65%</b>. The two largest customer groups make up 62% of demand, so a slowdown in either segment shows here first.')
+  'Two-thirds of revenue is Material 1; Eastern Europe and export together are <b>65%</b>. The two largest customer groups make up 62% of demand, so a slowdown in either segment shows here first.')
  +card('Revenue quality','Revenue quality analysis · adjusted per meeting notes',
    minis([["New-customer revenue share","6.8","% · renamed (was new-product revenue)","wrn"],["New-product revenue share","11.2","% · kept, configurable"],
      ["Key-account revenue share","38.4","% · Top 5 concentration high","wrn"],["Core business revenue share","96.1","%"],
@@ -1388,7 +1388,7 @@ SCREEN.r_cash=function(){return ''
  +card('Cash composition and flows','Donut: closing balance · bars: three cash-flow categories',
    '<div class="pad"><div class="pair"><div>'
    +donut("Closing cash by form",[["Bank deposits",6240],["Notes receivable",1860],["Restricted cash",680,"var(--neg)"]],{sub:"$k closing"})
-   +'<div style="margin-top:18px">'+donut("Bank deposits by currency",[["CNY",5491],["USD",562],["EUR",187]],{sub:"$k deposits"})+'</div></div><div>'
+  +'<div style="margin-top:18px">'+donut("Bank deposits by currency",[["JPY",5491],["USD",562],["EUR",187]],{sub:"$k deposits"})+'</div></div><div>'
    +leg([["Operating","var(--blue)"],["Investing","var(--gold)"],["Financing","var(--pos)"]])
    +'<div class="chart">'+barsChart({w:520,h:330,cats:MON.map(function(m,i){return i%2===0||i===11?m:""}),
     series:[{c:"var(--blue)",d:[820,640,710,520,610,440,380,210,150,-80,-320,-640]},
@@ -1411,7 +1411,7 @@ var DIMS={
  rep:{n:"Sales rep",items:[["Rep 1",.29],["Rep 2",.24],["Rep 3",.21],["Rep 4",.15],["Rep 5",.11]]},
  cust:{n:"Customer",items:[["Customer A",.31],["Customer B",.24],["Customer C",.19],["Customer D",.15],["Customer E",.11]]},
  custtype:{n:"Customer type",items:[["Customer Type 1",.38],["Customer Type 2",.24],["Customer Type 3",.19],["Customer Type 4",.13],["Other",.06]]},
- region:{n:"Sales region",items:[["East China",.435],["South China",.226],["Export",.218],["North China",.081],["Other",.040]]},
+ region:{n:"Sales region",items:[["Eastern Europe",.435],["Southern Europe",.226],["Export",.218],["Northern Europe",.081],["Other",.040]]},
  channel:{n:"Channel",items:[["Direct",.62],["Distributors",.26],["E-commerce",.08],["Other",.04]]},
  prod:{n:"Product",items:[["Material 1",.36],["Material 2",.22],["Material 3",.18],["Material 4",.14],["Material 5",.10]]},
  lot:{n:"Lot",items:[["LOT-260901",.26],["LOT-260905",.22],["LOT-260912",.20],["LOT-260918",.18],["LOT-260922",.14]]},
@@ -1431,7 +1431,7 @@ var DIMS={
  invage:{n:"Age band",items:[["Within 1 month",.852],["Over 1 month",.096],["Over 2 months",.033],["Over 3 months",.019]]},
  bank:{n:"Bank",items:[["Bank 1",.38],["Bank 2",.27],["Bank 3",.21],["Bank 4",.14]]},
  account:{n:"Account",items:[["Basic account",.46],["General account 1",.24],["General account 2",.18],["FX account",.12]]},
- currency:{n:"Currency",items:[["CNY",.88],["USD",.09],["EUR",.03]]},
+ currency:{n:"Currency",items:[["JPY",.88],["USD",.09],["EUR",.03]]},
  fincat:{n:"Financing type",items:[["Working-capital loan",.52],["Bank acceptance",.28],["Letter of credit",.12],["Factoring",.08]]},
  cashcat:{n:"Cash-flow category",items:[["Operating",.64],["Investing",.14],["Financing",.22]]},
  processor:{n:"Processor",items:[["Processor A",.34],["Processor B",.26],["Processor C",.22],["Processor D",.18]]},
@@ -1694,12 +1694,12 @@ function renderArDetail(){
  back();
 }
 function renderCashDetail(){
- var L0=[["2026-09-02","Entity A","Bank 1","Basic account","CNY","Operating","—","In","4,860,000","Customer A payment received"],
-  ["2026-09-05","Entity A","Bank 1","Basic account","CNY","Operating","—","Out","2,140,000","Supplier A raw-material payment"],
-  ["2026-09-11","Entity A","Bank 2","General account 1","CNY","Financing","Working-capital loan","In","9,000,000","Working-capital loan drawdown"],
-  ["2026-09-18","Entity A","Bank 1","Basic account","CNY","Operating","—","Out","1,864,000","Sep payroll"],
-  ["2026-09-25","Entity D","Bank 3","FX account","USD","Operating","—","In","680,000","Export receipt (CNY equivalent)"],
-  ["2026-09-28","Entity B","Bank 2","General account 1","CNY","Investing","—","Out","2,800,000","Equipment purchase"]];
+ var L0=[["2026-09-02","Entity A","Bank 1","Basic account","JPY","Operating","—","In","4,860,000","Customer A payment received"],
+  ["2026-09-05","Entity A","Bank 1","Basic account","JPY","Operating","—","Out","2,140,000","Supplier A raw-material payment"],
+  ["2026-09-11","Entity A","Bank 2","General account 1","JPY","Financing","Working-capital loan","In","9,000,000","Working-capital loan drawdown"],
+  ["2026-09-18","Entity A","Bank 1","Basic account","JPY","Operating","—","Out","1,864,000","Sep payroll"],
+  ["2026-09-25","Entity D","Bank 3","FX account","USD","Operating","—","In","680,000","Export receipt (JPY equivalent)"],
+  ["2026-09-28","Entity B","Bank 2","General account 1","JPY","Investing","—","Out","2,800,000","Equipment purchase"]];
  var CM={legal:1,bank:2,account:3,currency:4,cashcat:5,fincat:6};
  var L=filt(L0,CM);
  var rows=L.map(function(r){
@@ -1716,7 +1716,7 @@ function renderCashDetail(){
   rows,1100,
   '<b>Cash detail is bank transactions</b>, by account and currency, with no direct link to customers or orders.<br>'
   +'★ Categories follow the cash-flow statement: <b>operating / investing / financing</b>.<br>'
-  +'★★ FX transactions must show the conversion rate and date, otherwise CNY amounts won\'t reconcile. Three candidate sources for opening balance (warehouse close / <code>nma41</code> / GL cash accounts) undecided.',
+  +'★★ FX transactions must show the conversion rate and date, otherwise JPY amounts won\'t reconcile. Three candidate sources for opening balance (warehouse close / <code>nma41</code> / GL cash accounts) undecided.',
   L.length,L.length!==L0.length,CM);
  back();
 }
@@ -1831,7 +1831,7 @@ function renderRmDetail(){
   [["Material",0],["Class",0],["Price feed",0],["Latest",1],["Unit",0],["d/d",1],["Month open",1],["30-day avg",1],["Price type",0],["Tax",0],["Updated",0],["Data quality",0]],
   rows,1020,
   '<b>Price metrics drill to price rows, not shipments.</b> The price library has no link to customers, reps or orders, so the only dimensions are <b>material class / feed / material</b>.<br>'
-  +'★★ Three bases must match the ERP before comparing: unit and currency (exchange quotes in CNY/t, <code>pmn31</code> in CNY/kg, report in US$/kg), tax (quotes include VAT, <code>pmn31</code> is net), price type (spot vs contract).<br>'
+  +'★★ Three bases must match the ERP before comparing: unit and currency (exchange quotes in JPY/t, <code>pmn31</code> in JPY/kg, report in US$/kg), tax (quotes include VAT, <code>pmn31</code> is net), price type (spot vs contract).<br>'
   +'★ Whether <b>filled</b> rows (market closed / no quote) count toward the monthly average and price-adjusted revenue is for the client to decide.',
   P.length,P.length!==P0.length,CM);
  back();
@@ -1907,12 +1907,12 @@ function renderDetail(){
   cash:renderCashDetail,proc:renderProcDetail,ni:renderNiDetail,gl:renderGlDetail,qc:renderQcDetail,wo:renderWoDetail};
  if(R[dt]){R[dt]();return}
  var COL={cust:3,custtype:4,rep:5,dept:6,bl:7,region:8,prod:10};
- var L0=[["DN-26090311","2026-09-08","SO-26090142","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","East China","MAT-001","Material 1","4,200 pcs","1,260.0","812.00",1023120,968400,54720,.053],
-  ["DN-26090311","2026-09-08","SO-26090142","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","East China","MAT-002","Material 2","2,800 pcs","448.0","786.00",352128,338900,13228,.038],
-  ["DN-26090287","2026-09-06","SO-26090087","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","East China","MAT-003","Material 3","6,000 pcs","132.0","79.50",477000,448600,28400,.060],
-  ["DN-26090264","2026-09-04","SO-26090031","Customer B","Customer Type 2","Rep 2","Sales Dept 2","Material 1","East China","MAT-004","Material 4","3,100 pcs","372.0","1,024.00",3174400,2698240,476160,.150],
-  ["DN-26080902","2026-08-29","SO-26080219","Customer C","Customer Type 3","Rep 1","Sales Dept 2","Material 3","South China","MAT-005","Material 5","1,800 pcs","288.0","1,486.00",2674800,2246832,427968,.160],
-  ["DN-26090198","2026-09-02","SO-26090031","Customer B","Customer Type 2","Rep 4","Sales Dept 1","Material 1","East China","MAT-001","Material 1","2,600 pcs","780.0","806.00",2095600,1718392,377208,.180],
+ var L0=[["DN-26090311","2026-09-08","SO-26090142","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","Eastern Europe","MAT-001","Material 1","4,200 pcs","1,260.0","812.00",1023120,968400,54720,.053],
+  ["DN-26090311","2026-09-08","SO-26090142","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","Eastern Europe","MAT-002","Material 2","2,800 pcs","448.0","786.00",352128,338900,13228,.038],
+  ["DN-26090287","2026-09-06","SO-26090087","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","Eastern Europe","MAT-003","Material 3","6,000 pcs","132.0","79.50",477000,448600,28400,.060],
+  ["DN-26090264","2026-09-04","SO-26090031","Customer B","Customer Type 2","Rep 2","Sales Dept 2","Material 1","Eastern Europe","MAT-004","Material 4","3,100 pcs","372.0","1,024.00",3174400,2698240,476160,.150],
+  ["DN-26080902","2026-08-29","SO-26080219","Customer C","Customer Type 3","Rep 1","Sales Dept 2","Material 3","Southern Europe","MAT-005","Material 5","1,800 pcs","288.0","1,486.00",2674800,2246832,427968,.160],
+  ["DN-26090198","2026-09-02","SO-26090031","Customer B","Customer Type 2","Rep 4","Sales Dept 1","Material 1","Eastern Europe","MAT-001","Material 1","2,600 pcs","780.0","806.00",2095600,1718392,377208,.180],
   ["DN-26090355","2026-09-11","SO-26090142","Customer D","Customer Type 4","Rep 3","Export Dept","Material 2","Export","MAT-003","Material 3","9,400 pcs","206.8","82.40",774560,619648,154912,.200]];
  var L=L0.filter(function(r){
   return D.path.every(function(pp){
@@ -2168,7 +2168,7 @@ SCREEN.r_rm=function(){return ''
     [["Raw Material 5","b-neg"],["Input Class 3","t"],["965.6"],["US$/kg","t"],["<span class=pos>▼ 1.2%</span>"],["991.0"],["975.1"],["Spot","t"],["Incl. VAT","t"]],
     [["Raw Material 6",""],["Input Class 1","t"],["6.3"],["US$/kg","t"],["—"],["6.3"],["6.3"],["Spot","t"],["Incl. VAT","t"]]],980),
    '★★ Three bases must match the ERP first or every comparison is wrong:<br>'
-   +'① <b>Unit and currency</b>: exchanges quote CNY per tonne, ERP purchase price <code>pmn31</code> is CNY per kg; this report shows US$/kg, so both convert at the same FX rate (demo: 6.68)<br>'
+  +'① <b>Unit and currency</b>: exchanges quote JPY per tonne, ERP purchase price <code>pmn31</code> is JPY per kg; this report shows US$/kg, so both convert at the same FX rate (demo: 149.50)<br>'
    +'② <b>Tax</b>: <code>pmn31</code> is <b>net of tax</b>, quotes usually include VAT; 13% difference<br>'
    +'③ <b>Price type</b>: spot / contract / ex-works / CIF; comparing spot with contract gives the wrong answer')
  +card('Own purchase price vs market','Link to business data · 4 fields',
