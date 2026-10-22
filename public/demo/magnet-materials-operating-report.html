@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Magnet Materials Operating Report</title>
+<title>Materials Operating Report</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;650;700&family=Geist+Mono:wght@400;500&display=swap">
 <style>
@@ -409,14 +409,14 @@ table.lean th:nth-child(4),table.lean td:nth-child(4),table.lean th:nth-child(5)
   <div><h1 id="pgTitle">Management Dashboard</h1><p id="pgSub">Company-level KPIs and layered drill-down · September 2026</p></div>
   <div class="tools">
     <select id="f1" aria-label="Legal entity"><option>All 6 entities</option><option>Entity A</option><option>Entity B</option><option>Entity C</option><option>Entity D</option></select>
-    <select id="f2" aria-label="Business line"><option>All business lines</option><option>NdFeB Magnets</option><option>SmCo Magnets</option><option>Magnet Assemblies</option><option>Recycled Material</option></select>
+    <select id="f2" aria-label="Business line"><option>All business lines</option><option>Material 1</option><option>Material 2</option><option>Material 3</option><option>Material 4</option></select>
     <select id="f3" aria-label="Period"><option>Sep 2026</option><option>Aug 2026</option><option>Jul 2026</option></select>
     <span class="badge">Demo data</span>
   </div>
 </div></div>
 
 <main class="gut">
-<div class="ph"><span class="dot"></span><span>Demo data · amounts in US$ thousands ($k) unless stated</span><details><summary>About the sample data</summary><p>Entities, customers and sales reps are placeholders until the client supplies master data (entity from <code>azw_file.azw02</code>, customer <code>occ_file.occ02</code>, sales rep <code>occ_file.occ04</code>). Business lines and departments are examples; the client's real organisation wins. Grades N42 / N38 / N45 / SmCo28 are standard industry grades. Sample figures are stated directly in US dollars; rare-earth market prices are converted from CNY at a demo rate of 6.68 CNY per USD.</p></details></div>
+<div class="ph"><span class="dot"></span><span>Demo data · amounts in US$ thousands ($k) unless stated</span><details><summary>About the sample data</summary><p>Entities, customers, sales reps and material names are placeholders until the client supplies master data (entity from <code>azw_file.azw02</code>, customer <code>occ_file.occ02</code>, sales rep <code>occ_file.occ04</code>). Business lines and departments are examples; the client's real organisation wins. Sample figures are stated directly in US dollars; market prices are converted from CNY at a demo rate of 6.68 CNY per USD.</p></details></div>
 
 <section id="mgmt">
   <div class="kpis" id="kpis"></div>
@@ -428,7 +428,7 @@ table.lean th:nth-child(4),table.lean td:nth-child(4),table.lean th:nth-child(5)
   <div class="segp" data-p="ov">
   <div class="card"><header><h2>Where the money comes from and goes</h2><div class="src">Composition of revenue, cost of sales and period expenses · Sep 2026</div></header>
     <div class="pad"><div class="dgrid" id="compDonuts"></div></div>
-    <div class="note">NdFeB magnets carry <b>62.9%</b> of revenue. Raw material is <b>68.4%</b> of cost of sales, which is why rare-earth prices drive the margin squeeze shown below. Hover a segment to isolate it.</div>
+    <div class="note">Material 1 carries <b>62.9%</b> of revenue. Raw material is <b>68.4%</b> of cost of sales, which is why input prices drive the margin squeeze shown below. Hover a segment to isolate it.</div>
   </div>
 
   <div class="card"><header><h2>Headline metric from each report</h2><div class="src">One headline metric per report · click a card to open that report</div></header>
@@ -448,19 +448,19 @@ table.lean th:nth-child(4),table.lean td:nth-child(4),table.lean th:nth-child(5)
     </div>
   </div>
 
-  <div class="card hero"><header><h2>Book revenue vs price-adjusted revenue</h2><div class="src">Comparable basis with rare-earth price pass-through removed · last 12 months</div></header>
+  <div class="card hero"><header><h2>Book revenue vs price-adjusted revenue</h2><div class="src">Comparable basis with raw-material price pass-through removed · last 12 months</div></header>
     <div class="adjwrap">
       <div class="adjstat">
         <div class="st" data-drill="Book revenue" data-unit="$k" data-val="18240" data-kind="money" data-dims="bl,prod,region,custtype,cust" data-detail="ship"><div class="k">Book revenue growth<span class="dmark"></span></div><div class="v n">+21.8<i>%</i></div><div class="s">14,980 → 18,240 ($k)</div></div>
         <div class="st" data-drill="Price-adjusted revenue" data-unit="$k" data-val="16090" data-kind="money" data-dims="bl,prod,region,custtype,cust" data-detail="ship"><div class="k">Price-adjusted growth<span class="dmark"></span></div><div class="v n pos">+7.4<i>%</i></div><div class="s">14,980 → 16,090 ($k)</div></div>
-        <div class="st gold" data-drill="Price pass-through" data-unit="$k" data-val="2150" data-kind="money" data-dims="mat,cat" data-detail="rm"><div class="k">Of which price pass-through<span class="dmark"></span></div><div class="v n">14.4<i>pp</i></div><div class="s">≈ 2,150 came from rare-earth price rises</div></div>
+        <div class="st gold" data-drill="Price pass-through" data-unit="$k" data-val="2150" data-kind="money" data-dims="mat,cat" data-detail="rm"><div class="k">Of which price pass-through<span class="dmark"></span></div><div class="v n">14.4<i>pp</i></div><div class="s">≈ 2,150 came from raw-material price rises</div></div>
       </div>
       <div class="adjchartbox">
         <div class="minileg"><span><span class="sw" style="background:var(--blue);opacity:1"></span>Book revenue</span><span><span class="sw d" style="width:15px;color:var(--pos);opacity:1"></span>Price-adjusted revenue</span><span><span class="sw" style="background:var(--gold);opacity:.4"></span>Price pass-through</span></div>
         <div class="chart wide" id="adjChart"></div>
       </div>
     </div>
-    <div class="note">The gold band between the two lines is the part of <b>rare-earth price rises passed on to selling prices</b>. Book revenue keeps climbing, but with price stripped out <b>volume has been flat since June</b>.<br>★★ Base period, pass-through coefficient and the adjustment formula are <b>all pending client sign-off</b>. Meeting notes: "price-adjusted revenue needs a formula, pick a base" and "month-opening cost price from purchase orders". Candidate price feeds: Western Exchange (西交所), Baiinfo (百川), Mysteel (钢联), Asian Metal.</div>
+    <div class="note">The gold band between the two lines is the part of <b>raw-material price rises passed on to selling prices</b>. Book revenue keeps climbing, but with price stripped out <b>volume has been flat since June</b>.<br>★★ Base period, pass-through coefficient and the adjustment formula are <b>all pending client sign-off</b>. Meeting notes: "price-adjusted revenue needs a formula, pick a base" and "month-opening cost price from purchase orders". Candidate price feeds are placeholders.</div>
   </div>
 
   <div class="card"><header><h2>Monthly operating trend</h2><div class="src">Last 12 months · solid = actual / dashed = budget / faint = prior year</div></header>
@@ -471,7 +471,7 @@ table.lean th:nth-child(4),table.lean td:nth-child(4),table.lean th:nth-child(5)
     <div class="pad" style="padding-top:0"><div class="single">
       <div><div class="minileg"><span><span class="sw" style="background:var(--blue);opacity:1"></span>Actual gross margin</span><span><span class="sw d" style="width:15px;color:var(--fg-3);opacity:1"></span>Budget 19.5%</span><span><span class="sw" style="background:var(--gold);opacity:.7"></span>Industry average 18.5%</span></div><div class="chart" id="gmChart"></div></div>
     </div></div>
-    <div class="note">Revenue is up <b>21.8%</b> over 12 months but price-adjusted revenue only <b>7.4%</b>; the gap is rare-earth price pass-through. Over the same period gross margin fell from 20.4% to <b>17.6%</b> and has been below the industry average since May: <b>raw materials rose faster than selling prices, so the increase was not fully passed on.</b></div>
+    <div class="note">Revenue is up <b>21.8%</b> over 12 months but price-adjusted revenue only <b>7.4%</b>; the gap is raw-material price pass-through. Over the same period gross margin fell from 20.4% to <b>17.6%</b> and has been below the industry average since May: <b>raw materials rose faster than selling prices, so the increase was not fully passed on.</b></div>
   </div>
 
   <div class="card"><header><h2>Profit change attribution</h2><div class="src">Last month 1,840 → this month 1,520 ($k) · by department</div></header>
@@ -555,8 +555,8 @@ table.lean th:nth-child(4),table.lean td:nth-child(4),table.lean th:nth-child(5)
       <p><code>gem_file.gem01</code> · <code>oga15 / oea15 / pmm13</code> · <code>abb05</code></p></div>
     <div class="rule"><h3>Five inventory classes</h3><p>Raw material / work in process / semi-finished / finished (in-house) / <b>purchased goods</b>. <b>WIP ≠ semi-finished</b>. Purchased goods are bought and resold unchanged at purchase cost; mixing them into finished goods distorts both turnover and margin. Everything in kg, <b>scrap in tonnes</b>.</p></div>
     <div class="rule"><h3>Ratios are never stored</h3><p>The DM layer stores only <b>numerator and denominator</b>; ratios are computed at query time as <code>SUM(num)/SUM(den)</code>. Stored ratios break on roll-up: the average of department margins is not the company margin.</p></div>
-    <div class="rule"><h3>Price-adjusted revenue</h3><p>Rare earths are priced at market, so raw-material moves pass straight into selling prices. Book revenue is <b>+8.0%</b> YoY; with pass-through removed it is <b>+2.1%</b>. Base, coefficient and formula are for the client to decide; candidate price feeds: Western Exchange, Baiinfo, Mysteel, Asian Metal.</p></div>
-    <div class="rule"><h3>FPY ≠ final yield</h3><p><b>First-pass yield</b> counts only units that pass every step without rework; <b>final yield</b> also counts reworked units that eventually pass. Plating rework hides inside final yield, so the Quality page reports FPY.</p></div>
+    <div class="rule"><h3>Price-adjusted revenue</h3><p>Key inputs are priced at market, so raw-material moves pass straight into selling prices. Book revenue is <b>+8.0%</b> YoY; with pass-through removed it is <b>+2.1%</b>. Base, coefficient and formula are for the client to decide; price feeds are placeholders.</p></div>
+    <div class="rule"><h3>FPY ≠ final yield</h3><p><b>First-pass yield</b> counts only units that pass every step without rework; <b>final yield</b> also counts reworked units that eventually pass. Coating rework hides inside final yield, so the Quality page reports FPY.</p></div>
     <div class="rule"><h3>OTD has two clocks</h3><p>On-time delivery is measured against the <b>first promised date</b>, not the latest re-promised one. Measuring against the latest date makes every order "on time", the same trap as supplier lead time (<code>pmn33</code> vs <code>pmn36</code>).</p></div>
     <div class="rule"><h3>Reporting currency: US dollars</h3><p>The ERP books in <b>CNY</b>; the report shows <b>US$</b>. P&amp;L lines convert at the <b>monthly average rate</b>, balance-sheet items (cash, receivables, inventory) at the <b>month-end rate</b>, the usual translation method under IAS 21.</p><p>★★ Rate source (bank, PBOC central parity or treasury rate) and who maintains it are for the client to decide. Exchange-rate moves show up as a separate translation difference, not as operating performance.</p></div>
   </div></div></div>
@@ -659,7 +659,7 @@ var K=[
   sum:"Cumulative recognised revenue 18,240 vs phased budget 18,000 ($k): 240 ahead.",
   def:"Revenue attainment = cumulative recognised revenue ÷ phased budget for the same period.<br>Revenue is what the ERP has recognised and can book to the period's P&amp;L (posted from confirmed shipments in <code>oga_file</code>).",
   watch:["<b>Budget</b> and <b>target</b> are two different sets: budget from Finance <code>afc_file</code>, target from Sales <code>osa_file</code>. Read the two rates separately.",
-         "Book growth includes rare-earth price pass-through; always read <b>price-adjusted revenue</b> (+2.1%) next to it.",
+         "Book growth includes raw-material price pass-through; always read <b>price-adjusted revenue</b> (+2.1%) next to it.",
          "★ Budget version (original or latest approved) is pending client confirmation."],
   bars:[1180,1210,1340,1280,1420,1480,1390,1460,1550,1490,1520,1520],
   line:[6.5,13.2,20.6,27.6,35.4,43.6,51.3,59.3,67.8,76.0,84.4,101.3],tgt:100,yb:"$k",yl:"%"},
@@ -700,7 +700,7 @@ $("kpis").innerHTML=[
   +'<div class="d">'+c[4].slice(0,2).map(function(d){return '<span>'+d[0]+'<b class="'+d[2]+'">'+d[1]+'</b></span>'}).join("")+'</div></div>'}).join("");
 
 $("compDonuts").innerHTML=
- donut("Revenue by business line",[["NdFeB Magnets",11480],["Magnet Assemblies",3260],["SmCo Magnets",2540],["Recycled Material",960]],{sub:"$k revenue"})
+ donut("Revenue by business line",[["Material 1",11480],["Material 2",3260],["Material 3",2540],["Material 4",960]],{sub:"$k revenue"})
  +donut("Cost of sales structure",[["Raw material",10281],["Manufacturing overhead",2300],["Direct labour",1818],["Other",631]],{sub:"$k cost of sales"})
  +donut("Period expenses by type",[["Selling",864],["Administrative",742],["Finance",364],["R&D",268]],{sub:"$k expenses"});
 
@@ -722,7 +722,7 @@ var ROLL=[
  ["r_sale","Shipments","Net shipments","18,240","$k · 96.2% of target",""],
  ["r_ni","Shipped Not Invoiced","Shipped, not invoiced","2,580","$k · 13.3% of shipments","w"],
  ["r_sar","Sales Receivables","Overdue receivables","3,062","$k · 640 long overdue","b"],
- ["r_rm","Raw Material Prices","PrNd oxide latest","$114.2","per kg · +0.9% d/d","w"],
+ ["r_rm","Raw Material Prices","Raw Material 1 latest","$114.2","per kg · +0.9% d/d","w"],
  ["r_trace","Traceability","Fields","—","Awaiting requirements",""]];
 function renderRoll(){
  if(!$("roll"))return;
@@ -920,7 +920,7 @@ Array.prototype.forEach.call(document.querySelectorAll("#deptBody tr"),function(
 $("anomBody").innerHTML=[["Sales Dept 3","Revenue vs budget","78.4%","100%","−21.6 pp","10%","neg","Revenue & Mix"],
  ["Sales Dept 3","Overdue AR share","22.4%","11.8%","+10.6 pp","10%","neg","AR & Collections"],
  ["R&D Center","Expense vs budget","+23.4%","0%","+23.4 pp","20%","neg","Expense Analysis"],
- ["Plant 1","Pressing line load","104%","≤ 95%","+9 pp","95%","neg","Scheduling"],
+ ["Plant 1","Forming line load","104%","≤ 95%","+9 pp","95%","neg","Scheduling"],
  ["Plant 1","First-pass yield","94.2%","96.0%","−1.8 pp","1.5 pp","wrn","Quality"],
  ["Sales Dept 2","Overdue AR share","18.7%","11.8%","+6.9 pp","10%","wrn","AR & Collections"],
  ["Sales Dept 3","Department GM %","13.1%","17.6%","−4.5 pp","10 pp","wrn","Gross Margin Analysis"]].map(function(a){
@@ -932,10 +932,10 @@ $("anomBody").innerHTML=[["Sales Dept 3","Revenue vs budget","78.4%","100%","−
 
 /* ===== Fixed drill-down demo ===== */
 var LV=[
- {n:"Company",dim:"Business line",pd:-320,rows:[["NdFeB Magnets",11480,2020,0.176,0.052,0.629,0.071,0.642,1],
-  ["Magnet Assemblies",3260,668,0.205,0.081,0.179,0.134,-0.169,2],["SmCo Magnets",2540,389,0.153,0.031,0.139,-0.042,0.447,3],
-  ["Recycled Material",960,133,0.139,0.047,0.053,0.218,0.080,4]]},
- {n:"NdFeB Magnets",dim:"Department",pd:-205,rows:[["Sales Dept 1",4910,951,0.194,0.118,0.428,0.082,0.210,1],
+ {n:"Company",dim:"Business line",pd:-320,rows:[["Material 1",11480,2020,0.176,0.052,0.629,0.071,0.642,1],
+  ["Material 2",3260,668,0.205,0.081,0.179,0.134,-0.169,2],["Material 3",2540,389,0.153,0.031,0.139,-0.042,0.447,3],
+  ["Material 4",960,133,0.139,0.047,0.053,0.218,0.080,4]]},
+ {n:"Material 1",dim:"Department",pd:-205,rows:[["Sales Dept 1",4910,951,0.194,0.118,0.428,0.082,0.210,1],
   ["Sales Dept 2",3680,561,0.152,0.061,0.321,0.034,0.712,2],["Export Dept",1960,391,0.199,0.115,0.171,0.165,-0.142,3],
   ["Sales Dept 3",930,117,0.126,0.024,0.081,-0.118,0.220,4]]},
  {n:"Sales Dept 2",dim:"Sales rep",pd:-146,rows:[["Rep 1",1420,238,0.168,0.079,0.386,0.061,0.137,1],
@@ -981,13 +981,13 @@ function renderDrill(){
 }
 var ORD={
  "SO-26090142":{cust:"Customer A",rep:"Rep 2",dept:"Sales Dept 2",date:"2026-09-08",ship:"DN-26090311",
-  lines:[["1","N42-BLK-503010","N42 block 50×30×10 Ni-plated","4,200 pcs","1,260.0","812.00","1,023,120","968,400","54,720","5.3%"],
-         ["2","N42-BLK-402008","N42 block 40×20×8 Ni-plated","2,800 pcs","448.0","786.00","352,128","338,900","13,228","3.8%"],
-         ["3","N38-RNG-2005","N38 ring Φ20×5 Zn-plated","6,000 pcs","132.0","79.50","477,000","448,600","28,400","6.0%"]],
+    lines:[["1","MAT-001","Material 1","4,200 pcs","1,260.0","812.00","1,023,120","968,400","54,720","5.3%"],
+      ["2","MAT-002","Material 2","2,800 pcs","448.0","786.00","352,128","338,900","13,228","3.8%"],
+      ["3","MAT-003","Material 3","6,000 pcs","132.0","79.50","477,000","448,600","28,400","6.0%"]],
   gl:[["AR-2609-0218","1","2026-09-08","1122-01","Accounts receivable – Customer A","Sales Dept 2","—","Dr","2,093,195","Sep sales SO-26090142"],
-      ["AR-2609-0218","2","2026-09-08","6001-01","Main business revenue – NdFeB","Sales Dept 2","P-NDFEB","Cr","1,852,248","Sep sales SO-26090142"],
+      ["AR-2609-0218","2","2026-09-08","6001-01","Main business revenue – Material 1","Sales Dept 2","MAT-001","Cr","1,852,248","Sep sales SO-26090142"],
       ["AR-2609-0218","3","2026-09-08","2221-01","Tax payable – output VAT","Sales Dept 2","—","Cr","240,947","13% output VAT"],
-      ["CS-2609-0411","1","2026-09-30","6401-01","Main business cost – NdFeB","Sales Dept 2","P-NDFEB","Dr","1,755,900","Month-end COGS transfer"],
+      ["CS-2609-0411","1","2026-09-30","6401-01","Main business cost – Material 1","Sales Dept 2","MAT-001","Dr","1,755,900","Month-end COGS transfer"],
       ["CS-2609-0411","2","2026-09-30","1405-01","Finished goods inventory","Warehouse 01","—","Cr","1,755,900","Month-end COGS transfer"]]}};
 function renderPierce(no){
  var o=ORD[no]||ORD["SO-26090142"];
@@ -1055,7 +1055,7 @@ var REP=[["Layer 1 · Sales","5 reports · 117 fields",[
  ["Toll Processing Settlement",31,"r_proc",[["Processor overview",11],["Processing fees",7],["Sludge & offcut prices",7],["Sludge recovery",6]]],
  ["Traceability",0,"r_trace",[["MIIT 5 tables · awaiting requirements",0]]]]],
 ["Layer 2 · Operations (new)","2 reports · fields to be specified",[
- ["Quality",0,"r_qual",[["First-pass yield",0],["Defect Pareto",0],["SPC: Br / Hcj",0],["Complaints & returns",0]]],
+ ["Quality",0,"r_qual",[["First-pass yield",0],["Defect Pareto",0],["SPC: Property A / B",0],["Complaints & returns",0]]],
  ["Scheduling",0,"r_sched",[["Capacity load",0],["OEE & six big losses",0],["Work-order Gantt",0],["On-time delivery",0]]]]],
 ["Reference data","1 report · 28 fields",[
  ["Raw Material Prices",28,"r_rm",[["Daily prices",7],["Moves & indices",7],["Material master",6],["Link to business data",4],["Source & quality",4]]]]],
@@ -1316,29 +1316,29 @@ SCREEN.r_pur=function(){return ''
    '<div class="pad">'+leg([["Own average purchase price","var(--blue)"],["Market reference price","var(--gold)"]])
    +'<div class="chart wide">'+barsChart({w:720,h:240,cats:MON,
     series:[{c:"var(--blue)",d:[61.7,64.1,66.8,66.0,70.1,73.7,72.8,76.3,80.2,78.4,82.0,84.1]},
-            {c:"var(--gold)",d:[62.9,64.7,67.7,67.1,70.7,74.6,74.0,77.2,81.1,79.6,83.2,85.9]}],unit:"US$/kg · PrNd metal",alt:"Purchase price vs market"})+'</div></div>',
-   '★ Candidate price feeds (named in meeting notes): <b>Western Exchange</b> (public data), Baiinfo, Mysteel (to confirm), Asian Metal. This month the average purchase price is <b>2.1%</b> below market.')
+            {c:"var(--gold)",d:[62.9,64.7,67.7,67.1,70.7,74.6,74.0,77.2,81.1,79.6,83.2,85.9]}],unit:"US$/kg · Raw Material 2",alt:"Purchase price vs market"})+'</div></div>',
+  '★ Candidate price feeds are represented as generic demo sources. This month the average purchase price is <b>2.1%</b> below market.')
  +card('Scrap','Scrap inventory and sales · in tonnes',
    tbl(["Scrap type","Source process","Stock (t)","Stock value","Generation rate","Sales price","Sales value","Variance reason"],[
     [["Grinding sludge","b-warn"],["Grinding","t"],["108"],["842"],["<span class=wrn>4.2%</span>"],["$7,800/t"],["342"],["High wheel wear","t"]],
     [["Offcuts",""],["Cutting","t"],["52"],["486"],["2.6%"],["$12,400/t"],["198"],["Normal","t"]],
-    [["Oxidised scrap",""],["Sintering","t"],["18"],["96"],["0.9%"],["$5,200/t"],["62"],["Normal","t"]],
+    [["Oxidised scrap",""],["Thermal processing","t"],["18"],["96"],["0.9%"],["$5,200/t"],["62"],["Normal","t"]],
     [["Recovered powder",""],["Recovery line","t"],["8"],["74"],["—"],["$21,000/t"],["41"],["—","t"]]],860),
    'Meeting notes: "scrap reports in tonnes" and "reasons for scrap quantity variance". ★ How deep the variance attribution goes (line / process / product / lot) is undecided.')}
 
 SCREEN.r_rev=function(){return ''
  +card('Revenue overview','Revenue & Mix · 58 fields · overall revenue',
    minis([["Revenue this month","18,240","$k · 101.3% of budget"],["Revenue year to date","198,640","$k · YoY +8.0%"],
-     ["Price-adjusted YoY","+2.1","% · rare-earth pass-through removed","wrn"],["Time elapsed","75.0","% · revenue progress 76.4%"],
+    ["Price-adjusted YoY","+2.1","% · raw-material pass-through removed","wrn"],["Time elapsed","75.0","% · revenue progress 76.4%"],
      ["Full-month forecast","18,240","$k · forecast accuracy 97.2%"]]))
  +card('Revenue mix','Core dimensions · business line / region / channel / customer type',
    '<div class="pad"><div class="dgrid">'
-   +donut("By business line",[["NdFeB Magnets",11480],["Magnet Assemblies",3260],["SmCo Magnets",2540],["Recycled Material",960]],{sub:"$k"})
+  +donut("By business line",[["Material 1",11480],["Material 2",3260],["Material 3",2540],["Material 4",960]],{sub:"$k"})
    +donut("By sales region",[["East China",7940],["South China",4120],["Export",3980],["North China",1480],["Other",720]],{sub:"$k"})
    +donut("By channel",[["Direct",11309],["Distributors",4742],["E-commerce",1459],["Other",730]],{sub:"$k"})
-   +donut("By customer type",[["Motor makers",6931],["Wind power",4378],["Consumer electronics",3466],["Auto parts",2371],["Other",1094]],{sub:"$k"})
+  +donut("By customer type",[["Customer Type 1",6931],["Customer Type 2",4378],["Customer Type 3",3466],["Customer Type 4",2371],["Other",1094]],{sub:"$k"})
    +'</div></div>',
-   'Two-thirds of revenue is NdFeB; East China and export together are <b>65%</b>. Motor makers and wind power make up 62% of demand, so a slowdown in either segment shows here first.')
+  'Two-thirds of revenue is Material 1; East China and export together are <b>65%</b>. The two largest customer groups make up 62% of demand, so a slowdown in either segment shows here first.')
  +card('Revenue quality','Revenue quality analysis · adjusted per meeting notes',
    minis([["New-customer revenue share","6.8","% · renamed (was new-product revenue)","wrn"],["New-product revenue share","11.2","% · kept, configurable"],
      ["Key-account revenue share","38.4","% · Top 5 concentration high","wrn"],["Core business revenue share","96.1","%"],
@@ -1369,10 +1369,10 @@ SCREEN.r_inv=function(){return ''
    '★ This report (sales, physical view) bands by <b>month</b> to watch sell-through; Purchasing &amp; Supply Chain (finance, cost view) bands at <b>3/6/12 months</b> for write-down provisions. Two purposes, two band sets, <b>separate field names</b>: sales says "stock age", finance says "inventory ageing".')
  +card('Slow-moving stock · daily alert','Meeting note "slow-moving stock reminder, daily, by department"',
    tbl(["Owning dept","Product","Qty (t)","Value","Age","Band","Status","Linked customer","Alert status"],[
-    [["Sales Dept 2","b-neg"],["N42 block 50×30×10","t"],["86"],["248"],["<span class=neg>104 days</span>"],['<span class="tag t-neg">Severely slow</span>',"t"],["Available","t"],["Customer A","t"],['Sent · not handled',"t"]],
-    [["Sales Dept 3","b-neg"],["N38H disc Φ20×5","t"],["42"],["126"],["<span class=neg>68 days</span>"],['<span class="tag t-neg">Slow-moving</span>',"t"],["Available","t"],["—","t"],['Sent',"t"]],
-    [["Sales Dept 1","b-warn"],["SmCo28 block","t"],["21"],["78"],["<span class=wrn>41 days</span>"],['<span class="tag t-warn">Watch</span>',"t"],["In QC","t"],["Customer D","t"],['Handled',"t"]],
-    [["Sales Dept 2","b-warn"],["N45 arc segment","t"],["12"],["34"],["<span class=wrn>36 days</span>"],['<span class="tag t-warn">Watch</span>',"t"],["Frozen","t"],["—","t"],['Handled',"t"]]],960),
+    [["Sales Dept 2","b-neg"],["Material 1","t"],["86"],["248"],["<span class=neg>104 days</span>"],['<span class="tag t-neg">Severely slow</span>',"t"],["Available","t"],["Customer A","t"],['Sent · not handled',"t"]],
+    [["Sales Dept 3","b-neg"],["Material 2","t"],["42"],["126"],["<span class=neg>68 days</span>"],['<span class="tag t-neg">Slow-moving</span>',"t"],["Available","t"],["—","t"],['Sent',"t"]],
+    [["Sales Dept 1","b-warn"],["Material 3","t"],["21"],["78"],["<span class=wrn>41 days</span>"],['<span class="tag t-warn">Watch</span>',"t"],["In QC","t"],["Customer D","t"],['Handled',"t"]],
+    [["Sales Dept 2","b-warn"],["Material 4","t"],["12"],["34"],["<span class=wrn>36 days</span>"],['<span class="tag t-warn">Watch</span>',"t"],["Frozen","t"],["—","t"],['Handled',"t"]]],960),
    '★★ Stock itself has no department. Three ways to assign one: ① customer <code>occ04</code> → rep → department ② order <code>oga15</code> ③ warehouse keeper <code>imd16</code>. They give different results; client to decide.<br>★ Delivery channel (in-app / email / DingTalk / WeCom) is not in the meeting notes.')
  +card('Inventory risk alerts','★ These three live in Purchasing & Supply Chain · finance cost view',
    tbl(["Alert","Trigger","Items","Value","Status","Source field"],[
@@ -1405,15 +1405,15 @@ SCREEN.r_cash=function(){return ''
 /* ===== Metric drill engine: click any metric, pick dimensions, reach detail ===== */
 var DIMS={
  legal:{n:"Subsidiary",items:[["Entity A",.42],["Entity B",.21],["Entity C",.16],["Entity D",.12],["Entity E",.06],["Entity F",.03]]},
- bl:{n:"Business line",items:[["NdFeB Magnets",.629],["Magnet Assemblies",.179],["SmCo Magnets",.139],["Recycled Material",.053]]},
+ bl:{n:"Business line",items:[["Material 1",.629],["Material 2",.179],["Material 3",.139],["Material 4",.053]]},
  dept:{n:"Department",items:[["Sales Dept 1",.305],["Sales Dept 2",.204],["Export Dept",.178],["R&D Center",.120],
   ["Sales Dept 3",.086],["Plant 1",.063],["Plant 2",.053],["Finance & Admin",.043],["Recycling Division",.030],["Procurement",.029]]},
  rep:{n:"Sales rep",items:[["Rep 1",.29],["Rep 2",.24],["Rep 3",.21],["Rep 4",.15],["Rep 5",.11]]},
  cust:{n:"Customer",items:[["Customer A",.31],["Customer B",.24],["Customer C",.19],["Customer D",.15],["Customer E",.11]]},
- custtype:{n:"Customer type",items:[["Motor makers",.38],["Wind power",.24],["Consumer electronics",.19],["Auto parts",.13],["Other",.06]]},
+ custtype:{n:"Customer type",items:[["Customer Type 1",.38],["Customer Type 2",.24],["Customer Type 3",.19],["Customer Type 4",.13],["Other",.06]]},
  region:{n:"Sales region",items:[["East China",.435],["South China",.226],["Export",.218],["North China",.081],["Other",.040]]},
  channel:{n:"Channel",items:[["Direct",.62],["Distributors",.26],["E-commerce",.08],["Other",.04]]},
- prod:{n:"Product",items:[["N42 block 50×30×10",.36],["N38 ring Φ20×5",.22],["N45 arc segment",.18],["SmCo28 block",.14],["Assembly unit",.10]]},
+ prod:{n:"Product",items:[["Material 1",.36],["Material 2",.22],["Material 3",.18],["Material 4",.14],["Material 5",.10]]},
  lot:{n:"Lot",items:[["LOT-260901",.26],["LOT-260905",.22],["LOT-260912",.20],["LOT-260918",.18],["LOT-260922",.14]]},
  costtype:{n:"Cost type",items:[["Raw material",.684],["Manufacturing overhead",.153],["Direct labour",.121],["Other",.042]]},
  expacct:{n:"Expense account",items:[["Payroll",.34],["Interest",.16],["R&D materials",.14],["Freight",.13],["Travel",.12],["Office",.11]]},
@@ -1422,8 +1422,8 @@ var DIMS={
  applicant:{n:"Requester",items:[["Requester 1",.31],["Requester 2",.26],["Requester 3",.22],["Requester 4",.21]]},
  age:{n:"Age bucket",items:[["Not yet due",.705],["< 1 month",.206],["1–3 months",.052],["3–6 months",.024],["6–12 months",.009],["> 1 year",.004]]},
  supplier:{n:"Supplier",items:[["Supplier A",.32],["Supplier B",.24],["Supplier C",.21],["Supplier D",.13],["Supplier E",.10]]},
- matcat:{n:"Material category",items:[["Rare-earth oxides",.46],["Rare-earth metals",.28],["Auxiliaries",.14],["Packaging",.08],["Other",.04]]},
- item:{n:"Item",items:[["PrNd oxide",.30],["PrNd metal",.24],["Dy oxide",.18],["Tb oxide",.14],["Nickel plating aux.",.14]]},
+ matcat:{n:"Material category",items:[["Raw materials",.46],["Processed materials",.28],["Auxiliaries",.14],["Packaging",.08],["Other",.04]]},
+ item:{n:"Item",items:[["Raw Material 1",.30],["Raw Material 2",.24],["Raw Material 3",.18],["Raw Material 4",.14],["Auxiliary Material 1",.14]]},
  wh:{n:"Warehouse",items:[["Warehouse 01",.34],["Warehouse 02",.26],["Warehouse 03",.19],["Warehouse 04",.13],["Warehouse 05",.08]]},
  loc:{n:"Bin area",items:[["Area A",.38],["Area B",.27],["Area C",.21],["Area D",.14]]},
  invtype:{n:"Inventory class",items:[["Raw material",.445],["Finished (in-house)",.301],["Semi-finished",.155],["Work in process",.112],["Purchased goods",.087]]},
@@ -1435,13 +1435,13 @@ var DIMS={
  fincat:{n:"Financing type",items:[["Working-capital loan",.52],["Bank acceptance",.28],["Letter of credit",.12],["Factoring",.08]]},
  cashcat:{n:"Cash-flow category",items:[["Operating",.64],["Investing",.14],["Financing",.22]]},
  processor:{n:"Processor",items:[["Processor A",.34],["Processor B",.26],["Processor C",.22],["Processor D",.18]]},
- proctype:{n:"Processing type",items:[["Grinding",.34],["Plating",.26],["Cutting",.22],["Sintering",.18]]},
- cat:{n:"Material class",items:[["Light RE oxides",.34],["Light RE metals",.26],["Heavy RE oxides",.18],["Heavy RE metals",.12],["Base metals",.06],["Alloy aux.",.04]]},
- src:{n:"Price feed",items:[["Western Exchange",.40],["Asian Metal",.32],["Baiinfo",.28]]},
- mat:{n:"Material",items:[["PrNd oxide",.28],["PrNd metal",.24],["Dy oxide",.20],["Dy metal",.14],["Tb oxide",.10],["La oxide",.04]]},
- line:{n:"Production line",items:[["Press P1",.24],["Press P2",.20],["Furnace F1",.18],["Furnace F2",.14],["Grinder M1",.13],["Plating L1",.11]]},
- proc:{n:"Process",items:[["Machining",.38],["Plating",.27],["Sintering",.16],["Pressing",.09],["Magnetise & test",.06],["Other",.04]]},
- defect:{n:"Defect type",items:[["Dimension out of tolerance",.34],["Plating peel / blister",.23],["Chipping / cracks",.17],["Low Br / Hcj",.11],["Surface scratches",.07],["Other",.08]]},
+ proctype:{n:"Processing type",items:[["Process 1",.34],["Process 2",.26],["Process 3",.22],["Process 4",.18]]},
+ cat:{n:"Material class",items:[["Input Class 1",.34],["Input Class 2",.26],["Input Class 3",.18],["Input Class 4",.12],["Base materials",.06],["Auxiliaries",.04]]},
+ src:{n:"Price feed",items:[["Price Feed A",.40],["Price Feed B",.32],["Price Feed C",.28]]},
+ mat:{n:"Material",items:[["Raw Material 1",.28],["Raw Material 2",.24],["Raw Material 3",.20],["Raw Material 4",.14],["Raw Material 5",.10],["Raw Material 6",.04]]},
+ line:{n:"Production line",items:[["Line 1",.24],["Line 2",.20],["Line 3",.18],["Line 4",.14],["Line 5",.13],["Line 6",.11]]},
+ proc:{n:"Process",items:[["Machining",.38],["Coating",.27],["Thermal processing",.16],["Forming",.09],["Final test",.06],["Other",.04]]},
+ defect:{n:"Defect type",items:[["Dimension out of tolerance",.34],["Coating defect",.23],["Chipping / cracks",.17],["Property out of range",.11],["Surface scratches",.07],["Other",.08]]},
  wostatus:{n:"WO status",items:[["On track",.62],["At risk",.20],["Late",.12],["Done",.06]]}
 };
 var SDIM={
@@ -1582,14 +1582,14 @@ function filt(L0,CM){return L0.filter(function(r){return D.path.every(function(p
 function back(){$("backLvl").addEventListener("click",function(){D.detail=false;renderD()})}
 function money(s){return parseInt(String(s).replace(/,/g,"")).toLocaleString("en-US")}
 function renderInvDetail(){
- var L0=[["Warehouse 01","Area A","Finished (in-house)","N42-BLK-503010","N42 block 50×30×10","LOT-260901","Customer A","186.0","538","Available","28 days","Within 1 month","Normal"],
-  ["Warehouse 01","Area B","Finished (in-house)","N38-RNG-2005","N38 ring Φ20×5","LOT-260905","Customer B","92.4","264","In QC","41 days","Over 1 month","Watch"],
-  ["Warehouse 02","Area A","Finished (in-house)","N42-BLK-402008","N42 block 40×20×8","LOT-260912","Customer A","64.8","198","Available","68 days","Over 2 months","Slow-moving"],
-  ["Warehouse 02","Area C","Purchased goods","SMC-BLK-2510","SmCo28 block 25×10","LOT-260918","—","21.0","78","Frozen","104 days","Over 3 months","Severely slow"],
-  ["Warehouse 03","Area A","Raw material","RM-PRND-OX","PrNd oxide","LOT-260912","—","320.0","2,442","Available","19 days","Within 1 month","Normal"],
-  ["Warehouse 03","Area D","Raw material","RM-DY-MET","Dy metal","LOT-260918","—","12.5","2,263","Available","26 days","Within 1 month","Normal"],
-  ["Warehouse 04","Area B","Semi-finished","SF-N45-BLANK","N45 sintered blank","LOT-260922","—","148.0","486","Available","22 days","Within 1 month","Normal"],
-  ["Warehouse 05","Area A","Work in process","WIP-N52-01","N52 in production","LOT-260922","—","42.0","168","Available","11 days","Within 1 month","Normal"]];
+ var L0=[["Warehouse 01","Area A","Finished (in-house)","MAT-001","Material 1","LOT-260901","Customer A","186.0","538","Available","28 days","Within 1 month","Normal"],
+  ["Warehouse 01","Area B","Finished (in-house)","MAT-002","Material 2","LOT-260905","Customer B","92.4","264","In QC","41 days","Over 1 month","Watch"],
+  ["Warehouse 02","Area A","Finished (in-house)","MAT-003","Material 3","LOT-260912","Customer A","64.8","198","Available","68 days","Over 2 months","Slow-moving"],
+  ["Warehouse 02","Area C","Purchased goods","MAT-004","Material 4","LOT-260918","—","21.0","78","Frozen","104 days","Over 3 months","Severely slow"],
+  ["Warehouse 03","Area A","Raw material","RAW-001","Raw Material 1","LOT-260912","—","320.0","2,442","Available","19 days","Within 1 month","Normal"],
+  ["Warehouse 03","Area D","Raw material","RAW-002","Raw Material 2","LOT-260918","—","12.5","2,263","Available","26 days","Within 1 month","Normal"],
+  ["Warehouse 04","Area B","Semi-finished","MAT-005","Material 5","LOT-260922","—","148.0","486","Available","22 days","Within 1 month","Normal"],
+  ["Warehouse 05","Area A","Work in process","MAT-006","Material 6","LOT-260922","—","42.0","168","Available","11 days","Within 1 month","Normal"]];
  var CM={wh:0,loc:1,invtype:2,prod:4,lot:5,cust:6,invstatus:9,invage:11};
  var L=filt(L0,CM);
  var rows=L.map(function(r){
@@ -1617,7 +1617,7 @@ function renderExpDetail(){
  var L0=[["PV-2609-0412","2026-09-05","6602-01","Payroll","Administrative","Sales Dept 2","Marketing","Requester 1","186,400","Sep sales staff payroll"],
   ["PV-2609-0455","2026-09-11","6602-08","Travel","Administrative","Sales Dept 2","Marketing","Requester 2","42,860","Customer visit travel claim"],
   ["PV-2609-0501","2026-09-18","6601-12","Freight","Selling","Sales Dept 1","Day-to-day","Requester 3","68,200","Sep finished-goods freight"],
-  ["PV-2609-0533","2026-09-22","5401-03","R&D materials","R&D","R&D Center","R&D projects","Requester 4","214,600","N52 grade trial material"],
+  ["PV-2609-0533","2026-09-22","5401-03","R&D materials","R&D","R&D Center","R&D projects","Requester 4","214,600","Material 6 trial"],
   ["PV-2609-0560","2026-09-26","6602-05","Office","Administrative","Finance & Admin","Day-to-day","Requester 1","18,400","Office supplies"],
   ["PV-2609-0588","2026-09-29","6603-01","Interest","Finance","Finance & Admin","Day-to-day","Requester 2","364,000","Sep loan interest"]];
  var CM={expacct:3,expcat:4,dept:5,proj:6,applicant:7};
@@ -1639,11 +1639,11 @@ function renderExpDetail(){
  back();
 }
 function renderPurDetail(){
- var L0=[["PO-2609-0188","2026-09-03","Supplier A","RM-PRND-OX","PrNd oxide","Rare-earth oxides","LOT-260901","42.0","114.2","4,797,305","2026-09-18","2026-09-17","0"],
-  ["PO-2609-0210","2026-09-07","Supplier A","RM-PRND-MET","PrNd metal","Rare-earth metals","LOT-260905","18.0","138.6","2,495,210","2026-09-22","2026-09-25","3"],
-  ["PO-2609-0244","2026-09-12","Supplier B","RM-DY-OX","Dy oxide","Rare-earth oxides","LOT-260912","2.4","213.3","511,976","2026-09-26","2026-09-26","0"],
-  ["PO-2609-0266","2026-09-16","Supplier C","AUX-NI-PLT","Nickel plating aux.","Auxiliaries","LOT-260918","6.8","12.3","83,473","2026-09-28","2026-10-04","6"],
-  ["PO-2609-0291","2026-09-21","Supplier D","RM-TB-OX","Tb oxide","Rare-earth oxides","LOT-260922","0.6","965.6","579,341","2026-10-05","—","—"]];
+ var L0=[["PO-2609-0188","2026-09-03","Supplier A","RAW-001","Raw Material 1","Raw materials","LOT-260901","42.0","114.2","4,797,305","2026-09-18","2026-09-17","0"],
+  ["PO-2609-0210","2026-09-07","Supplier A","RAW-002","Raw Material 2","Processed materials","LOT-260905","18.0","138.6","2,495,210","2026-09-22","2026-09-25","3"],
+  ["PO-2609-0244","2026-09-12","Supplier B","RAW-003","Raw Material 3","Raw materials","LOT-260912","2.4","213.3","511,976","2026-09-26","2026-09-26","0"],
+  ["PO-2609-0266","2026-09-16","Supplier C","AUX-001","Auxiliary Material 1","Auxiliaries","LOT-260918","6.8","12.3","83,473","2026-09-28","2026-10-04","6"],
+  ["PO-2609-0291","2026-09-21","Supplier D","RAW-004","Raw Material 4","Raw materials","LOT-260922","0.6","965.6","579,341","2026-10-05","—","—"]];
  var CM={supplier:2,item:4,matcat:5,lot:6};
  var L=filt(L0,CM);
  var rows=L.map(function(r){
@@ -1666,11 +1666,11 @@ function renderPurDetail(){
  back();
 }
 function renderArDetail(){
- var L0=[["AR-2609-0218","Customer A","Rep 2","Sales Dept 2","NdFeB Magnets","INV-26090412","2026-09-08","2026-11-07","2,093,195","360,000","1,733,195","0","Not yet due"],
-  ["AR-2607-0094","Customer A","Rep 2","Sales Dept 2","NdFeB Magnets","INV-26070188","2026-07-12","2026-09-10","862,000","0","862,000","38","1–3 months"],
-  ["AR-2605-0311","Customer E","Rep 5","Sales Dept 3","Magnet Assemblies","INV-26050266","2026-05-20","2026-07-19","1,240,000","0","1,240,000","91","3–6 months"],
-  ["AR-2609-0287","Customer B","Rep 2","Sales Dept 2","NdFeB Magnets","INV-26090355","2026-09-06","2026-11-05","477,000","477,000","0","0","Settled"],
-  ["AR-2608-0190","Customer D","Rep 3","Export Dept","SmCo Magnets","INV-26080244","2026-08-14","2026-10-13","1,760,000","1,348,000","412,000","0","Not yet due"]];
+ var L0=[["AR-2609-0218","Customer A","Rep 2","Sales Dept 2","Material 1","INV-26090412","2026-09-08","2026-11-07","2,093,195","360,000","1,733,195","0","Not yet due"],
+  ["AR-2607-0094","Customer A","Rep 2","Sales Dept 2","Material 1","INV-26070188","2026-07-12","2026-09-10","862,000","0","862,000","38","1–3 months"],
+  ["AR-2605-0311","Customer E","Rep 5","Sales Dept 3","Material 2","INV-26050266","2026-05-20","2026-07-19","1,240,000","0","1,240,000","91","3–6 months"],
+  ["AR-2609-0287","Customer B","Rep 2","Sales Dept 2","Material 1","INV-26090355","2026-09-06","2026-11-05","477,000","477,000","0","0","Settled"],
+  ["AR-2608-0190","Customer D","Rep 3","Export Dept","Material 3","INV-26080244","2026-08-14","2026-10-13","1,760,000","1,348,000","412,000","0","Not yet due"]];
  var CM={cust:1,rep:2,dept:3,bl:4,age:12};
  var L=filt(L0,CM);
  var rows=L.map(function(r){
@@ -1721,11 +1721,11 @@ function renderCashDetail(){
  back();
 }
 function renderProcDetail(){
- var L0=[["JG-2609-0042","Processor A","Grinding","Rare-earth metals","LOT-260901","WO-26090118","SO-26090142","Customer A","42.0","39.8","2.2","18.60","740,280","Settled"],
-  ["JG-2609-0051","Processor B","Plating","Auxiliaries","LOT-260905","WO-26090118","SO-26090142","Customer A","38.0","36.9","1.1","6.20","228,780","Part paid"],
-  ["JG-2609-0063","Processor C","Cutting","Rare-earth metals","LOT-260912","WO-26090204","SO-26090087","Customer B","31.0","29.4","1.6","12.40","364,560","Overdue"],
-  ["JG-2609-0070","Processor D","Sintering","Rare-earth oxides","LOT-260918","WO-26090231","SO-26090031","Customer C","28.0","26.8","1.2","32.80","879,040","Settled"],
-  ["JG-2609-0082","Processor A","Grinding","Rare-earth metals","LOT-260922","WO-26090255","—","—","16.0","15.2","0.8","18.60","282,720","Settled"]];
+ var L0=[["JG-2609-0042","Processor A","Grinding","Processed materials","LOT-260901","WO-26090118","SO-26090142","Customer A","42.0","39.8","2.2","18.60","740,280","Settled"],
+  ["JG-2609-0051","Processor B","Process 2","Auxiliaries","LOT-260905","WO-26090118","SO-26090142","Customer A","38.0","36.9","1.1","6.20","228,780","Part paid"],
+  ["JG-2609-0063","Processor C","Cutting","Processed materials","LOT-260912","WO-26090204","SO-26090087","Customer B","31.0","29.4","1.6","12.40","364,560","Overdue"],
+  ["JG-2609-0070","Processor D","Thermal processing","Raw materials","LOT-260918","WO-26090231","SO-26090031","Customer C","28.0","26.8","1.2","32.80","879,040","Settled"],
+  ["JG-2609-0082","Processor A","Grinding","Processed materials","LOT-260922","WO-26090255","—","—","16.0","15.2","0.8","18.60","282,720","Settled"]];
  var CM={processor:1,proctype:2,matcat:3,lot:4,cust:7};
  var L=filt(L0,CM);
  var rows=L.map(function(r){
@@ -1752,12 +1752,12 @@ function renderProcDetail(){
  back();
 }
 function renderGlDetail(){
- var L0=[["PV-2609-0901","2026-09-30","6001-01","Main business revenue – NdFeB","Entity A","NdFeB Magnets","Sales Dept 2","Day-to-day","Cr","18,522,480","Monthly revenue close"],
-  ["PV-2609-0902","2026-09-30","6401-01","Main business cost – NdFeB","Entity A","NdFeB Magnets","Sales Dept 2","Day-to-day","Dr","15,030,000","Month-end COGS transfer"],
-  ["PV-2609-0903","2026-09-30","6601-00","Selling expenses","Entity A","NdFeB Magnets","Sales Dept 2","Marketing","Dr","4,100,000","Sep selling expense close"],
+ var L0=[["PV-2609-0901","2026-09-30","6001-01","Main business revenue – Material 1","Entity A","Material 1","Sales Dept 2","Day-to-day","Cr","18,522,480","Monthly revenue close"],
+  ["PV-2609-0902","2026-09-30","6401-01","Main business cost – Material 1","Entity A","Material 1","Sales Dept 2","Day-to-day","Dr","15,030,000","Month-end COGS transfer"],
+  ["PV-2609-0903","2026-09-30","6601-00","Selling expenses","Entity A","Material 1","Sales Dept 2","Marketing","Dr","4,100,000","Sep selling expense close"],
   ["PV-2609-0904","2026-09-30","6602-00","Administrative expenses","Entity A","—","Finance & Admin","Day-to-day","Dr","7,420,000","Sep admin expense close"],
   ["PV-2609-0905","2026-09-30","6603-00","Finance expenses","Entity A","—","Finance & Admin","Day-to-day","Dr","3,640,000","Sep interest"],
-  ["PV-2609-0908","2026-09-30","5401-03","R&D materials","Entity A","NdFeB Magnets","R&D Center","R&D projects","Dr","2,146,000","N52 grade trial material"],
+  ["PV-2609-0908","2026-09-30","5401-03","R&D materials","Entity A","Material 1","R&D Center","R&D projects","Dr","2,146,000","Material 6 trial"],
   ["PV-2609-0906","2026-09-30","6711-00","Non-operating expense","Entity A","—","Finance & Admin","Day-to-day","Dr","182,000","Loss on asset disposal"],
   ["PV-2609-0907","2026-09-30","6801-00","Income tax expense","Entity A","—","Finance & Admin","Day-to-day","Dr","3,370,000","Sep income-tax accrual"]];
  var CM={legal:4,bl:5,dept:6,proj:7};
@@ -1809,12 +1809,12 @@ function renderNiDetail(){
  back();
 }
 function renderRmDetail(){
- var P0=[["PrNd oxide","Light RE oxides","Western Exchange","114.2","US$/kg","+0.9%","112.0","113.2","Spot","Incl. VAT","09:30","Normal"],
-  ["PrNd metal","Light RE metals","Western Exchange","138.6","US$/kg","+1.1%","135.0","136.8","Spot","Incl. VAT","09:30","Normal"],
-  ["Dy oxide","Heavy RE oxides","Asian Metal","213.3","US$/kg","−0.5%","218.6","215.9","Spot","Incl. VAT","09:15","Normal"],
-  ["Dy metal","Heavy RE metals","Asian Metal","271.0","US$/kg","−0.4%","276.2","273.7","Spot","Incl. VAT","09:15","Normal"],
-  ["Tb oxide","Heavy RE oxides","Baiinfo","965.6","US$/kg","−1.2%","991.0","975.1","Spot","Incl. VAT","09:15","Normal"],
-  ["La oxide","Light RE oxides","Western Exchange","6.3","US$/kg","—","6.3","6.3","Spot","Incl. VAT","09:30","Filled"]];
+ var P0=[["Raw Material 1","Input Class 1","Price Feed A","114.2","US$/kg","+0.9%","112.0","113.2","Spot","Incl. VAT","09:30","Normal"],
+  ["Raw Material 2","Input Class 2","Price Feed A","138.6","US$/kg","+1.1%","135.0","136.8","Spot","Incl. VAT","09:30","Normal"],
+  ["Raw Material 3","Input Class 3","Price Feed B","213.3","US$/kg","−0.5%","218.6","215.9","Spot","Incl. VAT","09:15","Normal"],
+  ["Raw Material 4","Input Class 4","Price Feed B","271.0","US$/kg","−0.4%","276.2","273.7","Spot","Incl. VAT","09:15","Normal"],
+  ["Raw Material 5","Input Class 3","Price Feed C","965.6","US$/kg","−1.2%","991.0","975.1","Spot","Incl. VAT","09:15","Normal"],
+  ["Raw Material 6","Input Class 1","Price Feed A","6.3","US$/kg","—","6.3","6.3","Spot","Incl. VAT","09:30","Filled"]];
  var CM={cat:1,src:2,mat:0};
  var P=filt(P0,CM);
  var rows=P.map(function(r){
@@ -1838,13 +1838,13 @@ function renderRmDetail(){
 }
 /* Quality: inspection lots */
 function renderQcDetail(){
- var L0=[["QC-2609-1182","2026-09-04","LOT-260901","N42 block 50×30×10","Machining","Grinder M1","Customer A",4200,62,"Dimension out of tolerance","1.304","1012","Pass"],
-  ["QC-2609-1206","2026-09-07","LOT-260905","N38 ring Φ20×5","Plating","Plating L1","Customer B",6000,214,"Plating peel / blister","1.236","1188","Rework"],
-  ["QC-2609-1241","2026-09-12","LOT-260912","N42 block 40×20×8","Machining","Grinder M1","Customer A",2800,96,"Chipping / cracks","1.298","1001","Pass"],
-  ["QC-2609-1271","2026-09-18","LOT-260918","N42 block 50×30×10","Sintering","Furnace F2","Customer A",3600,151,"Low Br / Hcj","1.320","979","Hold · OOC"],
-  ["QC-2609-1290","2026-09-20","LOT-260920","SmCo28 block 25×10","Machining","Grinder M1","Customer C",1800,41,"Chipping / cracks","1.042","1592","Pass"],
-  ["QC-2609-1315","2026-09-22","LOT-260922","N45 arc segment","Pressing","Press P2","Customer B",3100,88,"Dimension out of tolerance","1.338","968","Pass"],
-  ["QC-2609-1277","2026-09-19","LOT-260919","N42 block 50×30×10","Sintering","Furnace F2","Customer D",2600,118,"Low Br / Hcj","1.305","972","Hold · OOC"]];
+ var L0=[["QC-2609-1182","2026-09-04","LOT-260901","Material 1","Machining","Line 1","Customer A",4200,62,"Dimension out of tolerance","1.304","1012","Pass"],
+  ["QC-2609-1206","2026-09-07","LOT-260905","Material 2","Coating","Line 2","Customer B",6000,214,"Coating defect","1.236","1188","Rework"],
+  ["QC-2609-1241","2026-09-12","LOT-260912","Material 3","Machining","Line 1","Customer A",2800,96,"Chipping / cracks","1.298","1001","Pass"],
+  ["QC-2609-1271","2026-09-18","LOT-260918","Material 1","Thermal processing","Line 3","Customer A",3600,151,"Property out of range","1.320","979","Hold · OOC"],
+  ["QC-2609-1290","2026-09-20","LOT-260920","Material 4","Machining","Line 1","Customer C",1800,41,"Chipping / cracks","1.042","1592","Pass"],
+  ["QC-2609-1315","2026-09-22","LOT-260922","Material 3","Forming","Line 4","Customer B",3100,88,"Dimension out of tolerance","1.338","968","Pass"],
+  ["QC-2609-1277","2026-09-19","LOT-260919","Material 1","Thermal processing","Line 3","Customer D",2600,118,"Property out of range","1.305","972","Hold · OOC"]];
  var CM={lot:2,prod:3,proc:4,line:5,cust:6,defect:9};
  var L=filt(L0,CM);
  var rows=L.map(function(r){
@@ -1856,26 +1856,26 @@ function renderQcDetail(){
    +'<td class="n">'+r[7].toLocaleString("en-US")+'</td><td class="n">'+r[8]+'</td>'
    +'<td class="n '+(fpy<0.95?"neg":fpy<0.97?"wrn":"pos")+'">'+(fpy*100).toFixed(1)+'%</td>'
    +'<td style="text-align:left">'+r[9]+'</td>'
-   +'<td class="n">'+r[10]+'</td><td class="n'+(+r[11]<975&&r[3].indexOf("SmCo")<0?" neg":"")+'">'+r[11]+'</td>'
+  +'<td class="n">'+r[10]+'</td><td class="n'+(+r[11]<975?" neg":"")+'">'+r[11]+'</td>'
    +'<td style="text-align:left">'+(bad?'<span class="tag t-neg">'+r[12]+'</span>':rw?'<span class="tag t-warn">'+r[12]+'</span>':'<span class="tag t-pos">'+r[12]+'</span>')+'</td></tr>'}).join("");
  $("dBody").innerHTML=dwrap('Inspection lots','Quality · final inspection results by lot · source tables to be confirmed',
-  [["Inspection no.",0],["Date",0],["Lot",0],["Product",0],["Process",0],["Line",0],["Customer",0],["Inspected (pcs)",1],["Defects",1],["FPY",1],["Main defect",0],["Br (T)",1],["Hcj (kA/m)",1],["Result",0]],
+  [["Inspection no.",0],["Date",0],["Lot",0],["Product",0],["Process",0],["Line",0],["Customer",0],["Inspected (pcs)",1],["Defects",1],["FPY",1],["Main defect",0],["Property A",1],["Property B",1],["Result",0]],
   rows,1380,
-  '<b>Quality detail is the inspection lot.</b> One row per lot per inspection, with the magnetic test result for that lot.<br>'
-  +'★★ TIPTOP has inspection documents (candidate tables <code>qcs_file</code> for incoming, <code>qcf_file</code> for final inspection; <b>confirm on site</b>), but Br / Hcj readings normally live in the hysteresisgraph test software, not the ERP. A test-data import is needed.<br>'
-  +'★ LOT-260918 and LOT-260919 are consecutive lots from Furnace F2 with Hcj at or below the control limit. That pattern points at the furnace, not at random variation.',
+  '<b>Quality detail is the inspection lot.</b> One row per lot per inspection, with two key test results for that lot.<br>'
+  +'★★ TIPTOP has inspection documents (candidate tables <code>qcs_file</code> for incoming, <code>qcf_file</code> for final inspection; <b>confirm on site</b>), but test readings normally live in specialist test software, not the ERP. A test-data import is needed.<br>'
+  +'★ LOT-260918 and LOT-260919 are consecutive lots from Line 3 with Property B at or below the control limit. That pattern points at the line, not at random variation.',
   L.length,L.length!==L0.length,CM);
  back();
 }
 /* Scheduling: work orders */
 function renderWoDetail(){
- var L0=[["WO-26100352","N42 block 40×20×8","Customer A","SO-26090142","Grinder M1","Machining","2026-10-13","2026-10-20","2026-10-23",2800,"72%","Late",3,"Grinder wheel breakdown 6 h"],
-  ["WO-26100398","N45 arc segment","Customer B","SO-26090031","Press P2","Pressing","2026-10-14","2026-10-21","2026-10-25",3100,"55%","Late",4,"Dy oxide arrived 3 days late"],
-  ["WO-26100341","N38 ring Φ20×5","Customer B","SO-26090087","Plating L1","Plating","2026-10-17","2026-10-22","2026-10-23",6000,"60%","At risk",1,"Rework from plating peel"],
-  ["WO-26100440","N42 block 50×30×10","Customer D","SO-26100118","Press P2","Pressing","2026-10-21","2026-10-25","2026-10-26",2600,"10%","At risk",1,"Rush order inserted ahead"],
-  ["WO-26100412","N42 block 50×30×10","Customer A","SO-26100104","Press P1","Pressing","2026-10-19","2026-10-22","2026-10-22",4200,"64%","On track",0,"—"],
-  ["WO-26100377","SmCo28 block 25×10","Customer C","SO-26100097","Furnace F1","Sintering","2026-10-19","2026-10-23","2026-10-23",1800,"48%","On track",0,"—"],
-  ["WO-26100389","N38 ring Φ20×5","Customer E","SO-26100090","Furnace F2","Sintering","2026-10-19","2026-10-20","2026-10-20",5400,"100%","Done",0,"—"]];
+ var L0=[["WO-26100352","Material 3","Customer A","SO-26090142","Line 1","Machining","2026-10-13","2026-10-20","2026-10-23",2800,"72%","Late",3,"Equipment breakdown 6 h"],
+  ["WO-26100398","Material 4","Customer B","SO-26090031","Line 4","Forming","2026-10-14","2026-10-21","2026-10-25",3100,"55%","Late",4,"Raw Material 3 arrived 3 days late"],
+  ["WO-26100341","Material 2","Customer B","SO-26090087","Line 2","Coating","2026-10-17","2026-10-22","2026-10-23",6000,"60%","At risk",1,"Rework from coating defect"],
+  ["WO-26100440","Material 1","Customer D","SO-26100118","Line 4","Forming","2026-10-21","2026-10-25","2026-10-26",2600,"10%","At risk",1,"Rush order inserted ahead"],
+  ["WO-26100412","Material 1","Customer A","SO-26100104","Line 5","Forming","2026-10-19","2026-10-22","2026-10-22",4200,"64%","On track",0,"—"],
+  ["WO-26100377","Material 4","Customer C","SO-26100097","Line 3","Thermal processing","2026-10-19","2026-10-23","2026-10-23",1800,"48%","On track",0,"—"],
+  ["WO-26100389","Material 2","Customer E","SO-26100090","Line 6","Thermal processing","2026-10-19","2026-10-20","2026-10-20",5400,"100%","Done",0,"—"]];
  var CM={prod:1,cust:2,line:4,proc:5,wostatus:11};
  var L=filt(L0,CM);
  var rows=L.map(function(r){
@@ -1907,13 +1907,13 @@ function renderDetail(){
   cash:renderCashDetail,proc:renderProcDetail,ni:renderNiDetail,gl:renderGlDetail,qc:renderQcDetail,wo:renderWoDetail};
  if(R[dt]){R[dt]();return}
  var COL={cust:3,custtype:4,rep:5,dept:6,bl:7,region:8,prod:10};
- var L0=[["DN-26090311","2026-09-08","SO-26090142","Customer A","Motor makers","Rep 2","Sales Dept 2","NdFeB Magnets","East China","N42-BLK-503010","N42 block 50×30×10 Ni-plated","4,200 pcs","1,260.0","812.00",1023120,968400,54720,.053],
-  ["DN-26090311","2026-09-08","SO-26090142","Customer A","Motor makers","Rep 2","Sales Dept 2","NdFeB Magnets","East China","N42-BLK-402008","N42 block 40×20×8 Ni-plated","2,800 pcs","448.0","786.00",352128,338900,13228,.038],
-  ["DN-26090287","2026-09-06","SO-26090087","Customer A","Motor makers","Rep 2","Sales Dept 2","NdFeB Magnets","East China","N38-RNG-2005","N38 ring Φ20×5 Zn-plated","6,000 pcs","132.0","79.50",477000,448600,28400,.060],
-  ["DN-26090264","2026-09-04","SO-26090031","Customer B","Wind power","Rep 2","Sales Dept 2","NdFeB Magnets","East China","N45-ARC-3020","N45 arc segment 30×20","3,100 pcs","372.0","1,024.00",3174400,2698240,476160,.150],
-  ["DN-26080902","2026-08-29","SO-26080219","Customer C","Consumer electronics","Rep 1","Sales Dept 2","SmCo Magnets","South China","SMC-BLK-2510","SmCo28 block 25×10","1,800 pcs","288.0","1,486.00",2674800,2246832,427968,.160],
-  ["DN-26090198","2026-09-02","SO-26090031","Customer B","Wind power","Rep 4","Sales Dept 1","NdFeB Magnets","East China","N42-BLK-503010","N42 block 50×30×10 Ni-plated","2,600 pcs","780.0","806.00",2095600,1718392,377208,.180],
-  ["DN-26090355","2026-09-11","SO-26090142","Customer D","Auto parts","Rep 3","Export Dept","Magnet Assemblies","Export","N38-RNG-2005","N38 ring Φ20×5 Zn-plated","9,400 pcs","206.8","82.40",774560,619648,154912,.200]];
+ var L0=[["DN-26090311","2026-09-08","SO-26090142","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","East China","MAT-001","Material 1","4,200 pcs","1,260.0","812.00",1023120,968400,54720,.053],
+  ["DN-26090311","2026-09-08","SO-26090142","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","East China","MAT-002","Material 2","2,800 pcs","448.0","786.00",352128,338900,13228,.038],
+  ["DN-26090287","2026-09-06","SO-26090087","Customer A","Customer Type 1","Rep 2","Sales Dept 2","Material 1","East China","MAT-003","Material 3","6,000 pcs","132.0","79.50",477000,448600,28400,.060],
+  ["DN-26090264","2026-09-04","SO-26090031","Customer B","Customer Type 2","Rep 2","Sales Dept 2","Material 1","East China","MAT-004","Material 4","3,100 pcs","372.0","1,024.00",3174400,2698240,476160,.150],
+  ["DN-26080902","2026-08-29","SO-26080219","Customer C","Customer Type 3","Rep 1","Sales Dept 2","Material 3","South China","MAT-005","Material 5","1,800 pcs","288.0","1,486.00",2674800,2246832,427968,.160],
+  ["DN-26090198","2026-09-02","SO-26090031","Customer B","Customer Type 2","Rep 4","Sales Dept 1","Material 1","East China","MAT-001","Material 1","2,600 pcs","780.0","806.00",2095600,1718392,377208,.180],
+  ["DN-26090355","2026-09-11","SO-26090142","Customer D","Customer Type 4","Rep 3","Export Dept","Material 2","Export","MAT-003","Material 3","9,400 pcs","206.8","82.40",774560,619648,154912,.200]];
  var L=L0.filter(function(r){
   return D.path.every(function(pp){
    var ci=COL[pp.k]; if(ci===undefined)return true;
@@ -2025,14 +2025,14 @@ SCREEN.r_gm=function(){return ''
    'Attribution totals <b>−374</b>, reconciling to the month-on-month change in gross profit. <b>Raw-material cost (−392) is the main driver</b>; price increases passed to customers recovered only 286.')
  +card('Cost composition','New · meeting note "product cost traceability"',
    '<div class="pad"><div class="pair"><div>'
-   +donut("Unit cost by element, N42 block",[["Raw material",68.4],["Manufacturing overhead",15.3],["Direct labour",12.1],["Other",4.2]],{center:"$812",sub:"per kg selling price",fmt:function(v){return v.toFixed(1)+"%"}})
+  +donut("Unit cost by element, Material 1",[["Raw material",68.4],["Manufacturing overhead",15.3],["Direct labour",12.1],["Other",4.2]],{center:"$812",sub:"per kg selling price",fmt:function(v){return v.toFixed(1)+"%"}})
    +'</div><div>'
-   +donut("Raw material cost by element",[["PrNd metal",61],["Dy / Tb (heavy RE)",24],["Iron & boron",9],["Other additives",6]],{center:"68.4%",sub:"of unit cost",fmt:function(v){return v+"%"}})
+  +donut("Raw material cost by element",[["Raw Material 1",61],["Raw Material 2",24],["Raw Material 3",9],["Other additives",6]],{center:"68.4%",sub:"of unit cost",fmt:function(v){return v+"%"}})
    +'</div></div></div>',
-   'Heavy rare earths are under a quarter of raw-material cost but the most volatile line. Trace chain: finished goods → work order <code>sfb_file</code> → material issue <code>sfe_file</code> → raw-material lot <code>img04</code> → PO <code>pmn_file</code> → supplier <code>pmc_file</code>.<br>★★ Requires lot tracking: <code>imz42</code> = 0 none / 1 soft / 2 hard. <b>If 0, tracing stops at item level and never reaches the lot.</b>')
+  'Raw Material 2 is under a quarter of raw-material cost but the most volatile line. Trace chain: finished goods → work order <code>sfb_file</code> → material issue <code>sfe_file</code> → raw-material lot <code>img04</code> → PO <code>pmn_file</code> → supplier <code>pmc_file</code>.<br>★★ Requires lot tracking: <code>imz42</code> = 0 none / 1 soft / 2 hard. <b>If 0, tracing stops at item level and never reaches the lot.</b>')
  +card('Margin by dimension','Multi-dimension margin breakdown · 38 fields · business line → department → sales rep',
    tbl(["Node","Revenue","Cost of sales","Gross profit","GM %","Dept expense","Contribution","Contrib. %","Flag"],[
-    [["Business line: NdFeB Magnets","b-warn"],["11,480"],["9,460"],["2,020"],["<span class=wrn>17.6%</span>"],["—"],["—"],["—"],['',"t"]],
+    [["Business line: Material 1","b-warn"],["11,480"],["9,460"],["2,020"],["<span class=wrn>17.6%</span>"],["—"],["—"],["—"],['',"t"]],
     [["　Dept: Sales Dept 1",""],["4,910"],["3,959"],["951"],["19.4%"],["520"],["431"],["8.8%"],['',"t"]],
     [["　Dept: Sales Dept 2","b-neg"],["3,680"],["3,119"],["561"],["<span class=neg>15.2%</span>"],["410"],["151"],["<span class=neg>4.1%</span>"],['<span class="tag t-warn">Below baseline</span>',"t"]],
     [["　　Rep 2","b-neg"],["1,180"],["1,038"],["142"],["<span class=neg>12.0%</span>"],["132"],["10"],["<span class=neg>0.8%</span>"],['<span class="tag t-neg">3 negative-margin orders</span>',"t"]],
@@ -2044,15 +2044,15 @@ SCREEN.r_proc=function(){return ''
    minis([["Processors","12","processors · settled this month"],["Processing batches","186","lots"],
      ["Input weight","842","tonnes"],["Output weight","796","tonnes"],["Processing loss","46","tonnes · loss rate 5.5%","wrn"]])
    +'<div class="pad" style="padding-top:0"><div class="pair"><div>'
-   +donut("Fees by processing type",[["Sintering",1148],["Grinding",1145],["Cutting",606],["Plating",510]],{sub:"$k fees"})
+  +donut("Fees by processing type",[["Process 4",1148],["Process 1",1145],["Process 3",606],["Process 2",510]],{sub:"$k fees"})
    +'</div><div>'+tbl(["Item","Opening unsettled","Settled this period","Paid this period","Closing unsettled","Difference"],[
      [["Total","b-warn"],["2,840"],["3,620"],["3,180"],["3,280"],["<span class=wrn>+42</span>"]]],560)+'</div></div></div>')
  +card('Processing fees','Monthly processing fee report · 7 fields',
    tbl(["Processor","Type","Batches","Work order","Sales order","Fee rate","Accrued","Adjustment","Payable","Paid","Unpaid","Status"],[
     [["Processor A",""],["Grinding","t"],["42"],["WO-26090118","t"],["SO-26090142","t"],["$18.60/kg"],["862"],["0"],["862"],["862"],["0"],['<span class="tag t-main">Settled</span>',"t"]],
-    [["Processor B","b-warn"],["Plating","t"],["38"],["WO-26090118","t"],["SO-26090142","t"],["$6.20/kg"],["486"],["+24"],["510"],["380"],["<span class=wrn>130</span>"],['<span class="tag t-warn">Part paid</span>',"t"]],
+    [["Processor B","b-warn"],["Process 2","t"],["38"],["WO-26090118","t"],["SO-26090142","t"],["$6.20/kg"],["486"],["+24"],["510"],["380"],["<span class=wrn>130</span>"],['<span class="tag t-warn">Part paid</span>',"t"]],
     [["Processor C","b-neg"],["Cutting","t"],["31"],["WO-26090204","t"],["SO-26090087","t"],["$12.40/kg"],["624"],["−18"],["606"],["280"],["<span class=neg>326</span>"],['<span class="tag t-neg">Overdue</span>',"t"]],
-    [["Processor D",""],["Sintering","t"],["28"],["WO-26090231","t"],["SO-26090031","t"],["$32.80/kg"],["1,148"],["0"],["1,148"],["1,148"],["0"],['<span class="tag t-main">Settled</span>',"t"]],
+    [["Processor D",""],["Process 4","t"],["28"],["WO-26090231","t"],["SO-26090031","t"],["$32.80/kg"],["1,148"],["0"],["1,148"],["1,148"],["0"],['<span class="tag t-main">Settled</span>',"t"]],
     [["Processor A","b-warn"],["Grinding","t"],["16"],["WO-26090255","t"],['<span style="color:var(--fg-3)">Stock build · no order</span>',"t"],["$18.60/kg"],["283"],["0"],["283"],["283"],["0"],['<span class="tag t-main">Settled</span>',"t"]]],1220),
    '★ <b>Processing must trace back to an order</b>: <code>oea_file</code> order ← <code>sfb_file.sfb22/sfb221</code> WO ← <code>pmn_file.pmn41</code> subcontract PO (WO mandatory for SUB) ← settlement.<br>★★ <b>Stock-build WOs have no order</b> (last row); their fees can only be spread by product or period. Share to be checked on site.<br>★ Pricing basis, contract rate, tax basis and payment linkage to confirm.')
  +card('Sludge &amp; offcut invoice prices / sludge recovery','Monthly · 7 + 6 fields',
@@ -2111,12 +2111,12 @@ SCREEN.r_so=function(){return ''
    minis([["Orders this period","21,860","$k · YoY +11.2%"],["Order weight","3,240","tonnes · YoY +4.6%"],
      ["Open order book","8,420","$k · 1,180 t"],["Production status","Scheduled 78%","from sfb04 WO status"],
      ["Delivery status","On time 91.4%","14 orders late","wrn"]]),
-   '★ Value up 11.2% but weight only 4.6%: the gap is again rare-earth prices. Orders need a price-adjusted view too.')
+  '★ Value up 11.2% but weight only 4.6%: the gap is again raw-material prices. Orders need a price-adjusted view too.')
  +card('Order status','Order status 2 fields · from sfb_file work orders',
    '<div class="pad"><div class="pair"><div>'
    +donut("Open order book by production stage",[["Scheduled, not started",4820,"var(--blue)"],["In production",2140,"var(--gold)"],["Finished, awaiting dispatch",980,"var(--pos)"],["Not scheduled",480,"var(--neg)"]],{sub:"$k open orders"})
    +'</div><div>'
-   +donut("Open order book by product",[["N42 block",3031],["N38 ring",1852],["N45 arc segment",1516],["SmCo28 block",1179],["Assemblies",842]],{sub:"$k open orders"})
+  +donut("Open order book by product",[["Material 1",3031],["Material 2",1852],["Material 3",1516],["Material 4",1179],["Material 5",842]],{sub:"$k open orders"})
    +'</div></div></div>',
    '★ Production stage is derived from <code>sfb_file</code>: <code>sfb22/sfb221</code> link to the order, <code>sfb04</code> status (1 confirmed / 2–3 released / 4 material issued / 5 in production / 6 finished to FQC / 7 received to stock / 8 closed). <b>Exclude <code>sfb02 = 13</code> forecast WOs.</b> See the Scheduling page for line-level detail.')
  +card('Customer order changes','Growth plan 2 fields',
@@ -2158,15 +2158,15 @@ SCREEN.r_rm=function(){return ''
  +card('Raw Material Prices','Raw Material Prices · 28 fields · reference data shared by purchasing and revenue',
    minis([["Materials tracked","18","items · 8 classes"],["Up today","11","items · vs yesterday","wrn"],
      ["Down today","5","items · vs yesterday"],["Core materials","6","items · closely tracked"],
-     ["Data update","09:30","Western Exchange · each working day","","nodrill"]],"","cat,src,mat"))
+    ["Data update","09:30","Price Feed A · each working day","","nodrill"]],"","cat,src,mat"))
  +card('Price table','Daily prices 7 fields + moves and indices 7 fields',
    tbl(["Material","Class","Latest","Unit","d/d","Month open","30-day avg","Price type","Tax"],[
-    [["PrNd oxide","b-warn"],["Light RE oxides","t"],["114.2"],["US$/kg","t"],["<span class=neg>▲ 0.9%</span>"],["112.0"],["113.2"],["Spot","t"],["Incl. VAT","t"]],
-    [["PrNd metal",""],["Light RE metals","t"],["138.6"],["US$/kg","t"],["<span class=neg>▲ 1.1%</span>"],["135.0"],["136.8"],["Spot","t"],["Incl. VAT","t"]],
-    [["Dy oxide","b-neg"],["Heavy RE oxides","t"],["213.3"],["US$/kg","t"],["<span class=pos>▼ 0.5%</span>"],["218.6"],["215.9"],["Spot","t"],["Incl. VAT","t"]],
-    [["Dy metal",""],["Heavy RE metals","t"],["271.0"],["US$/kg","t"],["<span class=pos>▼ 0.4%</span>"],["276.2"],["273.7"],["Spot","t"],["Incl. VAT","t"]],
-    [["Tb oxide","b-neg"],["Heavy RE oxides","t"],["965.6"],["US$/kg","t"],["<span class=pos>▼ 1.2%</span>"],["991.0"],["975.1"],["Spot","t"],["Incl. VAT","t"]],
-    [["La oxide",""],["Light RE oxides","t"],["6.3"],["US$/kg","t"],["—"],["6.3"],["6.3"],["Spot","t"],["Incl. VAT","t"]]],980),
+    [["Raw Material 1","b-warn"],["Input Class 1","t"],["114.2"],["US$/kg","t"],["<span class=neg>▲ 0.9%</span>"],["112.0"],["113.2"],["Spot","t"],["Incl. VAT","t"]],
+    [["Raw Material 2",""],["Input Class 2","t"],["138.6"],["US$/kg","t"],["<span class=neg>▲ 1.1%</span>"],["135.0"],["136.8"],["Spot","t"],["Incl. VAT","t"]],
+    [["Raw Material 3","b-neg"],["Input Class 3","t"],["213.3"],["US$/kg","t"],["<span class=pos>▼ 0.5%</span>"],["218.6"],["215.9"],["Spot","t"],["Incl. VAT","t"]],
+    [["Raw Material 4",""],["Input Class 4","t"],["271.0"],["US$/kg","t"],["<span class=pos>▼ 0.4%</span>"],["276.2"],["273.7"],["Spot","t"],["Incl. VAT","t"]],
+    [["Raw Material 5","b-neg"],["Input Class 3","t"],["965.6"],["US$/kg","t"],["<span class=pos>▼ 1.2%</span>"],["991.0"],["975.1"],["Spot","t"],["Incl. VAT","t"]],
+    [["Raw Material 6",""],["Input Class 1","t"],["6.3"],["US$/kg","t"],["—"],["6.3"],["6.3"],["Spot","t"],["Incl. VAT","t"]]],980),
    '★★ Three bases must match the ERP first or every comparison is wrong:<br>'
    +'① <b>Unit and currency</b>: exchanges quote CNY per tonne, ERP purchase price <code>pmn31</code> is CNY per kg; this report shows US$/kg, so both convert at the same FX rate (demo: 6.68)<br>'
    +'② <b>Tax</b>: <code>pmn31</code> is <b>net of tax</b>, quotes usually include VAT; 13% difference<br>'
@@ -2176,15 +2176,15 @@ SCREEN.r_rm=function(){return ''
    +'<div class="chart wide">'+barsChart({w:720,h:250,cats:MON,
      series:[{c:"var(--blue)",d:[61.7,64.1,66.8,66.0,70.1,73.7,72.8,76.3,80.2,78.4,82.0,84.1]},
              {c:"var(--gold)",d:[62.9,64.7,67.7,67.1,70.7,74.6,74.0,77.2,81.1,79.6,83.2,85.9]}],
-     unit:"US$/kg · PrNd metal (converted, net of tax)",alt:"Purchase price vs market"})+'</div></div>',
+    unit:"US$/kg · Raw Material 2 (converted, net of tax)",alt:"Purchase price vs market"})+'</div></div>',
    'This month average purchase price is <b>2.1%</b> below market, saving 368. ★ The same series feeds "purchase price vs market" and "cost reduction rate" in Purchasing &amp; Supply Chain; <b>this report is the source, that one only displays</b>.')
  +card('Sources and data quality','Source 2 + quality 2 fields',
    tbl(["Price feed","Materials","Access","Frequency","Paid","Status"],[
-    [["Western Exchange","b-pos"],["12","t"],["★ Public data, direct","t"],["Each working day","t"],["No","t"],['<span class="tag t-main">Available</span>',"t"]],
-    [["Asian Metal","b-warn"],["18","t"],["★ Subscription","t"],["Each working day","t"],["Yes","t"],['<span class="tag t-warn">Account to confirm</span>',"t"]],
-    [["Baiinfo","b-warn"],["15","t"],["★ Subscription","t"],["Each working day","t"],["Yes","t"],['<span class="tag t-warn">Account to confirm</span>',"t"]],
-    [["Mysteel","b-neg"],["—","t"],["★ Coverage unconfirmed","t"],["—","t"],["Yes","t"],['<span class="tag t-neg">To confirm</span>',"t"]]],840),
-   'Meeting note 10/12: Western Exchange data is public; Baiinfo and Mysteel to be confirmed; Asian Metal via a data provider.<br>'
+    [["Price Feed A","b-pos"],["12","t"],["★ Public data, direct","t"],["Each working day","t"],["No","t"],['<span class="tag t-main">Available</span>',"t"]],
+    [["Price Feed B","b-warn"],["18","t"],["★ Subscription","t"],["Each working day","t"],["Yes","t"],['<span class="tag t-warn">Account to confirm</span>',"t"]],
+    [["Price Feed C","b-warn"],["15","t"],["★ Subscription","t"],["Each working day","t"],["Yes","t"],['<span class="tag t-warn">Account to confirm</span>',"t"]],
+    [["Price Feed D","b-neg"],["—","t"],["★ Coverage unconfirmed","t"],["—","t"],["Yes","t"],['<span class="tag t-neg">To confirm</span>',"t"]]],840),
+     'Demo price feeds are placeholders; access and coverage remain to be confirmed.<br>'
    +'★★ Two decisions for the client: ① <b>which feed is primary</b> when quotes disagree ② <b>gap-filling rule</b> for closed or unreported days (carry forward / leave blank / interpolate). <b>Different rules change the monthly average and price-adjusted revenue.</b>')}
 
 /* ===== NEW: Quality ===== */
@@ -2193,7 +2193,7 @@ SCREEN.r_qual=function(){return ''
  +card('Quality at a glance','Plant-wide · September 2026 · demo data',
    minis([["First-pass yield","94.2","% · target 96.0%","wrn","","proc,line,prod,lot"],["Scrap rate","2.1","% of output by weight · 17.7 t","wrn"],
      ["Customer complaints","7","cases · 12-month high 8","neg"],["Returns value","186","$k · 1.0% of revenue","neg"],
-     ["Process capability Cpk · Br","1.13","target ≥ 1.33","wrn"],["Process capability Cpk · Hcj","1.36","target ≥ 1.33","pos"]],"","proc,defect,line,prod,cust,lot","qc"))
+    ["Process capability Cpk · Property A","1.13","target ≥ 1.33","wrn"],["Process capability Cpk · Property B","1.36","target ≥ 1.33","pos"]],"","proc,defect,line,prod,cust,lot","qc"))
  +card('First-pass yield trend','Units passing every step first time, without rework · last 12 months',
    '<div class="pad"><div class="pair"><div style="min-width:0">'
    +leg([["Plant FPY","var(--blue)"],["Target 96%","var(--fg-3)"]])
@@ -2202,49 +2202,49 @@ SCREEN.r_qual=function(){return ''
              {c:"var(--fg-3)",data:[MON.map(function(){return 96})],styles:[{w:1.4,o:.8,d:"5 3"}]}],
      unit:"FPY %",fmtY:function(v){return v.toFixed(1)},alt:"First-pass yield trend"})+'</div></div>'
    +'<div><h4 style="font-size:12px;margin-bottom:10px">FPY by process step, this month</h4><div class="hbars">'
-   +[["Pressing",99.1],["Sintering",98.6],["Machining",97.4],["Plating",98.2],["Magnetise & test",99.6]].map(function(x){
+  +[["Forming",99.1],["Thermal processing",98.6],["Machining",97.4],["Coating",98.2],["Final test",99.6]].map(function(x){
      var c=x[1]<98?"var(--neg)":x[1]<99?"var(--gold)":"var(--pos)";
      return '<div class="hbar"><span class="t">'+x[0]+'</span><span class="tr"><span class="fl" style="width:'+((x[1]-95)/5*100).toFixed(0)+'%;background:'+c+'"></span></span><span class="v">'+x[1].toFixed(1)+'%</span></div>'}).join("")
    +'</div><p style="font-size:11px;color:var(--fg-3);margin-top:12px;line-height:1.7">Bars start at 95% so small gaps are visible. Plant FPY is the <b>product</b> of the step yields (0.991 × 0.986 × 0.974 × 0.982 × 0.996 ≈ 0.931 on this sample), which is why a 2.6-point loss at machining hurts so much.</p></div>'
    +'</div></div>',
-   'FPY has slipped <b>1.6 points in 12 months</b> and missed target every month since March. FPY counts only parts that pass without rework; final yield would hide plating rework and look better.')
+  'FPY has slipped <b>1.6 points in 12 months</b> and missed target every month since March. FPY counts only parts that pass without rework; final yield would hide coating rework and look better.')
  +card('Defect Pareto','Defective pieces by cause · September · red bars = the "vital few" making up 80%',
-   '<div class="pad"><div class="chart wide">'+pareto([["Dimension out of tolerance",142],["Plating peel / blister",96],["Chipping / cracks",71],["Low Br / Hcj",48],["Surface scratches",31],["Coating thickness",18],["Other",12]])+'</div></div>'
+  '<div class="pad"><div class="chart wide">'+pareto([["Dimension out of tolerance",142],["Coating defect",96],["Chipping / cracks",71],["Property out of range",48],["Surface scratches",31],["Coating thickness",18],["Other",12]])+'</div></div>'
    +'<div class="pad" style="padding-top:0"><div class="pair"><div>'
-   +donut("Defects by process where found",[["Machining",159],["Plating",114],["Sintering",67],["Pressing",38],["Magnetise & test",25],["Other",15]],{sub:"defective pcs"})
+  +donut("Defects by process where found",[["Machining",159],["Coating",114],["Thermal processing",67],["Forming",38],["Final test",25],["Other",15]],{sub:"defective pcs"})
    +'</div><div>'
    +donut("Cost of poor quality",[["Scrap",64],["Rework",41],["Returns & credit notes",186,"var(--neg)"],["Extra inspection",18]],{sub:"$k this month"})
    +'</div></div></div>',
-   'Three causes (dimension, plating, chipping) account for <b>74%</b> of defects; adding low Br/Hcj passes 85%. Fix those first. Returns are the largest slice of quality cost because a defect found by the customer costs far more than one found in the plant.')
- +card('SPC · remanence Br (N42)','Individuals chart, last 25 sintering lots · control limits = mean ± 3σ · spec 1.28–1.32 T',
+   'Three causes (dimension, coating, chipping) account for <b>74%</b> of defects; adding property variance passes 85%. Fix those first. Returns are the largest slice of quality cost because a defect found by the customer costs far more than one found in the plant.')
+ +card('SPC · Property A (Material 1)','Individuals chart, last 25 production lots · control limits = mean ± 3σ · demo spec range',
    '<div class="pad">'+leg([["Lot result","var(--blue-2)"],["Control limits (UCL / LCL)","var(--neg)"],["Spec limits (LSL / USL)","var(--gold)"],["Out of control","var(--neg)"]])
    +'<div class="chart wide">'+spc({d:[1.301,1.305,1.298,1.303,1.307,1.300,1.296,1.304,1.302,1.309,1.299,1.303,1.306,1.301,1.297,1.304,1.311,1.320,1.305,1.300,1.298,1.302,1.288,1.284,1.295],
-     lots:LOTS,cl:1.302,ucl:1.318,lcl:1.286,lsl:1.28,usl:1.32,dec:3,unit:"Br (T)",alt:"SPC chart for Br"})+'</div></div>',
+    lots:LOTS,cl:1.302,ucl:1.318,lcl:1.286,lsl:1.28,usl:1.32,dec:3,unit:"Property A",alt:"SPC chart for Property A"})+'</div></div>',
    'Two lots are out of control: <b>260918 above UCL</b> (sitting on the USL) and <b>260924 below LCL</b>. The process is centred but too wide: <b>Cpk 1.13</b> against the usual 1.33 minimum. Control limits come from the process itself; spec limits come from the grade. They are different lines and must be kept apart.')
- +card('SPC · intrinsic coercivity Hcj (N42)','Individuals chart, same 25 lots · spec Hcj ≥ 955 kA/m (12 kOe)',
+ +card('SPC · Property B (Material 1)','Individuals chart, same 25 lots · demo lower specification limit',
    '<div class="pad">'+leg([["Lot result","var(--blue-2)"],["Control limits","var(--neg)"],["Spec minimum (LSL)","var(--gold)"],["Trend warning","var(--gold)"]])
    +'<div class="chart wide">'+spc({d:[1012,1004,1018,998,1009,1021,1007,995,1013,1016,1002,1011,989,1006,1019,1008,1001,979,972,985,1003,1010,1014,1007,1011],
-     lots:LOTS,cl:1006,ucl:1042,lcl:974,lsl:955,dec:0,unit:"Hcj (kA/m)",run:[17,19],alt:"SPC chart for Hcj"})+'</div></div>',
-   'Lot <b>260919 fell below LCL</b> and the lots around it trend down (amber points): a run like this signals a cause, not random noise. Both lots belong to <b>Furnace F2</b>; check its temperature log for 17–19 Sep. Still above the 955 spec minimum, so nothing shipped out of spec.<br>★★ Br and Hcj readings come from the hysteresisgraph, not TIPTOP. An import from the test software (CSV export or database link) is needed before this chart can be live.')
+    lots:LOTS,cl:1006,ucl:1042,lcl:974,lsl:955,dec:0,unit:"Property B",run:[17,19],alt:"SPC chart for Property B"})+'</div></div>',
+  'Lot <b>260919 fell below LCL</b> and the lots around it trend down (amber points): a run like this signals a cause, not random noise. Both lots belong to <b>Line 4</b>; check its process log for 17–19 Sep. Still above the demo specification minimum, so nothing shipped out of spec.<br>★★ Property readings come from specialist test equipment, not TIPTOP. An import from the test software (CSV export or database link) is needed before this chart can be live.')
  +card('Complaints and returns','Customer-reported quality · bars = returns value, line = complaint count',
    '<div class="pad"><div class="chart wide">'+combo({t:"Complaints and returns",bars:[42,58,31,76,48,62,94,88,121,104,152,186],
      line:[3,4,2,5,3,4,6,5,7,6,8,7],tgt:4,tl:"Ceiling",yb:"$k returns",yl:" cases",ld:0,bc:"var(--neg)"})+'</div></div>'
    +tbl(["Case","Customer","Product","Defect","Qty affected","Found at","8D step","Owner","Status"],[
-    [["NCR-2609-014","b-neg"],["Customer A","t"],["N42 block 50×30×10","t"],["Plating peel","t"],["1,240 pcs"],["Customer incoming","t"],["D4 root cause","t"],["QA Lead","t"],['<span class="tag t-neg">Open · 22 days</span>',"t"]],
-    [["NCR-2609-017","b-warn"],["Customer B","t"],["N45 arc segment","t"],["Dimension","t"],["310 pcs"],["Customer assembly","t"],["D5 corrective action","t"],["Process Eng.","t"],['<span class="tag t-warn">Open · 9 days</span>',"t"]],
-    [["NCR-2609-019","b-warn"],["Customer D","t"],["N42 block 50×30×10","t"],["Low Hcj","t"],["2,600 pcs"],["Our final inspection","t"],["D3 containment","t"],["QA Lead","t"],['<span class="tag t-warn">Contained</span>',"t"]],
-    [["NCR-2608-011",""],["Customer C","t"],["SmCo28 block","t"],["Chipping","t"],["86 pcs"],["Customer incoming","t"],["D8 closed","t"],["Process Eng.","t"],['<span class="tag t-pos">Closed</span>',"t"]]],1040),
-   'Returns value has <b>more than quadrupled</b> in a year while the complaint count roughly doubled: individual complaints are getting larger. Customer A\'s plating case alone is 1,240 pieces.<br>★ Complaint and 8D tracking is not in TIPTOP; options are a custom table or the client\'s existing QMS.')}
+    [["NCR-2609-014","b-neg"],["Customer A","t"],["Material 1","t"],["Coating defect","t"],["1,240 pcs"],["Customer incoming","t"],["D4 root cause","t"],["QA Lead","t"],['<span class="tag t-neg">Open · 22 days</span>',"t"]],
+    [["NCR-2609-017","b-warn"],["Customer B","t"],["Material 4","t"],["Dimension","t"],["310 pcs"],["Customer assembly","t"],["D5 corrective action","t"],["Process Eng.","t"],['<span class="tag t-warn">Open · 9 days</span>',"t"]],
+    [["NCR-2609-019","b-warn"],["Customer D","t"],["Material 1","t"],["Property out of range","t"],["2,600 pcs"],["Our final inspection","t"],["D3 containment","t"],["QA Lead","t"],['<span class="tag t-warn">Contained</span>',"t"]],
+    [["NCR-2608-011",""],["Customer C","t"],["Material 4","t"],["Chipping","t"],["86 pcs"],["Customer incoming","t"],["D8 closed","t"],["Process Eng.","t"],['<span class="tag t-pos">Closed</span>',"t"]]],1040),
+  'Returns value has <b>more than quadrupled</b> in a year while the complaint count roughly doubled: individual complaints are getting larger. Customer A\'s coating case alone is 1,240 pieces.<br>★ Complaint and 8D tracking is not in TIPTOP; options are a custom table or the client\'s existing QMS.')}
 
 /* ===== NEW: Scheduling ===== */
 SCREEN.r_sched=function(){return ''
  +card('Scheduling at a glance','Week 43 · as of 21 Oct 2026 · demo data',
-   minis([["On-time delivery","91.4","% · target 95%","wrn","","line,cust,prod,wostatus"],["Capacity utilisation","87.4","% · bottleneck Pressing 104%"],
+  minis([["On-time delivery","91.4","% · target 95%","wrn","","line,cust,prod,wostatus"],["Capacity utilisation","87.4","% · bottleneck Forming 104%"],
      ["OEE","71.9","% · A 86% × P 89% × Q 94%","wrn"],["Late work orders","14","WOs · 3 critical","neg"],
      ["Schedule adherence","88","% of WOs started as planned","wrn"],["Open WOs","62","WOs · 8,420 $k"]],"","line,proc,wostatus,prod,cust","wo"))
  +card('Capacity load by process','Planned hours ÷ available hours, next 2 weeks · red = overloaded',
-   '<div class="pad"><div class="chart wide">'+loadChart([["Strip casting",92,"662","720"],["HD & jet milling",88,"634","720"],["Pressing",104,"749","720"],["Sintering",97,"1,397","1,440"],["Machining",83,"1,195","1,440"],["Plating",76,"547","720"],["Magnetise & test",61,"439","720"]])+'</div></div>',
-   '<b>Pressing is the bottleneck at 104%</b>; it is the only step above 100%, so every hour lost there is lost for the whole plant. Sintering at 97% has no buffer either. Magnetising has spare capacity that could absorb a second shift elsewhere.')
+  '<div class="pad"><div class="chart wide">'+loadChart([["Process 1",92,"662","720"],["Process 2",88,"634","720"],["Forming",104,"749","720"],["Thermal processing",97,"1,397","1,440"],["Machining",83,"1,195","1,440"],["Coating",76,"547","720"],["Final test",61,"439","720"]])+'</div></div>',
+  '<b>Forming is the bottleneck at 104%</b>; it is the only step above 100%, so every hour lost there is lost for the whole plant. Thermal processing at 97% has no buffer either. Final testing has spare capacity that could absorb a second shift elsewhere.')
  +card('OEE · overall equipment effectiveness','OEE = Availability × Performance × Quality · plant, September',
    '<div class="pad"><div class="gg">'
    +[["Availability",86,"run time ÷ planned time","wrn"],["Performance",89,"actual ÷ ideal output rate","wrn"],["Quality",94,"good units ÷ total units","wrn"],["OEE",71.9,"0.86 × 0.89 × 0.94","neg"]].map(function(g){
@@ -2260,13 +2260,13 @@ SCREEN.r_sched=function(){return ''
    '<div class="pad">'+leg([["On track","var(--blue)"],["At risk","var(--gold)"],["Late","var(--neg)"],["Done","var(--fg-3)"],["Today","var(--teal)"]])
    +'<div class="chart" style="overflow-x:auto"><div style="min-width:760px">'+gantt({today:2,
      days:["Mon 19","Tue 20","Wed 21","Thu 22","Fri 23","Sat 24","Sun 25","Mon 26","Tue 27","Wed 28","Thu 29","Fri 30","Sat 31"],
-     rows:[{n:"Press P1",load:"load 98%",t:[[0,4,"WO-26100412","ok","N42 block 50×30×10"],[4,8,"WO-26100431","ok","N42 block 40×20×8"],[8,12,"WO-26100455","ok","N38 ring Φ20×5"]]},
-           {n:"Press P2",load:"load 110%",t:[[0,3,"WO-26100398","late","N45 arc segment"],[3,7,"WO-26100440","risk","N42 block 50×30×10"],[7,11,"WO-26100462","ok","SmCo28 block"]]},
-           {n:"Furnace F1",load:"load 95%",t:[[0,5,"WO-26100377","ok","SmCo28 block"],[5,9,"WO-26100412","ok","N42 block 50×30×10"],[9,13,"WO-26100431","ok","N42 block 40×20×8"]]},
-           {n:"Furnace F2",load:"load 99%",t:[[0,2,"WO-26100389","done","N38 ring Φ20×5"],[3,8,"WO-26100398","late","N45 arc segment"],[8,12,"WO-26100440","risk","N42 block 50×30×10"]]},
-           {n:"Grinder M1",load:"load 83%",t:[[0,4,"WO-26100352","late","N42 block 40×20×8"],[5,9,"WO-26100377","ok","SmCo28 block"],[9,13,"WO-26100412","ok","N42 block 50×30×10"]]},
-           {n:"Plating L1",load:"load 76%",t:[[0,4,"WO-26100341","risk","N38 ring Φ20×5"],[4,6,"WO-26100389","ok","N38 ring Φ20×5"],[7,10,"WO-26100352","late","N42 block 40×20×8"]]}]})+'</div></div></div>',
-   'WO-26100398 is late on Press P2 and pushes into Furnace F2, which then delays WO-26100440: one late pressing job ripples down two lines. Weekend columns are shaded; the plant runs 7 days but maintenance is planned on Sundays.<br>★★ Machine-level allocation and forecast finish dates are not in TIPTOP. They need an APS/MES or a planner\'s daily update.')
+         rows:[{n:"Line 1",load:"load 98%",t:[[0,4,"WO-26100412","ok","Material 1"],[4,8,"WO-26100431","ok","Material 2"],[8,12,"WO-26100455","ok","Material 3"]]},
+           {n:"Line 2",load:"load 110%",t:[[0,3,"WO-26100398","late","Material 4"],[3,7,"WO-26100440","risk","Material 1"],[7,11,"WO-26100462","ok","Material 4"]]},
+           {n:"Line 3",load:"load 95%",t:[[0,5,"WO-26100377","ok","Material 4"],[5,9,"WO-26100412","ok","Material 1"],[9,13,"WO-26100431","ok","Material 2"]]},
+           {n:"Line 4",load:"load 99%",t:[[0,2,"WO-26100389","done","Material 3"],[3,8,"WO-26100398","late","Material 4"],[8,12,"WO-26100440","risk","Material 1"]]},
+           {n:"Line 5",load:"load 83%",t:[[0,4,"WO-26100352","late","Material 2"],[5,9,"WO-26100377","ok","Material 4"],[9,13,"WO-26100412","ok","Material 1"]]},
+           {n:"Line 6",load:"load 76%",t:[[0,4,"WO-26100341","risk","Material 3"],[4,6,"WO-26100389","ok","Material 3"],[7,10,"WO-26100352","late","Material 2"]]}]})+'</div></div></div>',
+  'WO-26100398 is late on Line 2 and pushes into Line 4, which then delays WO-26100440: one late forming job ripples down two lines. Weekend columns are shaded; the plant runs 7 days but maintenance is planned on Sundays.<br>★★ Machine-level allocation and forecast finish dates are not in TIPTOP. They need an APS/MES or a planner\'s daily update.')
  +card('On-time delivery and why orders are late','OTD against first promised date · last 12 months',
    '<div class="pad"><div class="pair"><div style="min-width:0">'
    +leg([["OTD","var(--blue)"],["Target 95%","var(--fg-3)"]])
@@ -2277,9 +2277,9 @@ SCREEN.r_sched=function(){return ''
    +donut("Root cause of 14 late work orders",[["Material shortage",5,"var(--gold)"],["Equipment breakdown",4,"var(--neg)"],["Rush order inserted",2,"var(--violet)"],["Quality hold / rework",2,"var(--teal)"],["Subcontractor late",1,"var(--blue)"]],{sub:"late WOs"})
    +'</div></div></div>'
    +tbl(["Work order","Customer","Product","Line","Planned finish","Forecast finish","Days late","Root cause","Action"],[
-    [["WO-26100398","b-neg"],["Customer B","t"],["N45 arc segment","t"],["Press P2","t"],["2026-10-21","t"],["2026-10-25","t"],["<span class=neg>4</span>"],["Dy oxide arrived 3 days late","t"],["Expedite; move to Press P1 Sat","t"]],
-    [["WO-26100352","b-neg"],["Customer A","t"],["N42 block 40×20×8","t"],["Grinder M1","t"],["2026-10-20","t"],["2026-10-23","t"],["<span class=neg>3</span>"],["Grinder wheel breakdown 6 h","t"],["Overtime Thu","t"]],
-    [["WO-26100341","b-warn"],["Customer B","t"],["N38 ring Φ20×5","t"],["Plating L1","t"],["2026-10-22","t"],["2026-10-23","t"],["<span class=wrn>1</span>"],["Plating peel rework","t"],["Linked to NCR-2609-014","t"]]],1080),
+    [["WO-26100398","b-neg"],["Customer B","t"],["Material 4","t"],["Line 2","t"],["2026-10-21","t"],["2026-10-25","t"],["<span class=neg>4</span>"],["Raw Material 3 arrived 3 days late","t"],["Expedite; move to Line 1 Sat","t"]],
+    [["WO-26100352","b-neg"],["Customer A","t"],["Material 2","t"],["Line 5","t"],["2026-10-20","t"],["2026-10-23","t"],["<span class=neg>3</span>"],["Equipment breakdown 6 h","t"],["Overtime Thu","t"]],
+    [["WO-26100341","b-warn"],["Customer B","t"],["Material 3","t"],["Line 6","t"],["2026-10-22","t"],["2026-10-23","t"],["<span class=wrn>1</span>"],["Coating rework","t"],["Linked to NCR-2609-014","t"]]],1080),
    'OTD has fallen below 95% every month since January. <b>Material shortage and breakdowns explain 9 of 14 late orders</b>, linking this page to Purchasing (supplier lateness) and to the OEE losses above. OTD is measured against the <b>first promised date</b>; re-promised dates would hide the problem.')}
 
 /* ===== Roles ===== */
@@ -2343,7 +2343,7 @@ var TT={mgmt:["Management Dashboard","Company-level KPIs and layered drill-down 
  r_pur:["Purchasing & Supply Chain","Purchase execution, cost control, five inventory classes, scrap"],
  r_cash:["Cash Monitoring","Cash position, flows, funding gap alerts"],
  r_inv:["Inventory","Sales-side physical view · age, slow-moving, abnormal stock"],
- r_qual:["Quality","First-pass yield, defect Pareto, SPC on Br / Hcj, complaints and returns"],
+ r_qual:["Quality","First-pass yield, defect Pareto, SPC on Property A / B, complaints and returns"],
  r_sched:["Scheduling","Capacity load, OEE, work-order Gantt, on-time delivery"],
  drill:["Drill-down demo","Fixed-path example · click any metric number on any report to pick your own dimensions"],
  list:["Report catalogue","Three layers + operations · 16 reports in use + 2 new"],
